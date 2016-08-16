@@ -11,10 +11,42 @@ import {
     View,
 } from 'react-native';
 
+import NavigationBar from '../widget/TabNavigator';
+
 export default class Home extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.onBackHandle = this.onBackHandle.bind(this);
+    this.onForwardHandle = this.onForwardHandle.bind(this);
+  }
+
+  onBackHandle() {
+
+  };
+
+  onForwardHandle() {
+
+  };
+
   render() {
     return (
         <View style={styles.container}>
+
+          <NavigationBar
+              title={'this is a test'}
+              height={44}
+              titleColor={'#fff'}
+              backgroundColor={'#149be0'}
+              leftButtonTitle={'back'}
+              leftButtonTitleColor={'#fff'}
+              onLeftButtonPress={this.onBackHandle}
+              rightButtonTitle={'forward'}
+              rightButtonTitleColor={'#fff'}
+              onRightButtonPress={this.onForwardHandle}
+          />
+
           <Text style={styles.welcome}>
             Home
           </Text>

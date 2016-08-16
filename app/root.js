@@ -50,11 +50,7 @@ export default class Root extends React.Component {
   render() {
     return (
         <View style={{flex: 1}}>
-          <StatusBar
-              barStyle='light-content'
-              backgroundColor='transparent'
-              style={{height: STATUS_BAR_HEIGHT}}
-          />
+
           <Navigator
               ref='navigator'
               style={styles.navigator}

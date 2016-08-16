@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 
 import TabNavigator from 'react-native-tab-navigator';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 import Home from './Home';
 import Center from './Center';
@@ -37,16 +36,14 @@ export default class Main extends React.Component {
               selected={this.state.selectedTab === 'home'}
               selectedTitleStyle={styles.selectedTextStyle}
               titleStyle={styles.textStyle}
-              renderIcon={() => <Icon
-                  name="ios-paper"
-                  size={30}
-                  color="#6B8E23"
-              />}
-              renderSelectedIcon={() => <Icon
-                  name="ios-paper"
-                  size={30}
-                  color="#6B8E23"
-              />}
+              renderIcon={() => <Image
+                  source={require('../img/ic_discovery.png')}
+                  style={styles.iconStyle}/>
+              }
+              renderSelectedIcon={() => <Image
+                  source={require('../img/ic_discovery_f.png')}
+                  style={styles.iconStyle}/>
+              }
               onPress={() => this.setState({ selectedTab: 'home' })}>
             <Home {...this.props}/>
           </TabNavigator.Item>
@@ -56,16 +53,14 @@ export default class Main extends React.Component {
               selected={this.state.selectedTab === 'center'}
               selectedTitleStyle={styles.selectedTextStyle}
               titleStyle={styles.textStyle}
-              renderIcon={() => <Icon
-                  name="ios-paper"
-                  size={30}
-                  color="#6B8E23"
-              />}
-              renderSelectedIcon={() => <Icon
-                  name="ios-paper"
-                  size={30}
-                  color="#6B8E23"
-              />}
+              renderIcon={() => <Image
+                  source={require('../img/ic_setting.png')}
+                  style={styles.iconStyle}/>
+              }
+              renderSelectedIcon={() => <Image
+                  source={require('../img/ic_setting_f.png')}
+                  style={styles.iconStyle}/>
+              }
               onPress={() => this.setState({ selectedTab: 'center' })}>
             <Center {...this.props}/>
           </TabNavigator.Item>
@@ -74,15 +69,16 @@ export default class Main extends React.Component {
     );
   }
 }
+
 const styles=StyleSheet.create({
   iconStyle:{
     width:26,
     height:26,
   },
   textStyle:{
-    color:'#999',
+    color:'#ADADAD',
   },
   selectedTextStyle:{
-    color:'black',
+    color:'#6B8E23',
   }
 });

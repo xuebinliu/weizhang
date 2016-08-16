@@ -1,12 +1,14 @@
 /**
  * Created by free on 8/16/16.
+ *
+ * 首页
  */
 
 import React from 'react';
 import {
     StyleSheet,
     Text,
-    View
+    View,
 } from 'react-native';
 
 export default class Home extends React.Component {

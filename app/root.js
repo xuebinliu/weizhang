@@ -9,7 +9,6 @@ import {
     Navigator,
     BackAndroid,
     View,
-    StatusBar,
     Platform,
 } from 'react-native';
 
@@ -17,9 +16,7 @@ import {NaviGoBack} from './utils/common';
 import Splash from './pages/Splash';
 
 
-export const STATUS_BAR_HEIGHT = (Platform.OS === 'ios' ? 20 : 25)
-
-var _navigator;
+let _navigator;
 export default class Root extends React.Component {
 
   constructor(props) {

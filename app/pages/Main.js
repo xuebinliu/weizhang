@@ -15,6 +15,7 @@ import TabNavigator from 'react-native-tab-navigator';
 
 
 import Home from './Home';
+import News from './News';
 import Center from './Center';
 
 
@@ -32,7 +33,7 @@ export default class Main extends React.Component {
       <TabNavigator>
 
         <TabNavigator.Item
-            title="主页"
+            title="Test"
             selected={this.state.selectedTab === 'home'}
             selectedTitleStyle={styles.selectedTextStyle}
             titleStyle={styles.textStyle}
@@ -49,7 +50,24 @@ export default class Main extends React.Component {
         </TabNavigator.Item>
 
         <TabNavigator.Item
-            title="我的"
+            title="Test"
+            selected={this.state.selectedTab === 'news'}
+            selectedTitleStyle={styles.selectedTextStyle}
+            titleStyle={styles.textStyle}
+            renderIcon={() => <Image
+                source={require('../img/ic_setting.png')}
+                style={styles.iconStyle}/>
+            }
+            renderSelectedIcon={() => <Image
+                source={require('../img/ic_setting_f.png')}
+                style={styles.iconStyle}/>
+            }
+            onPress={() => this.setState({ selectedTab: 'news' })}>
+          <News {...this.props}/>
+        </TabNavigator.Item>
+
+        <TabNavigator.Item
+            title="Test"
             selected={this.state.selectedTab === 'center'}
             selectedTitleStyle={styles.selectedTextStyle}
             titleStyle={styles.textStyle}

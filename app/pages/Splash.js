@@ -31,7 +31,7 @@ export default class Splash extends React.Component {
           name: 'Main'
         });
       });
-    }, 2000);
+    }, 1000);
   }
 
   componentWillUnmount() {

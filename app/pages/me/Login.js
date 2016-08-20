@@ -21,7 +21,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import NavigationBar from '../../widget/TabNavigator';
 
-import {NAV_HEIGHT} from '../../const';
+import gstyles from '../../gstyles';
+
 
 export default class Login extends React.Component {
 
@@ -31,14 +32,21 @@ export default class Login extends React.Component {
 
         <NavigationBar
             title={'Test'}
-            height={NAV_HEIGHT}
             titleColor={'#fff'}
-            backgroundColor={'#149be0'}
         />
 
-        <Text style={{marginTop:NAV_HEIGHT}}>
-          Login
-        </Text>
+        <View style={[gstyles.content, {marginTop: 80}]}>
+          <TextInput style={styles.input} placeholder={"邮箱/手机号"}/>
+
+          <TextInput style={styles.input} placeholder={"密码"}/>
+
+          <TouchableOpacity style={[gstyles.button, {marginTop:30}]}>
+
+            <Text>登陆</Text>
+
+          </TouchableOpacity>
+
+        </View>
 
       </View>
     );
@@ -48,14 +56,11 @@ export default class Login extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
   },
 
-  line:{
-    height:1,
-    backgroundColor:'#ccc',
-    marginLeft:8,
-    marginRight:8,
+  input: {
+    height: 60,
+    marginHorizontal:15,
   },
 
 });

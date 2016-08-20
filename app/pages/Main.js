@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 import TabNavigator from 'react-native-tab-navigator';
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Home from './Home';
 import News from './News';
@@ -35,16 +35,10 @@ export default class Main extends React.Component {
         <TabNavigator.Item
             title="Test"
             selected={this.state.selectedTab === 'home'}
-            selectedTitleStyle={styles.selectedTextStyle}
-            titleStyle={styles.textStyle}
-            renderIcon={() => <Image
-                source={require('../img/ic_discovery.png')}
-                style={styles.iconStyle}/>
-            }
-            renderSelectedIcon={() => <Image
-                source={require('../img/ic_discovery_f.png')}
-                style={styles.iconStyle}/>
-            }
+            titleStyle={{color:'gray'}}
+            selectedTitleStyle={{color:'green'}}
+            renderIcon={() => <Ionicons name="ios-home-outline" size={26} color="gray"/>}
+            renderSelectedIcon={() => <Ionicons name="ios-home" size={26} color="green"/>}
             onPress={() => this.setState({ selectedTab: 'home' })}>
           <Home {...this.props}/>
         </TabNavigator.Item>
@@ -52,16 +46,10 @@ export default class Main extends React.Component {
         <TabNavigator.Item
             title="Test"
             selected={this.state.selectedTab === 'news'}
-            selectedTitleStyle={styles.selectedTextStyle}
-            titleStyle={styles.textStyle}
-            renderIcon={() => <Image
-                source={require('../img/ic_setting.png')}
-                style={styles.iconStyle}/>
-            }
-            renderSelectedIcon={() => <Image
-                source={require('../img/ic_setting_f.png')}
-                style={styles.iconStyle}/>
-            }
+            titleStyle={{color:'gray'}}
+            selectedTitleStyle={{color:'green'}}
+            renderIcon={() => <Ionicons name="ios-aperture-outline" size={26} color="gray"/>}
+            renderSelectedIcon={() => <Ionicons name="ios-aperture" size={26} color="green"/>}
             onPress={() => this.setState({ selectedTab: 'news' })}>
           <News {...this.props}/>
         </TabNavigator.Item>
@@ -69,16 +57,10 @@ export default class Main extends React.Component {
         <TabNavigator.Item
             title="Test"
             selected={this.state.selectedTab === 'center'}
-            selectedTitleStyle={styles.selectedTextStyle}
-            titleStyle={styles.textStyle}
-            renderIcon={() => <Image
-                source={require('../img/ic_setting.png')}
-                style={styles.iconStyle}/>
-            }
-            renderSelectedIcon={() => <Image
-                source={require('../img/ic_setting_f.png')}
-                style={styles.iconStyle}/>
-            }
+            titleStyle={{color:'gray'}}
+            selectedTitleStyle={{color:'green'}}
+            renderIcon={() => <Ionicons name="ios-person-outline" size={26} color="gray"/>}
+            renderSelectedIcon={() => <Ionicons name="ios-person" size={26} color="green"/>}
             onPress={() => this.setState({ selectedTab: 'center' })}>
           <Center {...this.props}/>
         </TabNavigator.Item>
@@ -88,15 +70,3 @@ export default class Main extends React.Component {
   }
 }
 
-const styles=StyleSheet.create({
-  iconStyle:{
-    width:26,
-    height:26,
-  },
-  textStyle:{
-    color:'#ADADAD',
-  },
-  selectedTextStyle:{
-    color:'#6B8E23',
-  }
-});

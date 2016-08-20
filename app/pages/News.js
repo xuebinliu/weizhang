@@ -12,41 +12,19 @@ import {
 } from 'react-native';
 
 
-import {NAV_HEIGHT} from '../const';
+import gstyles from '../gstyles';
 import NavigationBar from '../widget/TabNavigator';
 
 export default class News extends React.Component {
   render() {
 
     return (
-        <View style={styles.container}>
+        <View style={gstyles.container}>
           <NavigationBar
               title={'Test2'}
-              height={NAV_HEIGHT}
-              titleColor={'#fff'}
-              backgroundColor={'#149be0'}
           />
 
-          <Text style={{marginTop:NAV_HEIGHT}}>
-            Keep
-          </Text>
         </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection:'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-
-});

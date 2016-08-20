@@ -14,6 +14,10 @@ import {
     Platform
 } from 'react-native';
 
+
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+
 let width = Dimensions.get('window').width;
 
 export default class NavigationBar extends React.Component{
@@ -34,8 +38,8 @@ export default class NavigationBar extends React.Component{
 
   static defaultProps = {
     height: 44,
-    titleColor: '#000',
-    backgroundColor: '#f5f3f4',
+    titleColor: 'white',
+    backgroundColor: 'dimgray',
     leftButtonTitle: null,
     leftButtonTitleColor: '#000',
     rightButtonTitle: null,
@@ -87,7 +91,7 @@ export default class NavigationBar extends React.Component{
   _renderLeftIcon() {
     if(this.state.leftButtonIcon){
       return (
-          <Image style={styles.leftButtonIcon} resizeMode={'contain'} source={this.state.leftButtonIcon} />
+          <Ionicons name={this.state.leftButtonIcon} size={20} color="white" />
       );
     }
     return null;

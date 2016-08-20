@@ -36,3 +36,11 @@ export const LC_APP_KEY = 'yUTGYrkMhb5XWyrnSnH0EGVq';
 
 // 导航栏高度
 export const NAV_HEIGHT = 44;
+
+
+
+// 配色
+
+// 导航栏 dimgray #696969
+// 导航栏文字 white
+// 页面背景 gainsboro #dcdcdc

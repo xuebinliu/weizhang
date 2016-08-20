@@ -37,8 +37,8 @@ export default class Main extends React.Component {
             selected={this.state.selectedTab === 'home'}
             titleStyle={{color:'gray'}}
             selectedTitleStyle={{color:'green'}}
-            renderIcon={() => <Ionicons name="ios-home-outline" size={26} color="gray"/>}
-            renderSelectedIcon={() => <Ionicons name="ios-home" size={26} color="green"/>}
+            renderIcon={() => <Ionicons name="ios-home-outline" size={28} color="gray"/>}
+            renderSelectedIcon={() => <Ionicons name="ios-home" size={28} color="green"/>}
             onPress={() => this.setState({ selectedTab: 'home' })}>
           <Home {...this.props}/>
         </TabNavigator.Item>
@@ -48,8 +48,8 @@ export default class Main extends React.Component {
             selected={this.state.selectedTab === 'news'}
             titleStyle={{color:'gray'}}
             selectedTitleStyle={{color:'green'}}
-            renderIcon={() => <Ionicons name="ios-aperture-outline" size={26} color="gray"/>}
-            renderSelectedIcon={() => <Ionicons name="ios-aperture" size={26} color="green"/>}
+            renderIcon={() => <Ionicons name="ios-aperture-outline" size={28} color="gray"/>}
+            renderSelectedIcon={() => <Ionicons name="ios-aperture" size={28} color="green"/>}
             onPress={() => this.setState({ selectedTab: 'news' })}>
           <News {...this.props}/>
         </TabNavigator.Item>
@@ -59,8 +59,8 @@ export default class Main extends React.Component {
             selected={this.state.selectedTab === 'center'}
             titleStyle={{color:'gray'}}
             selectedTitleStyle={{color:'green'}}
-            renderIcon={() => <Ionicons name="ios-person-outline" size={26} color="gray"/>}
-            renderSelectedIcon={() => <Ionicons name="ios-person" size={26} color="green"/>}
+            renderIcon={() => <Ionicons name="ios-person-outline" size={28} color="gray"/>}
+            renderSelectedIcon={() => <Ionicons name="ios-person" size={28} color="green"/>}
             onPress={() => this.setState({ selectedTab: 'center' })}>
           <Center {...this.props}/>
         </TabNavigator.Item>

@@ -8,21 +8,21 @@ import {StyleSheet} from 'react-native';
 
 export default gstyles = StyleSheet.create({
 
-  // 所有页面容器
+  // all page container
   container:{
     flex:1,
-    backgroundColor:'#f6f6f6',
+    backgroundColor:'white',
   },
 
-  // 导航栏
-  nav_bar:{
-
-  },
-
-  // 页面
+  // page content
   content:{
     flex:1,
     marginTop:44,
+  },
+
+  // list item
+  listItem:{
+    backgroundColor:'whitesmoke',
   },
 
   // 分割线

@@ -62,15 +62,17 @@ export default class Center extends React.Component {
 
           <View style={gstyles.content}>
             <TouchableOpacity onPress={() => {this.loginButtonAction()}}>
-              <View style={{flexDirection:'row', backgroundColor:'white', height:80, marginTop:80}}>
+              <View style={[gstyles.listItem, {flexDirection:'row', height:70, marginTop:15, position:'relative'}]}>
                 <Ionicons name={"md-contact"} size={60} color="coral" style={{marginLeft:10, alignSelf:'center'}}/>
                 <View style={{flexDirection:'column', justifyContent:'center', marginLeft:10}}>
                   <Text> 用户名 </Text>
                   <Text> 简介 </Text>
                 </View>
+
                 <View style={{flexDirection:'row', flex:1, justifyContent:'flex-end'}}>
-                  <Ionicons name="ios-arrow-forward" size={30} color="#4F8EF7" style={{alignSelf:'center', marginRight:10}}/>
+                  <Ionicons name="ios-arrow-forward" size={20} color="gray" style={{alignSelf:'center', marginRight:15}}/>
                 </View>
+
               </View>
             </TouchableOpacity>
 

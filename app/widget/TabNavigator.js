@@ -91,7 +91,7 @@ export default class NavigationBar extends React.Component{
   _renderLeftIcon() {
     if(this.state.leftButtonIcon){
       return (
-          <Ionicons name={this.state.leftButtonIcon} size={20} color="white" />
+          <Ionicons name={this.state.leftButtonIcon} size={30} color="white" />
       );
     }
     return null;

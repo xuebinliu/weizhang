@@ -20,11 +20,28 @@ import{
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import NavigationBar from '../../widget/TabNavigator';
+import {naviGoBack} from '../../utils/common';
 
 import gstyles from '../../gstyles';
 
 
 export default class Login extends React.Component {
+
+  constructor(props){
+    super(props);
+
+    this.onBackHandle = this.onBackHandle.bind(this);
+    this.onRightButtonPress = this.onRightButtonPress.bind(this);
+  }
+
+  onBackHandle() {
+    const {navigator} = this.props;
+    return naviGoBack(navigator);
+  };
+
+  onRightButtonPress() {
+
+  };
 
   render() {
     return (
@@ -33,6 +50,11 @@ export default class Login extends React.Component {
         <NavigationBar
             title={'Test'}
             titleColor={'#fff'}
+            leftButtonIcon="ios-arrow-round-back"
+            onLeftButtonPress={this.onBackHandle}
+            rightButtonTitle={"注册"}
+            rightButtonTitleColor={'white'}
+            onRightButtonPress={this.onRightButtonPress}
         />
 
         <View style={[gstyles.content, {marginTop: 80}]}>
@@ -40,11 +62,25 @@ export default class Login extends React.Component {
 
           <TextInput style={styles.input} placeholder={"密码"}/>
 
-          <TouchableOpacity style={[gstyles.button, {marginTop:30}]}>
-
-            <Text>登陆</Text>
-
+          <TouchableOpacity>
+            <Text style={{color:'blue', alignSelf:'flex-end', marginRight:15}}>
+              忘记密码?
+            </Text>
           </TouchableOpacity>
+
+          <TouchableOpacity style={[gstyles.button, {marginTop:30}]}>
+            <Text style={{color:'white'}} >登陆</Text>
+          </TouchableOpacity>
+
+
+          <View style={{marginTop:70,alignItems:'center'}}>
+            <Text style={{fontSize:13,color:'#777'}}>----------------第三方账号登录----------------</Text>
+            <View style={{flexDirection:'row',marginTop:20}}>
+              <TouchableOpacity>
+                <Image source={require('../../img/ic_login_weixin.png')} style={{width:50,height:50}}/>
+              </TouchableOpacity>
+            </View>
+          </View>
 
         </View>
 

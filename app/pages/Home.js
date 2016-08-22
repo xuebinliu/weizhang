@@ -13,12 +13,19 @@ import {
 import gstyles from '../gstyles';
 import NavigationBar from '../widget/TabNavigator';
 
+import {getCurrentCity} from '../utils/common';
+
+
 export default class Home extends React.Component {
   constructor(props) {
     super(props);
 
     this.onBackHandle = this.onBackHandle.bind(this);
     this.onForwardHandle = this.onForwardHandle.bind(this);
+
+    this.state = {
+      city:''
+    };
   }
 
   onBackHandle() {
@@ -29,13 +36,23 @@ export default class Home extends React.Component {
 
   };
 
+  componentDidMount() {
+    getCurrentCity((city)=>{
+      if(city !== 'error') {
+        this.setState({
+          city:city
+        });
+      }
+    });
+  }
+
   render() {
     return (
         <View style={gstyles.container}>
 
           <NavigationBar
               title={'Test1'}
-              leftButtonTitle={'back'}
+              leftButtonTitle={this.state.city}
               leftButtonTitleColor={'#fff'}
               onLeftButtonPress={this.onBackHandle}
               rightButtonTitle={'forward'}

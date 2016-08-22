@@ -9,6 +9,8 @@ import {
     View,
 } from 'react-native';
 
+import { registerApp } from 'react-native-wechat';
+
 import {naviGoBack} from './utils/common';
 import Splash from './pages/Splash';
 
@@ -17,6 +19,9 @@ let _navigator;
 export default class Root extends React.Component {
   constructor(props) {
     super(props);
+
+    // 微信
+    // registerApp('wxb24c445773822c79');
 
     this.goBack = this.goBack.bind(this);
     this.renderScene = this.renderScene.bind(this);

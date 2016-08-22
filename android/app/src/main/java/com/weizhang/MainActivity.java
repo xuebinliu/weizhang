@@ -1,7 +1,6 @@
 package com.weizhang;
 
 import com.facebook.react.ReactActivity;
-import com.theweflex.react.WeChatPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 
 public class MainActivity extends ReactActivity {

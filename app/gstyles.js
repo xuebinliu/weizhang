@@ -25,6 +25,12 @@ export default gstyles = StyleSheet.create({
     backgroundColor:'whitesmoke',
   },
 
+  input: {
+    height: 60,
+    marginHorizontal:15,
+    color:'#777',
+  },
+
   // 分割线
   line:{
     height:1,

@@ -14,7 +14,6 @@ import gstyles from '../gstyles';
 import NavigationBar from '../widget/TabNavigator';
 
 export default class Home extends React.Component {
-
   constructor(props) {
     super(props);
 

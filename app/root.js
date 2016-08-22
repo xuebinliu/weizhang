@@ -2,34 +2,36 @@
  * Created by free on 8/16/16.
  */
 
-
 import React from 'react';
 import {
-    StyleSheet,
     Navigator,
     BackAndroid,
     View,
-    Platform,
 } from 'react-native';
 
-import {NaviGoBack} from './utils/common';
+import {naviGoBack} from './utils/common';
 import Splash from './pages/Splash';
 
-
 let _navigator;
-export default class Root extends React.Component {
 
+export default class Root extends React.Component {
   constructor(props) {
     super(props);
 
     this.goBack = this.goBack.bind(this);
     this.renderScene = this.renderScene.bind(this);
+  }
 
+  componentDidMount() {
     BackAndroid.addEventListener('hardwareBackPress', this.goBack);
   }
 
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.goBack);
+  }
+
   goBack() {
-    return NaviGoBack(_navigator);
+    return naviGoBack(_navigator);
   }
 
   renderScene(route, navigator) {
@@ -47,10 +49,9 @@ export default class Root extends React.Component {
   render() {
     return (
         <View style={{flex: 1}}>
-
           <Navigator
               ref='navigator'
-              style={styles.navigator}
+              style={{flex:1}}
               configureScene={this.configureScene}
               renderScene={this.renderScene}
               initialRoute={{
@@ -61,11 +62,4 @@ export default class Root extends React.Component {
         </View>
     );
   }
-
 }
-
-const styles = StyleSheet.create({
-  navigator: {
-    flex: 1
-  }
-});

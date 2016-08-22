@@ -6,10 +6,6 @@
  */
 
 import React from 'react';
-import {
-    StyleSheet,
-    Image,
-} from 'react-native';
 
 import TabNavigator from 'react-native-tab-navigator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -17,7 +13,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Home from './Home';
 import News from './News';
 import Center from './Center';
-
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -31,7 +26,6 @@ export default class Main extends React.Component {
   render() {
     return (
       <TabNavigator>
-
         <TabNavigator.Item
             title="Test"
             selected={this.state.selectedTab === 'home'}
@@ -64,7 +58,6 @@ export default class Main extends React.Component {
             onPress={() => this.setState({ selectedTab: 'center' })}>
           <Center {...this.props}/>
         </TabNavigator.Item>
-
       </TabNavigator>
     );
   }

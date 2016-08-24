@@ -6,15 +6,15 @@
 
 import React from 'react';
 import {
-    Text,
     View,
+    InteractionManager,
 } from 'react-native';
 
 import gstyles from '../gstyles';
 import NavigationBar from '../widget/TabNavigator';
 
 import {getCurrentCity} from '../utils/common';
-
+import Location from './Location';
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -29,11 +29,16 @@ export default class Home extends React.Component {
   }
 
   onBackHandle() {
-
+    const {navigator} = this.props;
+    InteractionManager.runAfterInteractions(() => {
+      navigator.push({
+        component: Location,
+        name: 'Location'
+      });
+    });
   };
 
   onForwardHandle() {
-
   };
 
   componentDidMount() {

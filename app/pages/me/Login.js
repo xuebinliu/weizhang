@@ -54,11 +54,10 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={gstyles.container}>
 
         <NavigationBar
             title={'登陆'}
-            titleColor={'#fff'}
             leftButtonIcon="ios-arrow-round-back"
             onLeftButtonPress={this.onBackHandle}
             rightButtonTitle={"注册"}
@@ -97,12 +96,5 @@ export default class Login extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-
-});
 
 

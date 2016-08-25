@@ -33,7 +33,6 @@ export default class Home extends React.Component {
     InteractionManager.runAfterInteractions(() => {
       navigator.push({
         component: Location,
-        name: 'Location'
       });
     });
   };

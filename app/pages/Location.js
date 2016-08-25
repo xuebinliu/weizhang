@@ -9,18 +9,21 @@ import {
   View,
   Text,
   ListView,
+  StyleSheet,
+  TouchableHighlight,
 } from 'react-native';
 
-import NavigationBar from '../widget/TabNavigator';
-import {naviGoBack} from '../utils/common';
+import {toastShort} from '../utils/ToastUtil';
 
-import LoadingView from '../widget/LoadingView';
+import NavigationBar from '../widget/TabNavigator';
+import {naviGoBack, getCityList} from '../utils/common';
 
 import gstyles from '../gstyles';
 
-import {CITYS, tests} from '../const';
+import LoadingView from '../widget/LoadingView';
 
-let dataSource;
+import DeviceStorage from '../utils/Storage';
+import {SK_CURR_CITY} from '../const/StorageKey';
 
 export default class Location extends React.Component {
 
@@ -30,25 +33,38 @@ export default class Location extends React.Component {
     this.onBackHandle = this.onBackHandle.bind(this);
     this.renderRow = this.renderRow.bind(this);
     this.renderSectionHeader = this.renderSectionHeader.bind(this);
+    this.renderSeparator = this.renderSeparator.bind(this);
+    this.onPressRow = this.onPressRow.bind(this);
 
-    let ds = new ListView.DataSource({
-      rowHasChanged:(r1, r2)=> r1 !== r2,
-      sectionHeaderHasChanged:(s1, s2)=> s1!== s2,
-    });
+    this.renderListView = this.renderListView.bind(this);
 
-    console.log(tests);
-
-    this.state = {
-      dataSource : ds.cloneWithRowsAndSections(tests)
-    };
   }
 
   componentWillMount() {
-
+    console.log('componentWillMount');
+    this.props = {
+        isLoading : true
+    };
   }
 
-  componentWillUnmount() {
+  componentDidMount() {
+    console.log('componentDidMount');
+    getCityList((cities) => {
+      let ds = new ListView.DataSource({
+        rowHasChanged:(r1, r2)=> r1 !== r2,
+        sectionHeaderHasChanged:(s1, s2)=> s1!== s2,
+      });
 
+      console.log('get cities ok');
+
+      // 数据加载完成
+      this.props.isLoading = false;
+
+      // 触发下一次绘制
+      this.setState({
+        dataSource : ds.cloneWithRowsAndSections(cities)
+      });
+    });
   }
 
   onBackHandle() {
@@ -56,16 +72,54 @@ export default class Location extends React.Component {
     return naviGoBack(navigator);
   };
 
+  onPressRow(rowData) {
+    toastShort('已切换到 '+rowData);
+
+    DeviceStorage.save(SK_CURR_CITY, rowData);
+
+    setTimeout(()=>this.onBackHandle(), 500);
+  }
+
   renderRow(rowData, sectionId, rowId) {
     return (
-        <Text>{rowData}</Text>
+      <TouchableHighlight style={styles.listItemContainer}  underlayColor='rgba(24,36,35,0.1)' onPress={() => this.onPressRow(rowData)}>
+        <Text style={styles.listItemText}>{rowData}</Text>
+      </TouchableHighlight>
+    );
+  }
+
+  renderSeparator(sectionID, rowID, adjacentRowHighlighted){
+    return (
+        <View style={gstyles.line}></View>
     );
   }
 
   renderSectionHeader(sectionData, sectionId) {
     return (
-      <Text>{sectionId}</Text>
+      <View style={styles.listHeaderContainer}>
+        <Text style={styles.listHeaderText}>{sectionId}</Text>
+      </View>
     );
+  }
+
+  renderListView() {
+    console.log('renderListView isLoading=' + this.props.isLoading);
+    if(!this.props.isLoading) {
+      return (
+          <View style={gstyles.content}>
+            <ListView
+                initialListSize={10}
+                pageSize={20}
+                dataSource={this.state.dataSource}
+                renderSectionHeader={this.renderSectionHeader}
+                renderSeparator={this.renderSeparator}
+                renderLoading
+                renderRow={this.renderRow}/>
+          </View>
+      );
+    } else {
+      return (<LoadingView/>);
+    }
   }
 
   render(){
@@ -73,23 +127,36 @@ export default class Location extends React.Component {
         <View style={gstyles.container}>
 
           <NavigationBar
-              title={'城市'}
+              title={'选择城市'}
               leftButtonIcon="ios-arrow-round-back"
               onLeftButtonPress={this.onBackHandle}
           />
 
-          <View style={gstyles.content}>
-
-            <ListView
-                initialListSize={1}
-                dataSource={this.state.dataSource}
-                renderSectionHeader={this.renderSectionHeader}
-                renderRow={this.renderRow}/>
-
-          </View>
+          {this.renderListView()}
 
         </View>
     );
   }
-
 }
+
+const styles = StyleSheet.create({
+  listItemContainer:{
+    marginHorizontal:8,
+  },
+  listItemText:{
+    marginVertical:8,
+    fontSize:14
+  },
+  listHeaderContainer:{
+    flex:1,
+    height:30,
+    backgroundColor:'whitesmoke',
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  listHeaderText:{
+    fontSize:16,
+    fontWeight:'bold'
+  },
+
+});

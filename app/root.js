@@ -9,6 +9,10 @@ import {
     View,
 } from 'react-native';
 
+
+import AV from 'leancloud-storage';
+import {LC_APP_ID, LC_APP_KEY} from './const';
+
 import { registerApp } from 'react-native-wechat';
 
 import {naviGoBack} from './utils/common';
@@ -19,6 +23,12 @@ let _navigator;
 export default class Root extends React.Component {
   constructor(props) {
     super(props);
+
+    // leancloud
+    AV.init({
+      appId:LC_APP_ID,
+      appKey:LC_APP_KEY
+    });
 
     // 微信
     // registerApp('wxb24c445773822c79');

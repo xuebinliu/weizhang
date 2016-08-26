@@ -37,6 +37,8 @@ export async function getCurrentCity(callback) {
 
       let city = json.content.address_detail.city;
       callback(city);
+
+      // 存储
       DeviceStorage.save(SK_CURR_CITY, city);
 
       console.log('from baidu city=' + city);

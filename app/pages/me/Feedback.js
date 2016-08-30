@@ -22,6 +22,7 @@ import {naviGoBack} from '../../utils/common';
 
 import gstyles from '../../gstyles';
 
+import {toastShort} from '../../utils/ToastUtil';
 
 let feedbackContent;
 let contact;
@@ -52,10 +53,18 @@ export default class Feedback extends React.Component {
 
     console.log('onFeedback feedbackContent=' + feedbackContent + ', contact=' + contact);
 
+    const that = this;
     feedbackObj.save().then(function (success) {
       console.log(success);
+
+      toastShort('提交成功');
+
+      that.onBackHandle();
+
     }, function (error) {
       console.log(error);
+
+      toastShort('提交失败');
     });
   }
 

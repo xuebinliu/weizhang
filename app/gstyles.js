@@ -39,6 +39,12 @@ export default gstyles = StyleSheet.create({
     marginRight:8,
   },
 
+  // 分割线
+  noMarginline:{
+    height:1,
+    backgroundColor:'#dddddd',
+  },
+
   // 长按钮
   button:{
     marginHorizontal:30,

@@ -13,7 +13,7 @@ import {
     View,
 } from 'react-native';
 
-import Main from './Main';
+import Main from './MainContainer';
 
 var {height, width} = Dimensions.get('window');
 

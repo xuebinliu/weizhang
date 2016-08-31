@@ -36,24 +36,9 @@ export default class Login extends React.Component {
   constructor(props){
     super(props);
 
-    console.log('Login constructor');
-
     this.onBackHandle = this.onBackHandle.bind(this);
     this.onRightButtonPress = this.onRightButtonPress.bind(this);
     this.onLogin = this.onLogin.bind(this);
-  }
-
-  componentWillMount() {
-    console.log('Login componentWillMount');
-  }
-
-  componentDidMount() {
-    console.log('Login componentDidMount');
-  }
-
-  shouldComponentUpdate() {
-    console.log('Login shouldComponentUpdate');
-    return false;
   }
 
   onBackHandle() {
@@ -102,7 +87,7 @@ export default class Login extends React.Component {
 
         <NavigationBar
             title={'登陆'}
-            leftButtonIcon="ios-arrow-round-back"
+            leftButtonIcon="md-arrow-back"
             onLeftButtonPress={this.onBackHandle}
             rightButtonTitle={"注册"}
             rightButtonTitleColor={'white'}

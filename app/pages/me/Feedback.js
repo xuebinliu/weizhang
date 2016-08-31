@@ -73,7 +73,7 @@ export default class Feedback extends React.Component {
         <View style={gstyles.container}>
           <NavigationBar
               title={'用户反馈'}
-              leftButtonIcon="ios-arrow-round-back"
+              leftButtonIcon="md-arrow-back"
               onLeftButtonPress={this.onBackHandle}
           />
 

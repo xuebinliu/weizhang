@@ -93,7 +93,7 @@ export default class NavigationBar extends React.Component{
   _renderLeftIcon() {
     if(this.state.leftButtonIcon){
       return (
-          <Ionicons name={this.state.leftButtonIcon} size={30} color="white" />
+          <Ionicons name={this.state.leftButtonIcon} size={28} color="white" />
       );
     }
     return null;
@@ -102,11 +102,20 @@ export default class NavigationBar extends React.Component{
   _renderRightIcon() {
     if(this.state.rightButtonIcon){
       return (
-          <Image style={styles.rightButtonIcon} resizeMode={'contain'} source={this.state.rightButtonIcon} />
+          <Ionicons name={this.state.rightButtonIcon} size={28} color="white" />
       );
     }
     return null;
   }
+
+  // _renderRightIcon() {
+  //   if(this.state.rightButtonIcon){
+  //     return (
+  //         <Image style={styles.rightButtonIcon} resizeMode={'contain'} source={this.state.rightButtonIcon} />
+  //     );
+  //   }
+  //   return null;
+  // }
 
   _onLeftButtonPressHandle(event) {
     let onPress = this.state.onLeftButtonPress;

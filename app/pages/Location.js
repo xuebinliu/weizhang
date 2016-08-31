@@ -123,7 +123,7 @@ export default class Location extends React.Component {
 
           <NavigationBar
               title={'选择城市'}
-              leftButtonIcon="ios-arrow-round-back"
+              leftButtonIcon="md-arrow-back"
               onLeftButtonPress={this.onBackHandle}
           />
 

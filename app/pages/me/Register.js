@@ -45,27 +45,27 @@ export default class Register extends React.Component {
 
   onRegister() {
     if(nickName == undefined || nickName.length < 1) {
-      Alert.alert('提示', '亲, 请输入昵称');
+      Alert.alert('提示', '请输入昵称');
       return;
     }
 
     if(account == undefined || account.length < 1) {
-      Alert.alert('提示', '亲, 请输入账号');
+      Alert.alert('提示', '请输入账号');
       return;
     }
 
     if(pwd == undefined || pwd.length < 1) {
-      Alert.alert('提示', '亲, 请输入密码');
+      Alert.alert('提示', '请输入密码');
       return;
     }
 
     if(confirmPwd == undefined || confirmPwd.length < 1) {
-      Alert.alert('提示', '亲, 请输入确认密码');
+      Alert.alert('提示', '请输入确认密码');
       return;
     }
 
     if(pwd !== confirmPwd) {
-      Alert.alert('提示', '亲, 两次输入密码不一致, 请重新输入');
+      Alert.alert('提示', '两次输入密码不一致, 请重新输入');
       return;
     }
 
@@ -99,7 +99,7 @@ export default class Register extends React.Component {
           <NavigationBar
               title={'注册'}
               titleColor={'#fff'}
-              leftButtonIcon="ios-arrow-round-back"
+              leftButtonIcon="md-arrow-back"
               onLeftButtonPress={this.onBackHandle}
           />
 

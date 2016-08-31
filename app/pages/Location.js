@@ -41,21 +41,17 @@ export default class Location extends React.Component {
   }
 
   componentWillMount() {
-    console.log('componentWillMount');
     this.props = {
         isLoading : true
     };
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
     getCityList((cities) => {
       let ds = new ListView.DataSource({
         rowHasChanged:(r1, r2)=> r1 !== r2,
         sectionHeaderHasChanged:(s1, s2)=> s1!== s2,
       });
-
-      console.log('get cities ok');
 
       // 数据加载完成
       this.props.isLoading = false;
@@ -82,7 +78,7 @@ export default class Location extends React.Component {
 
   renderRow(rowData, sectionId, rowId) {
     return (
-      <TouchableHighlight style={styles.listItemContainer}  underlayColor='rgba(24,36,35,0.1)' onPress={() => this.onPressRow(rowData)}>
+      <TouchableHighlight style={styles.listItemContainer} underlayColor='rgba(24,36,35,0.1)' onPress={() => this.onPressRow(rowData)}>
         <Text style={styles.listItemText}>{rowData}</Text>
       </TouchableHighlight>
     );
@@ -103,7 +99,6 @@ export default class Location extends React.Component {
   }
 
   renderListView() {
-    console.log('renderListView isLoading=' + this.props.isLoading);
     if(!this.props.isLoading) {
       return (
           <View style={gstyles.content}>

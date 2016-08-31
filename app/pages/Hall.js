@@ -21,8 +21,6 @@ export default class Home extends React.Component {
     super(props);
 
     this.onBackHandle = this.onBackHandle.bind(this);
-    this.onForwardHandle = this.onForwardHandle.bind(this);
-
     this.state = {
       city:''
     };
@@ -35,9 +33,6 @@ export default class Home extends React.Component {
         component: Location,
       });
     });
-  };
-
-  onForwardHandle() {
   };
 
   componentDidMount() {
@@ -53,15 +48,11 @@ export default class Home extends React.Component {
   render() {
     return (
         <View style={gstyles.container}>
-
           <NavigationBar
               title={'Test1'}
               leftButtonTitle={this.state.city}
               leftButtonTitleColor={'#fff'}
               onLeftButtonPress={this.onBackHandle}
-              rightButtonTitle={'forward'}
-              rightButtonTitleColor={'#fff'}
-              onRightButtonPress={this.onForwardHandle}
           />
         </View>
     );

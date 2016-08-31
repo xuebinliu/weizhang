@@ -10,7 +10,7 @@ import React from 'react';
 import TabNavigator from 'react-native-tab-navigator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import Home from './Home';
+import Home from './Hall';
 import News from './News';
 import Center from './Center';
 

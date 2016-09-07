@@ -29,7 +29,7 @@ export async function getCurrentCity(callback) {
   try {
     let city = await DeviceStorage.get(SK_CURR_CITY);
     if(city){
-      console.log('from cache city=' + city);
+      console.log(city);
       callback(city);
     } else {
       let response = await fetch(BD_MAP_IP_URL);
@@ -41,22 +41,24 @@ export async function getCurrentCity(callback) {
       // 存储
       DeviceStorage.save(SK_CURR_CITY, city);
 
-      console.log('from baidu city=' + city);
+      console.log(city);
     }
   } catch (error) {
-    console.log('getCurrentCity err=' + error);
+    console.error(error);
     callback('未知');
   }
 }
 
 // 获取城市列表,包含了当前用户所在城市
-export async function getCityList(callback) {
+export function getCityList(callback) {
   try {
-    getCurrentCity((city)=>{
-      CITIES.当前[0]=city;
-      callback(CITIES);
-    });
+    setTimeout(function () {
+      getCurrentCity((city)=>{
+        CITIES.当前[0]=city;
+        callback(CITIES);
+      });
+    }, 0);
   } catch (error) {
-    console.log('getCityList err=' + error);
+    console.error(error);
   }
 }

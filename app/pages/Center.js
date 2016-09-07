@@ -23,7 +23,6 @@ import Feedback from './me/Feedback';
 
 
 export default class Center extends React.Component {
-
   constructor(props) {
     super(props);
 
@@ -39,7 +38,6 @@ export default class Center extends React.Component {
     InteractionManager.runAfterInteractions(() => {
       navigator.push({
         component: Login,
-        name: 'Login'
       });
     });
   }
@@ -50,7 +48,6 @@ export default class Center extends React.Component {
     InteractionManager.runAfterInteractions(() => {
       navigator.push({
         component: Feedback,
-        name: 'Feedback'
       });
     });
   }

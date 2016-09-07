@@ -78,15 +78,18 @@ export default class Location extends React.Component {
 
   renderRow(rowData, sectionId, rowId) {
     return (
-      <TouchableHighlight style={styles.listItemContainer} underlayColor='rgba(24,36,35,0.1)' onPress={() => this.onPressRow(rowData)}>
+      <TouchableHighlight key={`${sectionId}-${rowId}`}
+                          style={styles.listItemContainer}
+                          underlayColor='rgba(24,36,35,0.1)'
+                          onPress={() => this.onPressRow(rowData)}>
         <Text style={styles.listItemText}>{rowData}</Text>
       </TouchableHighlight>
     );
   }
 
-  renderSeparator(sectionID, rowID, adjacentRowHighlighted){
+  renderSeparator(sectionId, rowId, adjacentRowHighlighted){
     return (
-        <View style={gstyles.line}></View>
+        <View key={`${sectionId}-${rowId}`} style={gstyles.line}></View>
     );
   }
 

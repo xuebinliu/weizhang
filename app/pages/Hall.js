@@ -25,7 +25,7 @@ export default class Home extends React.Component {
     this.onClickPublish = this.onClickPublish.bind(this);
 
     this.state = {
-      city:''
+      city:'未知'
     };
   }
 

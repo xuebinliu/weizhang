@@ -7,9 +7,9 @@
   },
   "dependencies": {
     "leancloud-realtime": "^3.2.1",
-    "leancloud-storage": "^1.3.3",
-    "react": "15.2.1",
-    "react-native": "0.31.0",
+    "leancloud-storage": "1.4.0",
+    "react": "~15.3.0",
+    "react-native": "0.32.0",
     "react-native-root-toast": "^1.0.3",
     "react-native-storage": "^0.1.2",
     "react-native-tab-navigator": "^0.3.3",

@@ -9,11 +9,10 @@ import {
     View,
 } from 'react-native';
 
+// import { registerApp } from 'react-native-wechat';
 
 import AV from 'leancloud-storage';
 import {LC_APP_ID, LC_APP_KEY} from './const';
-
-import { registerApp } from 'react-native-wechat';
 
 import {naviGoBack} from './utils/common';
 import Splash from './pages/Splash';
@@ -24,7 +23,6 @@ export default class Root extends React.Component {
   constructor(props) {
     super(props);
 
-    // leancloud
     AV.init({
       appId:LC_APP_ID,
       appKey:LC_APP_KEY
@@ -33,19 +31,20 @@ export default class Root extends React.Component {
     // 微信
     // registerApp('wxb24c445773822c79');
 
-    this.goBack = this.goBack.bind(this);
+    this.onAndroidBack = this.onAndroidBack.bind(this);
     this.renderScene = this.renderScene.bind(this);
   }
 
   componentDidMount() {
-    BackAndroid.addEventListener('hardwareBackPress', this.goBack);
+    // root监听了android back键,其他界面就不需要监听了
+    BackAndroid.addEventListener('hardwareBackPress', this.onAndroidBack);
   }
 
   componentWillUnmount() {
-    BackAndroid.removeEventListener('hardwareBackPress', this.goBack);
+    BackAndroid.removeEventListener('hardwareBackPress', this.onAndroidBack);
   }
 
-  goBack() {
+  onAndroidBack() {
     return naviGoBack(_navigator);
   }
 
@@ -71,7 +70,6 @@ export default class Root extends React.Component {
               renderScene={this.renderScene}
               initialRoute={{
                 component: Splash,
-                name: 'Splash'
               }}
           />
         </View>

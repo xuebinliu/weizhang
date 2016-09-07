@@ -10,12 +10,13 @@ import {
     InteractionManager,
 } from 'react-native';
 
-import gstyles from '../gstyles';
-import NavigationBar from '../widget/TabNavigator';
-
-import {getCurrentCity} from '../utils/common';
-import Location from './Location';
-import Publish from './Publish';
+import {
+    gstyles,
+    NavigationBar,
+    getCurrentCity,
+    Location,
+    Publish,
+} from '../header';
 
 export default class Home extends React.Component {
   constructor(props) {

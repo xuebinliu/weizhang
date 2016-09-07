@@ -4,10 +4,8 @@
 
 
 import DeviceStorage from './Storage';
-import {SK_CURR_CITY} from '../const/StorageKey';
 
-import {BD_MAP_IP_URL} from '../const';
-import {CITIES} from '../const/City';
+import {BD_MAP_IP_URL, SK_CURR_CITY, CITIES} from '../const';
 
 export function naviGoBack(navigator) {
   if (navigator && navigator.getCurrentRoutes().length > 1) {

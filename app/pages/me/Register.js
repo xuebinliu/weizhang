@@ -13,16 +13,16 @@ import{
     Alert,
 } from 'react-native';
 
+import {
+    gstyles,
+    DeviceStorage,
+    NavigationBar,
+    naviGoBack,
+    toastShort,
+} from '../../header';
+
 import AV from 'leancloud-storage';
-
-import NavigationBar from '../../widget/TabNavigator';
-import {naviGoBack} from '../../utils/common';
-
-import DeviceStorage from '../../utils/Storage';
-import {SK_ACCOUNT_INFO} from '../../const/StorageKey';
-
-import gstyles from '../../gstyles';
-import LoadingView from '../../widget/LoadingView';
+import {SK_ACCOUNT_INFO} from '../../const';
 
 let nickName;
 let account;

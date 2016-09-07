@@ -13,17 +13,17 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-import {toastShort} from '../utils/ToastUtil';
+import {
+    toastShort,
+    NavigationBar,
+    gstyles,
+    DeviceStorage,
+    LoadingView,
+    naviGoBack,
+    getCityList,
+} from '../header';
 
-import NavigationBar from '../widget/TabNavigator';
-import {naviGoBack, getCityList} from '../utils/common';
-
-import gstyles from '../gstyles';
-
-import LoadingView from '../widget/LoadingView';
-
-import DeviceStorage from '../utils/Storage';
-import {SK_CURR_CITY} from '../const/StorageKey';
+import {SK_CURR_CITY} from '../const';
 
 export default class Location extends React.Component {
 

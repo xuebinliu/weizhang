@@ -13,13 +13,16 @@ import {
     StyleSheet,
 } from 'react-native';
 
+import {
+    gstyles,
+    DeviceStorage,
+    NavigationBar,
+    toastShort,
+    Login,
+    Feedback,
+} from '../header';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
-import gstyles from '../gstyles';
-import NavigationBar from '../widget/TabNavigator';
-
-import Login from './me/Login';
-import Feedback from './me/Feedback';
 
 
 export default class Center extends React.Component {

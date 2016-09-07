@@ -8,16 +8,18 @@ import{
     TextInput,
 } from 'react-native';
 
+import {
+    gstyles,
+    DeviceStorage,
+    NavigationBar,
+    naviGoBack,
+    toastShort,
+} from '../../header';
+
 import AV from 'leancloud-storage';
 import DeviceInfo from 'react-native-device-info';
+import {SK_ACCOUNT_INFO} from '../../const';
 
-import gstyles from '../../gstyles';
-import DeviceStorage from '../../utils/Storage';
-import {SK_ACCOUNT_INFO} from '../../const/StorageKey';
-
-import NavigationBar from '../../widget/TabNavigator';
-import {naviGoBack} from '../../utils/common';
-import {toastShort} from '../../utils/ToastUtil';
 
 let feedbackContent;
 

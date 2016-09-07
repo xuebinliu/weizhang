@@ -15,17 +15,17 @@ import{
     Alert,
 } from 'react-native';
 
+import {
+    gstyles,
+    DeviceStorage,
+    NavigationBar,
+    naviGoBack,
+    toastShort,
+    Register,
+} from '../../header';
+
 import AV from 'leancloud-storage';
-
-import DeviceStorage from '../../utils/Storage';
-import {SK_ACCOUNT_INFO} from '../../const/StorageKey';
-
-import NavigationBar from '../../widget/TabNavigator';
-import {naviGoBack} from '../../utils/common';
-
-import gstyles from '../../gstyles';
-
-import Register from './Register';
+import {SK_ACCOUNT_INFO} from '../../const';
 
 
 let account;
@@ -95,9 +95,9 @@ export default class Login extends React.Component {
         />
 
         <View style={gstyles.content}>
-          <TextInput onChangeText={(text)=> account=text} multiline={false} style={[gstyles.input, {marginTop: 20}]} placeholder={"邮箱/手机号"}/>
+          <TextInput autoFocus={true} onChangeText={(text)=> account=text} style={[gstyles.input, {marginTop: 20}]} placeholder={"邮箱/手机号"}/>
 
-          <TextInput onChangeText={(text)=> pwd=text} multiline={false} secureTextEntry={true} style={gstyles.input} placeholder={"密码"}/>
+          <TextInput onChangeText={(text)=> pwd=text} secureTextEntry={true} style={gstyles.input} placeholder={"密码"}/>
 
           <TouchableOpacity>
             <Text style={{color:'blue', alignSelf:'flex-end', marginRight:15}}>

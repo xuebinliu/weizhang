@@ -17,7 +17,6 @@ import{
 
 import {
     gstyles,
-    DeviceStorage,
     NavigationBar,
     naviGoBack,
     toastShort,
@@ -25,14 +24,11 @@ import {
 } from '../../header';
 
 import AV from 'leancloud-storage';
-import {SK_ACCOUNT_INFO} from '../../const';
-
 
 let account;
 let pwd;
 
 export default class Login extends React.Component {
-
   constructor(props){
     super(props);
 
@@ -41,26 +37,22 @@ export default class Login extends React.Component {
     this.onLogin = this.onLogin.bind(this);
   }
 
-  onBackHandle() {
+  onBackHandle(){
     const {navigator} = this.props;
     return naviGoBack(navigator);
   };
 
-  // 注册
-  onRightButtonPress() {
+  // register
+  onRightButtonPress(){
     const {navigator} = this.props;
     InteractionManager.runAfterInteractions(() => {
       navigator.push({
         component: Register,
-        name: 'Register'
       });
     });
   };
 
-  // 登陆
-  onLogin() {
-    console.log('account=' + account + ', pwd=' + pwd);
-
+  onLogin(){
     if(account == undefined || account.length < 1) {
       Alert.alert('提示', '亲, 请输入账号');
       return;
@@ -72,19 +64,16 @@ export default class Login extends React.Component {
     }
 
     AV.User.logIn(account, pwd).then(function (loginedUser) {
-      console.log(loginedUser);
-
-      DeviceStorage.save(SK_ACCOUNT_INFO, loginedUser.toString());
-
+      toastShort('亲登陆成功了');
     }, function (error) {
-      console.log(error.toString());
+      console.error(error);
+      toastShort('亲登陆失败了');
     });
   }
 
   render() {
     return (
       <View style={gstyles.container}>
-
         <NavigationBar
             title={'登陆'}
             leftButtonIcon="md-arrow-back"

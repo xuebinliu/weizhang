@@ -4,8 +4,7 @@
  */
 
 // storage key
-export const SK_ACCOUNT_INFO    = "SK_ACCOUNT_INFO";    // 账号信息
-export const SK_CURR_CITY       = "SK_CURR_CITY";       // 用户选择的当前城市
+export const SK_CURR_CITY = "SK_CURR_CITY";       // 用户选择的当前城市
 
 // leancloud key
 export const LC_APP_ID = 'iLQyRNE5pRG1ht5TkvqIua8v-gzGzoHsz';

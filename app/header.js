@@ -15,7 +15,6 @@ import gstyles from './gstyles';
 import DeviceStorage from './utils/Storage';
 import {toastShort, toastLong} from './utils/ToastUtil';
 import {naviGoBack, getCityList, getCurrentCity} from './utils/common';
-import Account from './pages/me/Account';
 
 // widget
 import LoadingView from './widget/LoadingView';
@@ -37,7 +36,6 @@ export {
     toastLong,
     LoadingView,
     NavigationBar,
-    Account,
     naviGoBack,
     getCityList,
     getCurrentCity,

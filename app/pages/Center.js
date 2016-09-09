@@ -22,6 +22,7 @@ import {
     Feedback,
 } from '../header';
 
+import AV from 'leancloud-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
@@ -35,17 +36,19 @@ export default class Center extends React.Component {
     this.onAbout=this.onAbout.bind(this);
   }
 
-  //登录
   onLogin(){
     const {navigator} = this.props;
-    InteractionManager.runAfterInteractions(() => {
+    if (AV.User.current()) {
+      // go user profile
+    }
+    else {
+      // go login
       navigator.push({
         component: Login,
       });
-    });
+    }
   }
 
-  // 反馈
   onFeedback(){
     const {navigator} = this.props;
     InteractionManager.runAfterInteractions(() => {
@@ -66,7 +69,6 @@ export default class Center extends React.Component {
   render() {
     return (
         <View style={gstyles.container}>
-
           <NavigationBar
               title={'Test3'}
               titleColor={'white'}

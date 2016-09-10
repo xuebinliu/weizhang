@@ -23,6 +23,8 @@ import {
     Register,
 } from '../../header';
 
+import ResetPassword from './ResetPassword';
+
 import AV from 'leancloud-storage';
 
 let account;
@@ -35,6 +37,7 @@ export default class Login extends React.Component {
     this.onBackHandle = this.onBackHandle.bind(this);
     this.onRightButtonPress = this.onRightButtonPress.bind(this);
     this.onLogin = this.onLogin.bind(this);
+    this.onReset = this.onReset.bind(this);
   }
 
   onBackHandle(){
@@ -63,11 +66,22 @@ export default class Login extends React.Component {
       return;
     }
 
+    const that = this;
     AV.User.logIn(account, pwd).then(function (loginedUser) {
-      toastShort('亲登陆成功了');
+      toastShort('登陆成功');
+      that.onBackHandle();
     }, function (error) {
       console.error(error);
-      toastShort('亲登陆失败了');
+      toastShort('登陆失败');
+    });
+  }
+
+  onReset(){
+    const {navigator} = this.props;
+    InteractionManager.runAfterInteractions(() => {
+      navigator.push({
+        component: ResetPassword,
+      });
     });
   }
 
@@ -88,7 +102,7 @@ export default class Login extends React.Component {
 
           <TextInput onChangeText={(text)=> pwd=text} secureTextEntry={true} style={gstyles.input} placeholder={"密码"}/>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={this.onReset}>
             <Text style={{color:'blue', alignSelf:'flex-end', marginRight:15}}>
               忘记密码?
             </Text>

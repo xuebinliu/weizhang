@@ -15,14 +15,12 @@ import{
 
 import {
     gstyles,
-    DeviceStorage,
     NavigationBar,
     naviGoBack,
     toastShort,
 } from '../../header';
 
 import AV from 'leancloud-storage';
-import {SK_ACCOUNT_INFO} from '../../const';
 
 let nickName;
 let account;
@@ -30,7 +28,6 @@ let pwd;
 let confirmPwd;
 
 export default class Register extends React.Component {
-
   constructor(props) {
     super(props);
 
@@ -69,28 +66,33 @@ export default class Register extends React.Component {
       return;
     }
 
-    // 新建 AVUser 对象实例
     var user = new AV.User();
-    // 设置用户名
     user.setUsername(account);
-    // 设置密码
     user.setPassword(pwd);
-    // 设置邮箱
-    // if(account.contains("@")) {
-    //   user.setEmail(account);
-    // }
 
+    // 用邮箱注册的账号,直接绑定
+    if(account.includes("@")) {
+      user.setEmail(account);
+    }
+
+    const that = this;
     user.signUp().then(function (loginedUser) {
-      console.log('register success, ' + loginedUser);
-      // 注册成功
+      // register successful
+      console.log(JSON.stringify(loginedUser));
 
-      DeviceStorage.save(SK_ACCOUNT_INFO, loginedUser);
-
+      toastShort('亲注册成功,请登录');
+      that.onBackHandle();
     }, (function (error) {
-      console.log('register faild, ' + error);
+      console.log(JSON.stringify(error));
 
+      if(error.code === 202) {
+        toastShort('用户名重复');
+      } else if(error.code === 203) {
+        toastShort('邮箱重复');
+      } else if(error.code === 214) {
+        toastShort('手机号重复');
+      }
     }));
-
   }
 
   render() {

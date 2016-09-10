@@ -9,6 +9,7 @@ import Login from './pages/me/Login';
 import Feedback from './pages/me/Feedback';
 import Location from './pages/Location';
 import Publish from './pages/Publish';
+import Profile from './pages/me/Profile';
 
 // utils
 import gstyles from './gstyles';
@@ -29,6 +30,7 @@ export {
     Feedback,
     Location,
     Publish,
+    Profile,
 
     gstyles,
     DeviceStorage,

@@ -20,6 +20,7 @@ import {
     toastShort,
     Login,
     Feedback,
+    Profile,
 } from '../header';
 
 import AV from 'leancloud-storage';
@@ -40,6 +41,9 @@ export default class Center extends React.Component {
     const {navigator} = this.props;
     if (AV.User.current()) {
       // go user profile
+      navigator.push({
+        component: Profile,
+      });
     }
     else {
       // go login

@@ -18,11 +18,12 @@ export default gstyles = StyleSheet.create({
   content:{
     flex:1,
     marginTop:44,
+    backgroundColor:'whitesmoke',
   },
 
   // list item
   listItem:{
-    backgroundColor:'whitesmoke',
+    backgroundColor:'white',
   },
 
   input: {

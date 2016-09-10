@@ -107,13 +107,13 @@ export default class Register extends React.Component {
 
           <View style={gstyles.content}>
 
-            <TextInput onChangeText={(text) => nickName=text} style={[gstyles.input, {marginTop: 20}]} placeholder={"昵称"}/>
+            <TextInput onChangeText={(text)=> nickName=text} style={[gstyles.input, {marginTop: 20}]} placeholder={"昵称"}/>
 
-            <TextInput onChangeText={(text) => account=text} style={gstyles.input} placeholder={"账号(邮箱/手机号)"}/>
+            <TextInput onChangeText={(text)=> account=text} style={gstyles.input} placeholder={"账号(邮箱/手机号)"}/>
 
-            <TextInput onChangeText={(text) => pwd=text} secureTextEntry={true} style={gstyles.input} placeholder={"密码"}/>
+            <TextInput onChangeText={(text)=> pwd=text} secureTextEntry={true} style={gstyles.input} placeholder={"密码"}/>
 
-            <TextInput onChangeText={(text) => confirmPwd=text} secureTextEntry={true} style={gstyles.input} placeholder={"确认密码"}/>
+            <TextInput onChangeText={(text)=> confirmPwd=text} secureTextEntry={true} style={gstyles.input} placeholder={"确认密码"}/>
 
             <TouchableOpacity onPress={this.onRegister} style={[gstyles.button, {marginTop:30}]}>
               <Text style={{color:'white'}} >注册</Text>

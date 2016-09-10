@@ -31,10 +31,30 @@ export default class Center extends React.Component {
   constructor(props) {
     super(props);
 
-    this.onLogin=this.onLogin.bind(this);
-    this.onFeedback=this.onFeedback.bind(this);
-    this.onVersion=this.onVersion.bind(this);
-    this.onAbout=this.onAbout.bind(this);
+    this.onLogin = this.onLogin.bind(this);
+    this.onFeedback = this.onFeedback.bind(this);
+    this.onVersion = this.onVersion.bind(this);
+    this.onAbout = this.onAbout.bind(this);
+    this.loginCallback = this.loginCallback.bind(this);
+
+    this.setUser();
+  }
+
+  setUser = ()=>{
+    let user = AV.User.current();
+    let name='未登录';
+    if(user) {
+      name = user.getUsername();
+    }
+
+    this.state = {
+      nickName:name
+    };
+  };
+
+  // login success callback
+  loginCallback(){
+    this.setUser();
   }
 
   onLogin(){
@@ -49,6 +69,7 @@ export default class Center extends React.Component {
       // go login
       navigator.push({
         component: Login,
+        callback: this.loginCallback,
       });
     }
   }
@@ -83,7 +104,7 @@ export default class Center extends React.Component {
               <View style={[gstyles.listItem, {flexDirection:'row', height:70, marginTop:15, position:'relative'}]}>
                 <Ionicons name={"md-contact"} size={60} color="coral" style={{marginLeft:10, alignSelf:'center'}}/>
                 <View style={{flexDirection:'column', justifyContent:'center', marginLeft:10}}>
-                  <Text> 用户名 </Text>
+                  <Text>{this.state.nickName}</Text>
                   <Text> 简介 </Text>
                 </View>
 
@@ -152,7 +173,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
     flexDirection:'row',
     height:40,
-    paddingLeft:10,
+    paddingLeft:15,
     position:'relative'
   }
 });

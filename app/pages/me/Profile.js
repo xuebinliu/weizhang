@@ -32,7 +32,17 @@ export default class Profile extends React.Component {
 
   constructor(props){
     super(props);
+
+    this.state = {
+      userinfo:AV.User.current(),
+    }
   }
+
+  onChangeProfile= ()=>{
+    this.setState({
+      userinfo:AV.User.current(),
+    });
+  };
 
   onBackHandle= ()=>{
     const {navigator} = this.props;
@@ -69,6 +79,7 @@ export default class Profile extends React.Component {
     const {navigator} = this.props;
     navigator.push({
       component: ModifySex,
+      callback:this.onChangeProfile
     });
   };
 
@@ -77,6 +88,19 @@ export default class Profile extends React.Component {
     navigator.push({
       component: ModifyAge,
     });
+  };
+
+  getSex= ()=>{
+    let sex = this.state.userinfo.get('sex');
+    if(sex === 0) {
+      return '男';
+    } else if(sex === 1){
+      return '女';
+    } else if(sex ===2){
+      return '保密';
+    } else {
+      return '未设置';
+    }
   };
 
   render(){
@@ -104,7 +128,7 @@ export default class Profile extends React.Component {
             <View style={[gstyles.listItem, styles.item]}>
               <Text>昵称</Text>
               <View style={{flex:1, flexDirection:'row', marginRight:10, justifyContent:'flex-end'}}>
-                <Text>nickname</Text>
+                <Text>{this.state.userinfo.getUsername()}</Text>
               </View>
               <Ionicons name="ios-arrow-forward" size={20} color="gray"/>
             </View>
@@ -115,7 +139,7 @@ export default class Profile extends React.Component {
             <View style={[gstyles.listItem, styles.item]}>
               <Text>性别</Text>
               <View style={{flex:1, flexDirection:'row', marginRight:10, justifyContent:'flex-end'}}>
-                <Text>未设置</Text>
+                <Text>{this.getSex()}</Text>
               </View>
               <Ionicons name="ios-arrow-forward" size={20} color="gray"/>
             </View>

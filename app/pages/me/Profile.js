@@ -1,5 +1,6 @@
 /**
  * Created by free on 9/9/16.
+ * 个人信息展示页面
  */
 import React from 'react';
 import{
@@ -8,7 +9,6 @@ import{
     TouchableOpacity,
     Image,
     ScrollView,
-    TextInput,
     StyleSheet,
 } from 'react-native';
 
@@ -21,6 +21,12 @@ import {
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AV from 'leancloud-storage';
+
+import ModifyAge from './ModifyAge';
+import ModifyEmail from './ModifyEmail';
+import ModifyHead from './ModifyHead';
+import ModifyName from './ModifyName';
+import ModifySex from './ModifySex';
 
 export default class Profile extends React.Component {
 
@@ -39,23 +45,38 @@ export default class Profile extends React.Component {
   };
 
   onModifyHead= ()=>{
-
+    const {navigator} = this.props;
+    navigator.push({
+      component: ModifyHead,
+    });
   };
 
   onModifyName= ()=>{
-
+    const {navigator} = this.props;
+    navigator.push({
+      component: ModifyName,
+    });
   };
 
   onModifyEMail= ()=>{
-
+    const {navigator} = this.props;
+    navigator.push({
+      component: ModifyEmail,
+    });
   };
 
   onModifySex= ()=>{
-
+    const {navigator} = this.props;
+    navigator.push({
+      component: ModifySex,
+    });
   };
 
   onModifyAge= ()=>{
-
+    const {navigator} = this.props;
+    navigator.push({
+      component: ModifyAge,
+    });
   };
 
   render(){

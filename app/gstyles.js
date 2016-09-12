@@ -18,12 +18,12 @@ export default gstyles = StyleSheet.create({
   content:{
     flex:1,
     marginTop:44,
-    backgroundColor:'whitesmoke',
+    backgroundColor:'#ececec',
   },
 
   // list item
   listItem:{
-    backgroundColor:'white',
+    backgroundColor:'#f6f6f6',
   },
 
   input: {
@@ -54,7 +54,11 @@ export default gstyles = StyleSheet.create({
     backgroundColor:'forestgreen',
     justifyContent:'center',
     alignItems:'center',
+  },
 
+  // 文字颜色
+  text:{
+    color:'#595959',
   },
 
 });

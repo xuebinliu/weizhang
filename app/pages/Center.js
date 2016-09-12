@@ -107,17 +107,47 @@ export default class Center extends React.Component {
                   <Text>{this.state.nickName}</Text>
                   <Text> 简介 </Text>
                 </View>
-
                 <View style={{flexDirection:'row', flex:1, justifyContent:'flex-end'}}>
                   <Ionicons name="ios-arrow-forward" size={20} color="gray" style={{alignSelf:'center', marginRight:15}}/>
                 </View>
-
               </View>
             </TouchableOpacity>
+            <View style={gstyles.line}/>
+
+            <View style={[gstyles.listItem, {flexDirection:'row', paddingVertical:10}]}>
+              <TouchableOpacity style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                <View style={{flexDirection:'column'}}>
+                  <Text>红豆</Text>
+                  <Text>100</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                <View style={{flexDirection:'column'}}>
+                  <Text>动态</Text>
+                  <Text>100</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                <View style={{flexDirection:'column'}}>
+                  <Text>粉丝</Text>
+                  <Text>100</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                <View style={{flexDirection:'column'}}>
+                  <Text>关注</Text>
+                  <Text>100</Text>
+                </View>
+              </TouchableOpacity>
+
+            </View>
 
             <TouchableOpacity onPress={() => {this.onVersion()}}>
               <View style={[gstyles.listItem, styles.item, {marginTop:15, position:'relative'}]}>
-                <Text>已发单</Text>
+                <Text>相册</Text>
                 <View style={{flexDirection:'row', flex:1, justifyContent:'flex-end'}}>
                   <Ionicons name="ios-arrow-forward" size={20} color="gray" style={{alignSelf:'center', marginRight:15}}/>
                 </View>
@@ -126,7 +156,7 @@ export default class Center extends React.Component {
             <View style={gstyles.noMarginline}/>
             <TouchableOpacity onPress={() => {this.onVersion()}}>
               <View style={[gstyles.listItem, styles.item,]}>
-                <Text>已接单</Text>
+                <Text>充值</Text>
                 <View style={{flexDirection:'row', flex:1, justifyContent:'flex-end'}}>
                   <Ionicons name="ios-arrow-forward" size={20} color="gray" style={{alignSelf:'center', marginRight:15}}/>
                 </View>

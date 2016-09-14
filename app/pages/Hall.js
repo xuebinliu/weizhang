@@ -69,6 +69,9 @@ export default class Home extends React.Component {
               onRightButtonPress={this.onClickPublish}
               rightButtonIcon={'md-add'}
           />
+
+          <View style={[gstyles.content]}>
+          </View>
         </View>
     );
   }

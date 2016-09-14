@@ -37,19 +37,26 @@ export default class Center extends React.Component {
     this.onAbout = this.onAbout.bind(this);
     this.loginCallback = this.loginCallback.bind(this);
 
+    this.state = {
+      nickName:''
+    };
+  }
+
+  componentDidMount() {
     this.setUser();
   }
 
   setUser = ()=>{
-    let user = AV.User.current();
-    let name='未登录';
-    if(user) {
-      name = user.getUsername();
-    }
+    AV.User.currentAsync().then((currentUser)=>{
+      let name='未登录';
+      if(currentUser) {
+        name = currentUser.getUsername();
+      }
 
-    this.state = {
-      nickName:name
-    };
+      this.setState({
+        nickName:name
+      });
+    });
   };
 
   // login success callback
@@ -59,19 +66,19 @@ export default class Center extends React.Component {
 
   onLogin(){
     const {navigator} = this.props;
-    if (AV.User.current()) {
-      // go user profile
-      navigator.push({
-        component: Profile,
-      });
-    }
-    else {
-      // go login
-      navigator.push({
-        component: Login,
-        callback: this.loginCallback,
-      });
-    }
+    AV.User.currentAsync().then((currentUser)=>{
+      if(currentUser) {
+        navigator.push({
+          component: Profile,
+        });
+      } else {
+        // go login
+        navigator.push({
+          component: Login,
+          callback: this.loginCallback,
+        });
+      }
+    });
   }
 
   onFeedback(){
@@ -207,5 +214,3 @@ const styles = StyleSheet.create({
     position:'relative'
   }
 });
-
-

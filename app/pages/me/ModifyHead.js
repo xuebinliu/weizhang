@@ -31,7 +31,7 @@ export default class ModifyHead extends React.Component {
     super(props);
 
     this.state = {
-      avatarSource: ''
+      avatarSource: {}
     };
   }
 
@@ -41,12 +41,11 @@ export default class ModifyHead extends React.Component {
   };
 
   onRightButtonPress= ()=>{
-
     var options = {
-      title: 'Select Avatar',
-      customButtons: [
-        {name: 'fb', title: 'Choose Photo from Facebook'},
-      ],
+      title: '选择头像',
+      cancelButtonTitle:'取消',
+      takePhotoButtonTitle:'拍照',
+      chooseFromLibraryButtonTitle:'从相册选择',
       storageOptions: {
         skipBackup: true,
         path: 'images'
@@ -62,23 +61,30 @@ export default class ModifyHead extends React.Component {
       else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       }
-      else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      }
       else {
         // You can display the image using either data...
         const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
 
         // or a reference to the platform specific asset location
-        if (Platform.OS === 'ios') {
-          const source = {uri: response.uri.replace('file://', ''), isStatic: true};
-        } else {
-          const source = {uri: response.uri, isStatic: true};
-        }
+        // let source;
+        // if (Platform.OS === 'ios') {
+        //   source = {uri: response.uri.replace('file://', ''), isStatic: true};
+        // } else {
+        //   source = {uri: response.uri, isStatic: true};
+        // }
 
         this.setState({
           avatarSource: source
         });
+
+        // upload
+        // let avFile = new AV.File(response.fileName, {base64:response.data}, response.type);
+        // avFile.save().then(function (obj) {
+        //   console.log(obj);
+        // }, function (error) {
+        //   console.error(error);
+        // });
+
       }
     });
 
@@ -94,6 +100,11 @@ export default class ModifyHead extends React.Component {
               rightButtonIcon="ios-more"
               onRightButtonPress={this.onRightButtonPress}
           />
+
+          <View style={[gstyles.content, ]}>
+
+            <Image source={this.state.avatarSource}></Image>
+          </View>
 
 
         </View>

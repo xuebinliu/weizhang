@@ -37,7 +37,6 @@ export default class Location extends React.Component {
     this.onPressRow = this.onPressRow.bind(this);
 
     this.renderListView = this.renderListView.bind(this);
-
   }
 
   componentWillMount() {

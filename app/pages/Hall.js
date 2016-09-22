@@ -3,7 +3,6 @@
  *
  * 大厅页面
  */
-
 import React from 'react';
 import {
     View,
@@ -49,7 +48,7 @@ export default class Home extends React.Component {
   }
 
   componentDidMount(){
-    getCurrentCity((city)=>{
+    getCurrentCity().then((city)=>{
       if(city !== 'error') {
         this.setState({
           city:city

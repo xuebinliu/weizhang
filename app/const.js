@@ -3,6 +3,13 @@
  * 常量定义
  */
 
+
+export const IC_NAV_BACK  = 'md-arrow-back';      // 后退
+export const IC_NAV_CHECK = 'md-checkmark';       // 确认
+
+
+
+
 // storage key
 export const SK_CURR_CITY = "SK_CURR_CITY";       // 用户选择的当前城市
 

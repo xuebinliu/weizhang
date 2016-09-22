@@ -1,21 +1,15 @@
 /**
  * Created by free on 8/16/16.
- *
  * 闪屏
  */
-
-
 import React from 'react';
 import {
     Dimensions,
     Image,
-    InteractionManager,
     View,
 } from 'react-native';
 
 import Main from './MainContainer';
-
-var {height, width} = Dimensions.get('window');
 
 export default class Splash extends React.Component {
   constructor(props) {
@@ -25,11 +19,8 @@ export default class Splash extends React.Component {
   componentDidMount() {
     const {navigator} = this.props;
     this.timer = setTimeout(() => {
-      InteractionManager.runAfterInteractions(() => {
-        navigator.resetTo({
-          component: Main,
-          name: 'Main'
-        });
+      navigator.resetTo({
+        component: Main,
       });
     }, 1000);
   }
@@ -39,10 +30,12 @@ export default class Splash extends React.Component {
   }
 
   render() {
+    let {height, width} = Dimensions.get('window');
     return (
         <View style={{flex:1}}>
           <Image
-              style={{flex:1,width:width,height:height}}
+              style={{width:width,height:height}}
+              resizeMode={'stretch'}
               source={require('../img/ic_welcome.jpg')}
           />
         </View>

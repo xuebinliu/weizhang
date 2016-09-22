@@ -1,7 +1,6 @@
 /**
  * Created by free on 8/16/16.
  */
-
 import React from 'react';
 import {
     Navigator,

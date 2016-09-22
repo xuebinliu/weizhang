@@ -8,13 +8,19 @@
 import React from 'react';
 import {
     View,
-    InteractionManager,
 } from 'react-native';
 
-import {naviGoBack} from '../utils/common';
+import {
+    toastShort,
+    NavigationBar,
+    gstyles,
+    DeviceStorage,
+    LoadingView,
+    naviGoBack,
+    getCityList,
+} from '../header';
 
-import gstyles from '../gstyles';
-import NavigationBar from '../widget/TabNavigator';
+import * as Const from '../const';
 
 
 export default class Publish extends React.Component{
@@ -43,7 +49,7 @@ export default class Publish extends React.Component{
               leftButtonIcon="md-arrow-back"
               onLeftButtonPress={this.onBackHandle}
               onRightButtonPress={this.onClickPublish}
-              rightButtonIcon={'md-checkmark'}
+              rightButtonIcon={Const.IC_NAV_CHECK}
           />
 
           <View style={gstyles.content}>

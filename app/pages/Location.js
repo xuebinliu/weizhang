@@ -30,7 +30,6 @@ export default class Location extends React.Component {
   constructor(props){
     super(props);
 
-    this.onBackHandle = this.onBackHandle.bind(this);
     this.renderRow = this.renderRow.bind(this);
     this.renderSectionHeader = this.renderSectionHeader.bind(this);
     this.renderSeparator = this.renderSeparator.bind(this);
@@ -62,7 +61,7 @@ export default class Location extends React.Component {
     });
   }
 
-  onBackHandle() {
+  onBackHandle=()=> {
     const {navigator} = this.props;
     return naviGoBack(navigator);
   };

@@ -4,7 +4,6 @@
  * 主框架界面
  *
  */
-
 import React from 'react';
 
 import TabNavigator from 'react-native-tab-navigator';
@@ -62,4 +61,3 @@ export default class Main extends React.Component {
     );
   }
 }
-

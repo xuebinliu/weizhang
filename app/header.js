@@ -23,7 +23,7 @@ import {naviGoBack, getCityList, getCurrentCity} from './utils/common';
 // widget
 import LoadingView from './widget/LoadingView';
 import NavigationBar from './widget/TabNavigator';
-
+import ImagePicker from './widget/ImagePicker';
 
 
 
@@ -34,15 +34,17 @@ export {
     Location,
     Publish,
     Profile,
-
     UserProfile,
 
     gstyles,
     DeviceStorage,
     toastShort,
     toastLong,
+
     LoadingView,
     NavigationBar,
+    ImagePicker,
+
     naviGoBack,
     getCityList,
     getCurrentCity,

@@ -1,8 +1,6 @@
 /**
  * Created by free on 8/16/16.
  */
-
-
 import DeviceStorage from './Storage';
 
 import {BD_MAP_IP_URL, SK_CURR_CITY, CITIES} from '../const';
@@ -23,27 +21,25 @@ export function isEmptyObject(obj) {
 }
 
 // 根据当前IP获取所在城市
-export async function getCurrentCity(callback) {
+export async function getCurrentCity() {
   try {
     let city = await DeviceStorage.get(SK_CURR_CITY);
     if(city){
       console.log(city);
-      callback(city);
+      return city;
     } else {
       let response = await fetch(BD_MAP_IP_URL);
       let json = await response.json();
 
       let city = json.content.address_detail.city;
-      callback(city);
-
       // 存储
       DeviceStorage.save(SK_CURR_CITY, city);
-
       console.log(city);
+      return city;
     }
   } catch (error) {
     console.error(error);
-    callback('未知');
+    return '未知';
   }
 }
 
@@ -51,7 +47,7 @@ export async function getCurrentCity(callback) {
 export function getCityList(callback) {
   try {
     setTimeout(function () {
-      getCurrentCity((city)=>{
+      getCurrentCity().then((city)=>{
         CITIES.当前[0]=city;
         callback(CITIES);
       });

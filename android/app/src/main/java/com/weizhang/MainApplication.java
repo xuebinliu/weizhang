@@ -9,12 +9,14 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.theweflex.react.WeChatPackage;
-import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.*;
+
 
 import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
+  private static final String TAG = "MainApplication";
 
   @Override
   public void onCreate() {
@@ -22,6 +24,7 @@ public class MainApplication extends Application implements ReactApplication {
 
       // 初始化参数依次为 this, AppId, AppKey
       AVOSCloud.initialize(this,"iLQyRNE5pRG1ht5TkvqIua8v-gzGzoHsz","yUTGYrkMhb5XWyrnSnH0EGVq");
+      AVAnalytics.enableCrashReport(this, true);
   }
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {

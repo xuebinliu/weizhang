@@ -48,8 +48,8 @@ export default class ImagePicker extends React.Component{
       selected: images,
     });
 
-    console.log(images);
-    console.log(current);
+    const {route} = this.props;
+    route.callback(current);
   };
 
   render(){

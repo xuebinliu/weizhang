@@ -12,6 +12,7 @@ import{
     ScrollView,
     StyleSheet,
     Platform,
+    NativeModules,
 } from 'react-native';
 
 import {
@@ -25,13 +26,15 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AV from 'leancloud-storage';
 
+let uri;
+
 export default class ModifyHead extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       avatarSource: {}
-    };
+    }
   }
 
   onBackHandle= ()=>{
@@ -40,36 +43,46 @@ export default class ModifyHead extends React.Component {
   };
 
   onRightButtonPress= ()=>{
-
     const {navigator} = this.props;
     navigator.push({
       component:ImagePicker,
+      callback:this.onPickerImages
     });
-
-    // // upload
-    // let avFile = new AV.File(response.fileName, {base64:response.data}, response.type);
-    // avFile.save().then(function (obj) {
-    //   console.log(obj);
-    // }, function (error) {
-    //   console.error(error);
-    // });
-
   };
 
-  render() {
+  onPickerImages= (image)=>{
+    console.log("pickerImages", image);
+    this.setState({
+      avatarSource:image,
+    });
+  };
+
+  renderAvatar= ()=>{
+    // console.log("avatarSource", this.state.avatarSource);
+    // if(this.state.avatarSource.uri) {
+    //   return <Image source={{uri:this.state.avatarSource}}
+    //                 style={{height: this.state.avatarSource.height, width: this.state.avatarSource.width}}/>;
+    // } else {
+    //   return <Image source={require('../../img/ic_setting_f.png')}/>;
+    // }
+  };
+
+  render(){
     return (
         <View style={gstyles.container}>
           <NavigationBar
               title={'修改头像'}
               leftButtonIcon="md-arrow-back"
               onLeftButtonPress={this.onBackHandle}
-              rightButtonIcon="ios-more"
+              rightButtonTitle={'选择'}
               onRightButtonPress={this.onRightButtonPress}
           />
 
           <View style={[gstyles.content, ]}>
 
-            <Image source={this.state.avatarSource}></Image>
+            {this.renderAvatar()}
+
+
           </View>
 
 

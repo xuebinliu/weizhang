@@ -1,10 +1,9 @@
 package com.weizhang;
 
 import android.app.Application;
-import android.util.Log;
 
+import android.util.Log;
 import com.facebook.react.ReactApplication;
-import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -16,34 +15,46 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
-  private static final String TAG = "MainApplication";
+    private static final String TAG = "MainApplication";
 
-  @Override
-  public void onCreate() {
-      super.onCreate();
-
-      // 初始化参数依次为 this, AppId, AppKey
-      AVOSCloud.initialize(this,"iLQyRNE5pRG1ht5TkvqIua8v-gzGzoHsz","yUTGYrkMhb5XWyrnSnH0EGVq");
-      AVAnalytics.enableCrashReport(this, true);
-  }
-
-  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-    @Override
-    protected boolean getUseDeveloperSupport() {
-      return BuildConfig.DEBUG;
-    }
+    private static MainApplication instance;
 
     @Override
-    protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-          new WeChatPackage()
-      );
-    }
-  };
+    public void onCreate() {
+        super.onCreate();
+        Log.d(TAG, "onCreate start");
 
-  @Override
-  public ReactNativeHost getReactNativeHost() {
-      return mReactNativeHost;
-  }
+        // 初始化参数依次为 this, AppId, AppKey
+        AVOSCloud.initialize(this,"iLQyRNE5pRG1ht5TkvqIua8v-gzGzoHsz","yUTGYrkMhb5XWyrnSnH0EGVq");
+        AVAnalytics.enableCrashReport(this, true);
+
+        instance = this;
+
+        Log.d(TAG, "onCreate end");
+    }
+
+    public static MainApplication getInstance(){
+        return instance;
+    }
+
+    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+      @Override
+      protected boolean getUseDeveloperSupport() {
+        return BuildConfig.DEBUG;
+      }
+
+      @Override
+      protected List<ReactPackage> getPackages() {
+        return Arrays.<ReactPackage>asList(
+            new MainReactPackage(),
+            new WeChatPackage(),
+            new RNPackages()
+        );
+      }
+    };
+
+    @Override
+    public ReactNativeHost getReactNativeHost() {
+        return mReactNativeHost;
+    }
 }

@@ -4,8 +4,6 @@
 import React from 'react';
 import {
     ActivityIndicator,
-    Text,
-    StyleSheet,
     View,
     Image,
 } from 'react-native';
@@ -19,12 +17,12 @@ import {
 import * as Const from '../const';
 import CameraRollPicker from 'react-native-camera-roll-picker';
 
+let currentImage;
+
 export default class ImagePicker extends React.Component{
 
   constructor(props) {
     super(props);
-
-    console.log('ImagePicker constructor');
 
     this.state = {
       num: 0,
@@ -38,7 +36,10 @@ export default class ImagePicker extends React.Component{
   };
 
   onRightButtonPress= ()=>{
+    this.onBackHandle();
 
+    const {route} = this.props;
+    route.callback(currentImage);
   };
 
   getSelectedImages(images, current){
@@ -48,8 +49,7 @@ export default class ImagePicker extends React.Component{
       selected: images,
     });
 
-    const {route} = this.props;
-    route.callback(current);
+    currentImage = current;
   };
 
   render(){

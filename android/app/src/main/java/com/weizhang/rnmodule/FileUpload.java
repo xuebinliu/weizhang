@@ -40,9 +40,13 @@ public class FileUpload extends ReactContextBaseJavaModule {
                 @Override
                 public void done(AVException e) {
                     // 成功或失败处理...
-                    Log.d(getName(), file.getUrl());//返回一个唯一的 Url 地址
-
-                    callback.invoke("ok");
+                    if(e == null) {
+                        // 成功
+                        callback.invoke(true, file.getUrl());
+                    } else {
+                        // 失败
+                        callback.invoke(false, "");
+                    }
                 }
             }, new ProgressCallback() {
                 @Override

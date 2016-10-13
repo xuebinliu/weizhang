@@ -23,11 +23,6 @@ import {
     ImagePicker,
 } from '../../header';
 
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import AV from 'leancloud-storage';
-
-let uri;
-
 export default class ModifyHead extends React.Component {
   constructor(props) {
     super(props);
@@ -58,13 +53,21 @@ export default class ModifyHead extends React.Component {
   };
 
   renderAvatar= ()=>{
-    // console.log("avatarSource", this.state.avatarSource);
-    // if(this.state.avatarSource.uri) {
-    //   return <Image source={{uri:this.state.avatarSource}}
-    //                 style={{height: this.state.avatarSource.height, width: this.state.avatarSource.width}}/>;
-    // } else {
-    //   return <Image source={require('../../img/ic_setting_f.png')}/>;
-    // }
+    if(this.state.avatarSource.uri) {
+      return <Image source={{uri:this.state.avatarSource.uri}}
+                    style={{height: this.state.avatarSource.height, width: this.state.avatarSource.width}}/>;
+    } else {
+      return <Image source={require('../../img/ic_setting_f.png')}/>;
+    }
+  };
+
+  // 提交头像
+  commit= ()=> {
+    console.log('uploadFile start');
+    NativeModules.FileUpload.uploadFile(new String(this.state.avatarSource.uri), function (error, data) {
+      console.log('uploadFile', error, data);
+      toastShort('头像上传成功');
+    })
   };
 
   render(){
@@ -75,6 +78,7 @@ export default class ModifyHead extends React.Component {
               leftButtonIcon="md-arrow-back"
               onLeftButtonPress={this.onBackHandle}
               rightButtonTitle={'选择'}
+              rightButtonTitleColor={'white'}
               onRightButtonPress={this.onRightButtonPress}
           />
 
@@ -82,6 +86,9 @@ export default class ModifyHead extends React.Component {
 
             {this.renderAvatar()}
 
+            <TouchableOpacity onPress={this.commit} style={[gstyles.button, {marginTop:30}]}>
+              <Text style={{color:'white'}}>提交</Text>
+            </TouchableOpacity>
 
           </View>
 

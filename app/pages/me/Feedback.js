@@ -17,9 +17,7 @@ import {
 } from '../../header';
 
 import AV from 'leancloud-storage';
-import DeviceInfo from 'react-native-device-info';
 import {SK_ACCOUNT_INFO} from '../../const';
-
 
 let feedbackContent;
 
@@ -45,11 +43,11 @@ export default class Feedback extends React.Component {
 
     feedback.set('account', DeviceStorage.get(SK_ACCOUNT_INFO));
     feedback.set('content', feedbackContent);
-    feedback.set('manufacturer', DeviceInfo.getManufacturer());
-    feedback.set('system', DeviceInfo.getSystemName());
-    feedback.set('deviceVersion', DeviceInfo.getSystemVersion());
-    feedback.set('deviceModel', DeviceInfo.getModel());
-    feedback.set('appVersion', DeviceInfo.getVersion());
+    // feedback.set('manufacturer', DeviceInfo.getManufacturer());
+    // feedback.set('system', DeviceInfo.getSystemName());
+    // feedback.set('deviceVersion', DeviceInfo.getSystemVersion());
+    // feedback.set('deviceModel', DeviceInfo.getModel());
+    // feedback.set('appVersion', DeviceInfo.getVersion());
 
     const that = this;
     feedback.save().then(function (success) {

@@ -1,7 +1,6 @@
 package com.weizhang;
 
 import com.facebook.react.ReactActivity;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.avos.avoscloud.*;
 
 public class MainActivity extends ReactActivity {

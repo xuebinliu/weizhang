@@ -28,6 +28,8 @@ import ModifyHead from './ModifyHead';
 import ModifyName from './ModifyName';
 import ModifySex from './ModifySex';
 
+import ImagePicker from 'react-native-image-crop-picker';
+
 export default class Profile extends React.Component {
 
   constructor(props){
@@ -55,10 +57,18 @@ export default class Profile extends React.Component {
   };
 
   onModifyHead= ()=>{
-    const {navigator} = this.props;
-    navigator.push({
-      component: ModifyHead,
+    // const {navigator} = this.props;
+    // navigator.push({
+    //   component: ModifyHead,
+    // });
+    ImagePicker.openPicker({
+      width: 400,
+      height: 400,
+      cropping: true
+    }).then(image => {
+      console.log(image);
     });
+
   };
 
   onModifyName= ()=>{

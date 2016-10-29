@@ -32,7 +32,7 @@ export default gstyles = StyleSheet.create({
     color:'#777',
   },
 
-  // 分割线
+  // divider line with margin
   line:{
     height:1,
     backgroundColor:'#dddddd',
@@ -40,7 +40,7 @@ export default gstyles = StyleSheet.create({
     marginRight:8,
   },
 
-  // 分割线
+  // no margin divider line
   noMarginline:{
     height:1,
     backgroundColor:'#dddddd',

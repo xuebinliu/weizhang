@@ -26,7 +26,6 @@ import {
 import AV from 'leancloud-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-
 export default class Center extends React.Component {
   constructor(props) {
     super(props);
@@ -48,6 +47,7 @@ export default class Center extends React.Component {
 
   setUser = ()=>{
     AV.User.currentAsync().then((currentUser)=>{
+      console.log('setUser', currentUser);
       let name='未登录';
       if(currentUser) {
         name = currentUser.getUsername();
@@ -61,6 +61,7 @@ export default class Center extends React.Component {
 
   // login success callback
   loginCallback(){
+    console.log('loginCallback');
     this.setUser();
   }
 

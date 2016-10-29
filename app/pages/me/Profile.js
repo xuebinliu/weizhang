@@ -19,16 +19,14 @@ import {
     toastShort,
 } from '../../header';
 
+import ImagePicker from 'react-native-image-crop-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AV from 'leancloud-storage';
 
 import ModifyAge from './ModifyAge';
 import ModifyEmail from './ModifyEmail';
-import ModifyHead from './ModifyHead';
 import ModifyName from './ModifyName';
 import ModifySex from './ModifySex';
-
-import ImagePicker from 'react-native-image-crop-picker';
 
 export default class Profile extends React.Component {
 
@@ -57,18 +55,22 @@ export default class Profile extends React.Component {
   };
 
   onModifyHead= ()=>{
-    // const {navigator} = this.props;
-    // navigator.push({
-    //   component: ModifyHead,
-    // });
     ImagePicker.openPicker({
-      width: 400,
-      height: 400,
+      width: 80,
+      height: 80,
       cropping: true
-    }).then(image => {
-      console.log(image);
-    });
+    }).then((image)=>{
+      console.log("openPicker", image);
 
+      // display loading dialog
+
+      // save to server via native
+
+      // callback rn to refresh head avatar
+
+      // disappear loading dialog
+      
+    });
   };
 
   onModifyName= ()=>{

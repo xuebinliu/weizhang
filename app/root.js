@@ -15,6 +15,7 @@ import {LC_APP_ID, LC_APP_KEY} from './const';
 
 import {naviGoBack} from './utils/common';
 import Splash from './pages/Splash';
+import BusyIndicator from './widget/BusyIndicator';
 
 let _navigator;
 
@@ -71,6 +72,8 @@ export default class Root extends React.Component {
                 component: Splash,
               }}
           />
+
+          <BusyIndicator/>
         </View>
     );
   }

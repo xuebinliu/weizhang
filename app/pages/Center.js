@@ -11,6 +11,7 @@ import {
     InteractionManager,
     TouchableOpacity,
     StyleSheet,
+    Image,
 } from 'react-native';
 
 import {
@@ -34,10 +35,11 @@ export default class Center extends React.Component {
     this.onFeedback = this.onFeedback.bind(this);
     this.onVersion = this.onVersion.bind(this);
     this.onAbout = this.onAbout.bind(this);
-    this.loginCallback = this.loginCallback.bind(this);
+    this.updateUserState = this.updateUserState.bind(this);
 
     this.state = {
-      nickName:''
+      nickName:'未登陆',
+      avatar_url:null,
     };
   }
 
@@ -45,6 +47,9 @@ export default class Center extends React.Component {
     this.setUser();
   }
 
+  /**
+   * 更新头像、昵称状态
+   */
   setUser = ()=>{
     AV.User.currentAsync().then((currentUser)=>{
       console.log('setUser', currentUser);
@@ -54,14 +59,14 @@ export default class Center extends React.Component {
       }
 
       this.setState({
-        nickName:name
+        nickName:name,
+        avatar_url:currentUser.get('avatar_url'),
       });
     });
   };
 
   // login success callback
-  loginCallback(){
-    console.log('loginCallback');
+  updateUserState(){
     this.setUser();
   }
 
@@ -71,12 +76,13 @@ export default class Center extends React.Component {
       if(currentUser) {
         navigator.push({
           component: Profile,
+          callback: this.updateUserState,
         });
       } else {
         // go login
         navigator.push({
           component: Login,
-          callback: this.loginCallback,
+          callback: this.updateUserState,
         });
       }
     });
@@ -99,6 +105,19 @@ export default class Center extends React.Component {
 
   }
 
+  renderAvatar= ()=>{
+    let url = this.state.avatar_url;
+    if(url) {
+      return (
+          <Image style={{width:60, height:60, borderRadius:30, marginLeft:10, alignSelf:'center'}} source={{uri:url}}></Image>
+      );
+    } else {
+      return (
+          <Ionicons name={"md-contact"} size={60} color="coral" style={{marginLeft:10, alignSelf:'center'}}/>
+      );
+    }
+  };
+
   render() {
     return (
         <View style={gstyles.container}>
@@ -110,7 +129,7 @@ export default class Center extends React.Component {
           <View style={gstyles.content}>
             <TouchableOpacity onPress={() => {this.onLogin()}}>
               <View style={[gstyles.listItem, {flexDirection:'row', height:70, marginTop:15, position:'relative'}]}>
-                <Ionicons name={"md-contact"} size={60} color="coral" style={{marginLeft:10, alignSelf:'center'}}/>
+                {this.renderAvatar()}
                 <View style={{flexDirection:'column', justifyContent:'center', marginLeft:10}}>
                   <Text>{this.state.nickName}</Text>
                   <Text> 简介 </Text>

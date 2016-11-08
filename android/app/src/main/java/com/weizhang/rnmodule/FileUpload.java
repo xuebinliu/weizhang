@@ -30,11 +30,12 @@ public class FileUpload extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void uploadFile(final String uri, final Callback callback) {
+    public void upload(final String uri, final Callback callback) {
         try {
             String path = Common.getRealFilePath(MainApplication.getInstance(), Uri.parse(uri));
-            Log.d("FileUpload", "path=" + path + ", name=" + Uri.parse(uri).getLastPathSegment());
-            final AVFile file = AVFile.withAbsoluteLocalPath("LeanCloud.png", path);
+            Log.d("FileUpload", "path=" + path + ", name=" + Common.getFileNameFromPath(path));
+
+            final AVFile file = AVFile.withAbsoluteLocalPath(Common.getFileNameFromPath(path), path);
 
             file.saveInBackground(new SaveCallback() {
                 @Override
@@ -51,7 +52,7 @@ public class FileUpload extends ReactContextBaseJavaModule {
             }, new ProgressCallback() {
                 @Override
                 public void done(Integer integer) {
-                    // 上传进度数据，integer 介于 0 和 100。
+                    // 上传进度数据，integer 介于 0 和 100
                 }
             });
 

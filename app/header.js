@@ -23,6 +23,8 @@ import {naviGoBack, getCityList, getCurrentCity} from './utils/common';
 // widget
 import LoadingView from './widget/LoadingView';
 import NavigationBar from './widget/TabNavigator';
+import BusyIndicator from './widget/BusyIndicator';
+import loaderHandler from './widget/LoaderHandler';
 
 export {
     Register,
@@ -40,6 +42,8 @@ export {
 
     LoadingView,
     NavigationBar,
+    BusyIndicator,
+    loaderHandler,
 
     naviGoBack,
     getCityList,

@@ -10,6 +10,9 @@ import{
     Image,
     ScrollView,
     StyleSheet,
+    NativeModules,
+    DeviceEventEmitter,
+    PixelRatio,
 } from 'react-native';
 
 import {
@@ -27,6 +30,7 @@ import ModifyAge from './ModifyAge';
 import ModifyEmail from './ModifyEmail';
 import ModifyName from './ModifyName';
 import ModifySex from './ModifySex';
+
 
 export default class Profile extends React.Component {
 
@@ -55,21 +59,37 @@ export default class Profile extends React.Component {
   };
 
   onModifyHead= ()=>{
+    const that = this;
+
     ImagePicker.openPicker({
-      width: 80,
-      height: 80,
+      width: parseInt(60 * PixelRatio.get()),
+      height: parseInt(60 * PixelRatio.get()),
       cropping: true
     }).then((image)=>{
-      console.log("openPicker", image);
-
-      // display loading dialog
+      // 上传前，显示加载框
+      DeviceEventEmitter.emit('changeLoadingEffect', {title:'正在上传...', isVisible: true});
 
       // save to server via native
+      NativeModules.FileUpload.upload(image.path, function (error, url) {
+        // 取消加载框
+        DeviceEventEmitter.emit('changeLoadingEffect', {isVisible: false});
 
-      // callback rn to refresh head avatar
+        // 头像上传成功后，把url地址保存到User中
+        AV.User.current().set('avatar_url', url);
+        AV.User.current().save();
 
-      // disappear loading dialog
-      
+        // 更新当前界面
+        that.forceUpdate();
+
+        // 更新我的界面
+        const {route} = that.props;
+        route.callback();
+
+        console.log("onModifyHead url=", url);
+      });
+    }).catch((e)=>{
+      DeviceEventEmitter.emit('changeLoadingEffect', {isVisible: false});
+      console.log("onModifyHead e=", e);
     });
   };
 
@@ -115,6 +135,19 @@ export default class Profile extends React.Component {
     }
   };
 
+  renderAvatar= ()=>{
+    let url = AV.User.current().get('avatar_url');
+    if(url) {
+      return (
+          <Image style={{width:60, height:60, borderRadius:30}} source={{uri:url}}></Image>
+      );
+    } else {
+      return (
+          <Ionicons name={"md-contact"} size={60} color="coral" style={{marginLeft:10, alignSelf:'center'}}/>
+      );
+    }
+  };
+
   render(){
     return(
       <View style={gstyles.container}>
@@ -129,7 +162,7 @@ export default class Profile extends React.Component {
             <View style={[gstyles.listItem, styles.item, {height:70, marginTop:15}]}>
               <Text>头像</Text>
               <View style={{flex:1, flexDirection:'row', marginRight:10, justifyContent:'flex-end'}}>
-                <Image style={{width:60, height:60}} source={require('../../img/ic_setting.png')}></Image>
+                {this.renderAvatar()}
               </View>
               <Ionicons name="ios-arrow-forward" size={20} color="gray"/>
             </View>

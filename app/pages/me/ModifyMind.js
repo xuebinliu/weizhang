@@ -19,7 +19,7 @@ import AV from 'leancloud-storage';
 
 var yourMind;
 
-export default class ModifySex extends React.Component {
+export default class ModifyMind extends React.Component {
   constructor(props){
     super(props);
 

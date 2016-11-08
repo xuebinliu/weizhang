@@ -162,6 +162,19 @@ export default class Profile extends React.Component {
     }
   };
 
+  /**
+   * 获取昵称，如果没设置则返回用户名
+   * @returns {*}
+   */
+  getNickName= ()=>{
+    let mind = this.state.userinfo.get('nickname');
+    if(mind) {
+      return mind;
+    } else {
+      return this.state.userinfo.getUsername();
+    }
+  };
+
   // 渲染头像
   renderAvatar= ()=>{
     let url = AV.User.current().get('avatar_url');
@@ -197,7 +210,7 @@ export default class Profile extends React.Component {
             <View style={[gstyles.listItem, styles.item]}>
               <Text>昵称</Text>
               <View style={{flex:1, flexDirection:'row', marginRight:10, justifyContent:'flex-end'}}>
-                <Text>{this.state.userinfo.getUsername()}</Text>
+                <Text>{this.getNickName()}</Text>
               </View>
               <Ionicons name="ios-arrow-forward" size={20} color="gray"/>
             </View>

@@ -53,17 +53,30 @@ export default class Center extends React.Component {
    */
   setUser = ()=>{
     AV.User.currentAsync().then((currentUser)=>{
-      let name='未登录';
+      let nickName='未登录';
       if(currentUser) {
-        name = currentUser.getUsername();
+        nickName = this.getNickName(currentUser);
       }
 
       this.setState({
-        nickName:name,
+        nickName:nickName,
         mind:currentUser.get('mind'),
         avatar_url:currentUser.get('avatar_url'),
       });
     });
+  };
+
+  /**
+   * 获取昵称，如果没设置则返回用户名
+   * @returns {*}
+   */
+  getNickName= (currentUser)=>{
+    let nickname = currentUser.get('nickname');
+    if(nickname) {
+      return nickname;
+    } else {
+      return currentUser.getUsername();
+    }
   };
 
   // login success callback

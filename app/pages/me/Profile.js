@@ -30,7 +30,7 @@ import ModifyAge from './ModifyAge';
 import ModifyEmail from './ModifyEmail';
 import ModifyName from './ModifyName';
 import ModifySex from './ModifySex';
-
+import ModifyMind from './ModifyMind';
 
 export default class Profile extends React.Component {
 
@@ -42,10 +42,14 @@ export default class Profile extends React.Component {
     }
   }
 
-  onChangeProfile= ()=>{
+  updateUserProfile= ()=>{
     this.setState({
       userinfo:AV.User.current(),
     });
+
+    // 更新我的界面
+    const {route} = this.props;
+    route.callback();
   };
 
   onBackHandle= ()=>{
@@ -85,18 +89,22 @@ export default class Profile extends React.Component {
         const {route} = that.props;
         route.callback();
 
+        toastShort('更改头像成功');
+
         console.log("onModifyHead url=", url);
       });
     }).catch((e)=>{
+      // 取消加载框
       DeviceEventEmitter.emit('changeLoadingEffect', {isVisible: false});
-      console.log("onModifyHead e=", e);
+      toastShort('更改头像失败');
     });
   };
 
-  onModifyName= ()=>{
+  onModifyNickName= ()=>{
     const {navigator} = this.props;
     navigator.push({
       component: ModifyName,
+      callback:this.updateUserProfile
     });
   };
 
@@ -104,6 +112,7 @@ export default class Profile extends React.Component {
     const {navigator} = this.props;
     navigator.push({
       component: ModifyEmail,
+      callback:this.updateUserProfile
     });
   };
 
@@ -111,7 +120,7 @@ export default class Profile extends React.Component {
     const {navigator} = this.props;
     navigator.push({
       component: ModifySex,
-      callback:this.onChangeProfile
+      callback:this.updateUserProfile
     });
   };
 
@@ -119,6 +128,15 @@ export default class Profile extends React.Component {
     const {navigator} = this.props;
     navigator.push({
       component: ModifyAge,
+      callback:this.updateUserProfile
+    });
+  };
+
+  onModifyMind= ()=>{
+    const {navigator} = this.props;
+    navigator.push({
+      component: ModifyMind,
+      callback:this.updateUserProfile
     });
   };
 
@@ -135,16 +153,22 @@ export default class Profile extends React.Component {
     }
   };
 
+  getMind= ()=>{
+    let mind = this.state.userinfo.get('mind');
+    if(mind) {
+      return mind;
+    } else {
+      return '未知';
+    }
+  };
+
+  // 渲染头像
   renderAvatar= ()=>{
     let url = AV.User.current().get('avatar_url');
     if(url) {
-      return (
-          <Image style={{width:60, height:60, borderRadius:30}} source={{uri:url}}></Image>
-      );
+      return (<Image style={{width:60, height:60, borderRadius:30}} source={{uri:url}}></Image>);
     } else {
-      return (
-          <Ionicons name={"md-contact"} size={60} color="coral" style={{marginLeft:10, alignSelf:'center'}}/>
-      );
+      return (<Ionicons name={"md-contact"} size={60} color="coral" style={{marginLeft:10, alignSelf:'center'}}/>);
     }
   };
 
@@ -169,11 +193,22 @@ export default class Profile extends React.Component {
           </TouchableOpacity>
           <View style={gstyles.line}/>
 
-          <TouchableOpacity onPress={this.onModifyName}>
+          <TouchableOpacity onPress={this.onModifyNickName}>
             <View style={[gstyles.listItem, styles.item]}>
               <Text>昵称</Text>
               <View style={{flex:1, flexDirection:'row', marginRight:10, justifyContent:'flex-end'}}>
                 <Text>{this.state.userinfo.getUsername()}</Text>
+              </View>
+              <Ionicons name="ios-arrow-forward" size={20} color="gray"/>
+            </View>
+          </TouchableOpacity>
+          <View style={gstyles.line}/>
+
+          <TouchableOpacity onPress={this.onModifyMind}>
+            <View style={[gstyles.listItem, styles.item]}>
+              <Text>心情</Text>
+              <View style={{flex:1, flexDirection:'row', marginRight:10, justifyContent:'flex-end'}}>
+                <Text>{this.getMind()}</Text>
               </View>
               <Ionicons name="ios-arrow-forward" size={20} color="gray"/>
             </View>
@@ -204,14 +239,13 @@ export default class Profile extends React.Component {
 
           <TouchableOpacity onPress={this.onModifyEMail}>
             <View style={[gstyles.listItem, styles.item]}>
-              <Text>绑定邮箱</Text>
+              <Text>邮箱</Text>
               <View style={{flex:1, flexDirection:'row', marginRight:10, justifyContent:'flex-end'}}>
                 <Text>未绑定</Text>
               </View>
               <Ionicons name="ios-arrow-forward" size={20} color="gray"/>
             </View>
           </TouchableOpacity>
-
 
           <TouchableOpacity onPress={this.onLogout} style={[gstyles.button, {marginTop:30}]}>
             <Text style={{color:'white'}}>退出登录</Text>

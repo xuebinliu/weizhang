@@ -39,6 +39,7 @@ export default class Center extends React.Component {
 
     this.state = {
       nickName:'未登陆',
+      mind:'',
       avatar_url:null,
     };
   }
@@ -52,7 +53,6 @@ export default class Center extends React.Component {
    */
   setUser = ()=>{
     AV.User.currentAsync().then((currentUser)=>{
-      console.log('setUser', currentUser);
       let name='未登录';
       if(currentUser) {
         name = currentUser.getUsername();
@@ -60,6 +60,7 @@ export default class Center extends React.Component {
 
       this.setState({
         nickName:name,
+        mind:currentUser.get('mind'),
         avatar_url:currentUser.get('avatar_url'),
       });
     });
@@ -132,7 +133,7 @@ export default class Center extends React.Component {
                 {this.renderAvatar()}
                 <View style={{flexDirection:'column', justifyContent:'center', marginLeft:10}}>
                   <Text>{this.state.nickName}</Text>
-                  <Text> 简介 </Text>
+                  <Text> {this.state.mind} </Text>
                 </View>
                 <View style={{flexDirection:'row', flex:1, justifyContent:'flex-end'}}>
                   <Ionicons name="ios-arrow-forward" size={20} color="gray" style={{alignSelf:'center', marginRight:15}}/>

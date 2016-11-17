@@ -22,6 +22,7 @@ import {
     Login,
     Feedback,
     Profile,
+    AlbumContainer,
 } from '../header';
 
 import AV from 'leancloud-storage';
@@ -31,10 +32,6 @@ export default class Center extends React.Component {
   constructor(props) {
     super(props);
 
-    this.onLogin = this.onLogin.bind(this);
-    this.onFeedback = this.onFeedback.bind(this);
-    this.onVersion = this.onVersion.bind(this);
-    this.onAbout = this.onAbout.bind(this);
     this.updateUserState = this.updateUserState.bind(this);
 
     this.state = {
@@ -84,7 +81,7 @@ export default class Center extends React.Component {
     this.setUser();
   }
 
-  onLogin(){
+  onLogin= ()=>{
     const {navigator} = this.props;
     AV.User.currentAsync().then((currentUser)=>{
       if(currentUser) {
@@ -100,24 +97,42 @@ export default class Center extends React.Component {
         });
       }
     });
-  }
+  };
 
-  onFeedback(){
+  onFeedback= ()=>{
     const {navigator} = this.props;
     InteractionManager.runAfterInteractions(() => {
       navigator.push({
         component: Feedback,
       });
     });
-  }
+  };
 
-  onVersion(){
+  onPressVersion = ()=>{
 
-  }
+  };
 
-  onAbout(){
+  // 需要登录
+  onPressAlbum = ()=>{
+    const {navigator} = this.props;
+    AV.User.currentAsync().then((currentUser)=>{
+      if(currentUser) {
+        navigator.push({
+          component: AlbumContainer,
+        });
+      } else {
+        // go login
+        navigator.push({
+          component: Login,
+          callback: this.updateUserState,
+        });
+      }
+    });
+  };
 
-  }
+  onAbout = ()=>{
+
+  };
 
   renderAvatar= ()=>{
     let url = this.state.avatar_url;
@@ -162,31 +177,27 @@ export default class Center extends React.Component {
                   <Text>100</Text>
                 </View>
               </TouchableOpacity>
-
               <TouchableOpacity style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                 <View style={{flexDirection:'column'}}>
                   <Text>动态</Text>
                   <Text>100</Text>
                 </View>
               </TouchableOpacity>
-
               <TouchableOpacity style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                 <View style={{flexDirection:'column'}}>
                   <Text>粉丝</Text>
                   <Text>100</Text>
                 </View>
               </TouchableOpacity>
-
               <TouchableOpacity style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                 <View style={{flexDirection:'column'}}>
                   <Text>关注</Text>
                   <Text>100</Text>
                 </View>
               </TouchableOpacity>
-
             </View>
 
-            <TouchableOpacity onPress={() => {this.onVersion()}}>
+            <TouchableOpacity onPress={() => {this.onPressAlbum()}}>
               <View style={[gstyles.listItem, styles.item, {marginTop:15, position:'relative'}]}>
                 <Text>相册</Text>
                 <View style={{flexDirection:'row', flex:1, justifyContent:'flex-end'}}>
@@ -195,7 +206,7 @@ export default class Center extends React.Component {
               </View>
             </TouchableOpacity>
             <View style={gstyles.noMarginline}/>
-            <TouchableOpacity onPress={() => {this.onVersion()}}>
+            <TouchableOpacity onPress={() => {this.onPressVersion()}}>
               <View style={[gstyles.listItem, styles.item,]}>
                 <Text>充值</Text>
                 <View style={{flexDirection:'row', flex:1, justifyContent:'flex-end'}}>
@@ -204,7 +215,7 @@ export default class Center extends React.Component {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => {this.onVersion()}}>
+            <TouchableOpacity onPress={() => {this.onPressVersion()}}>
               <View style={[gstyles.listItem, styles.item, {marginTop:15, position:'relative'}]}>
                   <Text>版本</Text>
                 <View style={{flexDirection:'row', flex:1, justifyContent:'flex-end'}}>
@@ -213,6 +224,7 @@ export default class Center extends React.Component {
               </View>
             </TouchableOpacity>
             <View style={gstyles.noMarginline}/>
+
             <TouchableOpacity onPress={() => {this.onFeedback()}}>
               <View style={[gstyles.listItem, styles.item]}>
                 <Text>建议</Text>
@@ -222,6 +234,7 @@ export default class Center extends React.Component {
               </View>
             </TouchableOpacity>
             <View style={gstyles.noMarginline}/>
+
             <TouchableOpacity onPress={() => {this.onAbout()}}>
               <View style={[gstyles.listItem, styles.item]}>
                   <Text>关于</Text>
@@ -230,7 +243,6 @@ export default class Center extends React.Component {
                 </View>
               </View>
             </TouchableOpacity>
-
           </View>
 
 

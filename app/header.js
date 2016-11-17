@@ -10,6 +10,7 @@ import Feedback from './pages/me/Feedback';
 import Location from './pages/Location';
 import Publish from './pages/Publish';
 import Profile from './pages/me/Profile';
+import AlbumContainer from './pages/album/AlbumContainer';
 
 // module
 import UserProfile from './module/UserProfile';
@@ -34,6 +35,7 @@ export {
     Publish,
     Profile,
     UserProfile,
+    AlbumContainer,
 
     gstyles,
     DeviceStorage,

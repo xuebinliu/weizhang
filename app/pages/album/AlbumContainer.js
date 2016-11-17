@@ -30,6 +30,11 @@ export default class AlbumContainer extends React.Component {
 
   }
 
+  onBackHandle=()=> {
+    const {navigator} = this.props;
+    return naviGoBack(navigator);
+  };
+  
   onEditAlbum= ()=>{
 
   };
@@ -47,7 +52,7 @@ export default class AlbumContainer extends React.Component {
           />
 
           <View style={gstyles.content}>
-            <ListView/>
+
           </View>
         </View>
     );

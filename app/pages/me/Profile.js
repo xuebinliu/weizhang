@@ -20,6 +20,7 @@ import {
     NavigationBar,
     naviGoBack,
     toastShort,
+    loaderHandler,
 } from '../../header';
 
 import ImagePicker from 'react-native-image-crop-picker';
@@ -71,7 +72,7 @@ export default class Profile extends React.Component {
       cropping: true
     }).then((image)=>{
       // 上传前，显示加载框
-      DeviceEventEmitter.emit('changeLoadingEffect', {title:'正在上传...', isVisible: true});
+      loaderHandler.showLoader('正在上传...');
 
       // save to server via native
       NativeModules.FileUpload.upload(image.path, function (error, url) {
@@ -95,7 +96,7 @@ export default class Profile extends React.Component {
       });
     }).catch((e)=>{
       // 取消加载框
-      DeviceEventEmitter.emit('changeLoadingEffect', {isVisible: false});
+      loaderHandler.hideLoader();
       toastShort('更改头像失败');
     });
   };

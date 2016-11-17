@@ -1,6 +1,6 @@
 import { DeviceEventEmitter } from 'react-native';
 
-const loaderHandler = {
+export default loaderHandler = {
   hideLoader () {
     DeviceEventEmitter.emit('changeLoadingEffect', {isVisible: false});
   },
@@ -8,5 +8,3 @@ const loaderHandler = {
     DeviceEventEmitter.emit('changeLoadingEffect', {title:title, isVisible: true});
   }
 };
-
-module.exports = loaderHandler;

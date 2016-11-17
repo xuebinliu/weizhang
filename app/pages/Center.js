@@ -146,7 +146,7 @@ export default class Center extends React.Component {
                 {this.renderAvatar()}
                 <View style={{flexDirection:'column', justifyContent:'center', marginLeft:10}}>
                   <Text>{this.state.nickName}</Text>
-                  <Text> {this.state.mind} </Text>
+                  <Text>{this.state.mind}</Text>
                 </View>
                 <View style={{flexDirection:'row', flex:1, justifyContent:'flex-end'}}>
                   <Ionicons name="ios-arrow-forward" size={20} color="gray" style={{alignSelf:'center', marginRight:15}}/>
@@ -215,7 +215,7 @@ export default class Center extends React.Component {
             <View style={gstyles.noMarginline}/>
             <TouchableOpacity onPress={() => {this.onFeedback()}}>
               <View style={[gstyles.listItem, styles.item]}>
-                <Text>反馈</Text>
+                <Text>建议</Text>
                 <View style={{flexDirection:'row', flex:1, justifyContent:'flex-end'}}>
                 <Ionicons name="ios-arrow-forward" size={20} color="gray" style={{alignSelf:'center', marginRight:15}}/>
                 </View>

@@ -17,7 +17,6 @@ import {
 } from '../../header';
 
 import AV from 'leancloud-storage';
-import {SK_ACCOUNT_INFO} from '../../const';
 
 let feedbackContent;
 
@@ -41,7 +40,7 @@ export default class Feedback extends React.Component {
   onFeedback() {
     const feedback = AV.Object.new('Feedback');
 
-    feedback.set('account', DeviceStorage.get(SK_ACCOUNT_INFO));
+    // feedback.set('account', DeviceStorage.get(SK_ACCOUNT_INFO));
     feedback.set('content', feedbackContent);
     // feedback.set('manufacturer', DeviceInfo.getManufacturer());
     // feedback.set('system', DeviceInfo.getSystemName());
@@ -62,7 +61,7 @@ export default class Feedback extends React.Component {
     return (
         <View style={gstyles.container}>
           <NavigationBar
-              title={'用户反馈'}
+              title={'建议反馈'}
               leftButtonIcon="md-arrow-back"
               onLeftButtonPress={this.onBackHandle}
               rightButtonTitle={'提交'}

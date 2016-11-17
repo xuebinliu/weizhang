@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const BusyIndicator = React.createClass({
+export default BusyIndicator = React.createClass({
   propTypes: {
     color: React.PropTypes.string,
     overlayColor: React.PropTypes.string,
@@ -111,5 +111,3 @@ const BusyIndicator = React.createClass({
     }
   }
 });
-
-module.exports = BusyIndicator;

@@ -15,10 +15,8 @@ import{
     Alert,
 } from 'react-native';
 
+import AlbumSetting from './AlbumSetting';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
-// 每行显示相册个数
-const ALBUM_LINE_COUNT = 2;
 
 export default class Album extends React.Component {
   constructor(props){
@@ -34,11 +32,18 @@ export default class Album extends React.Component {
     rowData: null,      // 行数据，数组形式
   };
 
+  onAddAlbum= ()=>{
+    const {navigator} = this.props;
+    navigator.push({
+      component:AlbumSetting
+    });
+  };
+
   renderItem0= ()=>{
     if(this.props.isAddBtn){
       // 渲染加号按钮
       return (
-        <TouchableOpacity style={[styles.itemView, {borderWidth:1, borderColor:'#dddddd'}]}>
+        <TouchableOpacity onPress={this.onAddAlbum} style={[styles.itemView, {borderWidth:1, borderColor:'#dddddd'}]}>
           <Ionicons name={"ios-add-outline"} size={60} color="blue" />
           <Text style={{color:'blue'}}>添加相册</Text>
         </TouchableOpacity>

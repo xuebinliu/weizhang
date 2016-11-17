@@ -100,8 +100,9 @@ export default class AlbumContainer extends React.Component {
 
   renderRow= (rowData, sectionId, rowId)=>{
     console.log('renderRow', rowData, sectionId, rowId);
+    const {navigator} = this.props;
     let isAddBtn = (rowData.length==1 && rowData[0]==0) ? true : false;
-    return <AlbumContainerItem isAddBtn={isAddBtn} isDel={false} navigator={null} rowData={rowData}/>;
+    return <AlbumContainerItem isAddBtn={isAddBtn} isDel={false} navigator={navigator} rowData={rowData}/>;
   };
 
   render() {

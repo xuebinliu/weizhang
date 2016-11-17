@@ -49,7 +49,7 @@ export default class ModifyName extends React.Component {
               title={'修改昵称'}
               leftButtonIcon="md-arrow-back"
               onLeftButtonPress={this.onBackHandle}
-              rightButtonTitle={'提交'}
+              rightButtonTitle={'确定'}
               onRightButtonPress={this.onSubmit}
               rightButtonTitleColor={'white'}
           />

@@ -99,6 +99,7 @@ export default class Center extends React.Component {
     });
   };
 
+  // 建议
   onFeedback= ()=>{
     const {navigator} = this.props;
     InteractionManager.runAfterInteractions(() => {
@@ -112,16 +113,17 @@ export default class Center extends React.Component {
 
   };
 
-  // 需要登录
+  // 相册
   onPressAlbum = ()=>{
-    const {navigator} = this.props;
+    console.log('onPressAlbum');
+    const that = this;
     AV.User.currentAsync().then((currentUser)=>{
+      const {navigator} = that.props;
       if(currentUser) {
         navigator.push({
           component: AlbumContainer,
         });
       } else {
-        // go login
         navigator.push({
           component: Login,
           callback: this.updateUserState,

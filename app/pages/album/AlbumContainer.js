@@ -3,14 +3,11 @@
  *
  * 相册容器
  */
-
 import React from 'react';
 import{
     View,
     ListView,
-    InteractionManager,
     StyleSheet,
-    Alert,
 } from 'react-native';
 
 import AV from 'leancloud-storage';
@@ -20,14 +17,13 @@ import {
     gstyles,
     NavigationBar,
     naviGoBack,
-    toastShort,
 } from '../../header';
-
-// 每行显示相册个数
-const ALBUM_LINE_COUNT = 2;
 
 var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
+/**
+ * 可以查看自己的相册和他人的相册，只有查看自己的相册时，可以添加新相册
+ */
 export default class AlbumContainer extends React.Component {
   constructor(props){
     super(props);
@@ -38,44 +34,57 @@ export default class AlbumContainer extends React.Component {
   }
 
   componentDidMount() {
-    const that = this;
+    this.loadAlbums();
+  }
 
+  // TODO 加载对应用户的相册
+  loadAlbums() {
+    const that = this;
     let album_id = AV.User.current().get('album_id');
+
+    console.log('loadAlbums album_id', album_id);
+
     if(album_id) {
-      // 获取相册
+      // 相册存在，获取相册
       var query = new AV.Query('Albums');
       query.get(album_id).then(function (albumObj) {
-        that.setState({
-          albums:that.getListItemData(albumObj.content)
-        })
+        console.log('loadAlbums get albumObj content', albumObj.content);
+        if(albumObj.content) {
+          that.setState({
+            albums:that.getListItemData(albumObj.content)
+          })
+        }
       }, function (error) {
-        console.log('get album error', album_id, error);
+        console.log('loadAlbums: get album error', album_id, error);
+      });
+    } else {
+      // 相册不存在，相册对象Albums，并创建一个空相册放入content中
+      var Albums = AV.Object.extend('Albums');
+      var albumObj = new Albums();
+      albumObj.set('content', []);
+      albumObj.save().then(function (albumObj) {
+        console.log('albumObj is ' + albumObj);
+
+        // 保存相册id到user中
+        AV.User.current().set('album_id', albumObj.id);
+        AV.User.current().save();
+      }, function (error) {
+        console.error(error);
       });
     }
-    console.log('componentDidMount album_id', album_id);
   }
 
   getListItemData(content) {
-    if(content.length == 0) {
-      content.push([0]);
-      return dataSource.cloneWithRows(content);
-    }
-
     console.log('getListItemData content', content);
 
+    // 查看自己相册时，显示加号
     content.unshift({addBtn:true});
 
+    // 每行显示两个相册，所以对原相册对象进行分组，两个一组
     let items = [];
-    let rowCount = parseInt(content.length / ALBUM_LINE_COUNT);
-    for(let i=0; i<rowCount; i++){
-      for(let j=0; j<ALBUM_LINE_COUNT; j++){
-        items[i].push(content[i*ALBUM_LINE_COUNT+j]);
-      }
-    }
-
-    let leftItemsCount = content.length % ALBUM_LINE_COUNT;
-    for(let i=0; i<leftItemsCount; i++){
-      items[rowCount].push(content[rowCount*ALBUM_LINE_COUNT+i]);
+    let rowCount = parseInt(content.length / 2);
+    for(let i=0; i<=rowCount; i+=2){
+      items.push([content[i], content[i+1]]);
     }
 
     console.log('getListItemData items', items);
@@ -88,21 +97,23 @@ export default class AlbumContainer extends React.Component {
     return naviGoBack(navigator);
   };
 
-  // 添加相册
-  onAddAlbum= ()=>{
+  // 当相册改变状态时，刷新相册容器
+  onRefresh= ()=>{
+    console.log('onRefresh');
 
-  };
-
-  // 编辑相册
-  onEditAlbum= ()=>{
-
+    this.loadAlbums();
   };
 
   renderRow= (rowData, sectionId, rowId)=>{
-    console.log('renderRow', rowData, sectionId, rowId);
+    console.log('renderRow', rowData[0], rowData[1], sectionId, rowId);
+
     const {navigator} = this.props;
-    let isAddBtn = (rowData.length==1 && rowData[0]==0) ? true : false;
-    return <AlbumContainerItem isAddBtn={isAddBtn} isDel={false} navigator={navigator} rowData={rowData}/>;
+
+    // 渲染一个相册容器的item
+    return <AlbumContainerItem
+              refresh={this.onRefresh}
+              navigator={navigator}
+              rowData={rowData}/>;
   };
 
   render() {
@@ -112,9 +123,6 @@ export default class AlbumContainer extends React.Component {
               title={'相册'}
               leftButtonIcon="md-arrow-back"
               onLeftButtonPress={this.onBackHandle}
-              rightButtonTitle={'编辑'}
-              onRightButtonPress={this.onEditAlbum}
-              rightButtonTitleColor={'white'}
           />
 
           <View style={gstyles.content}>

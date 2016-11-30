@@ -61,6 +61,7 @@ export default class Profile extends React.Component {
   onLogout= ()=>{
     AV.User.logOut();
     toastShort('退出登录成功');
+    this.onBackHandle();
   };
 
   onModifyHead= ()=>{

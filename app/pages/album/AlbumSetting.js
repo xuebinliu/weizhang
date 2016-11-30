@@ -1,12 +1,11 @@
 /**
  * Created by free on 11/8/16.
  *
- * 相册设置，标题、权限
+ * 相册设置: 可以创建、修改、删除相册
  */
 import React from 'react';
 import{
     View,
-    ListView,
     Text,
     TouchableOpacity,
     TextInput,
@@ -21,13 +20,18 @@ import {
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+// 用户点击提交时，保存的标题
+var title='';
+
 export default class AlbumSetting extends React.Component {
   constructor(props) {
     super(props);
 
+    const {route} = this.props;
     this.state = {
-      power:0,    // 相册权限
-      albumTitle:this.props.albumTitle,   // 相册标题
+      isCreate: route.isCreate,    // 是否新建相册
+      power:route.power,           // 相册权限
+      albumTitle:route.albumTitle, // 相册标题
     };
   }
 
@@ -37,9 +41,26 @@ export default class AlbumSetting extends React.Component {
   };
 
   onSubmit= ()=>{
-
     const {route} = this.props;
-    route.callback();
+    let albumSetting;
+    if(route.isCreate) {
+      // 创建一个相册对象
+      albumSetting = {
+        id: new Date().getTime(),
+        index:0,
+        name:title,
+        power:this.state.power
+      };
+    } else {
+      // 修改相册
+      albumSetting = {
+
+      };
+    }
+
+    console.log('AlbumSetting onSubmit albumSetting', albumSetting);
+
+    route.albumSettingChange(albumSetting);
 
     this.onBackHandle();
     toastShort('添加相册成功');
@@ -64,7 +85,7 @@ export default class AlbumSetting extends React.Component {
           />
 
           <View style={gstyles.content}>
-            <TextInput onChangeText={(text)=> {}} style={[gstyles.input, {marginTop: 20}]} placeholder={"相册名称"}/>
+            <TextInput onChangeText={(text)=> {title=text}} style={[gstyles.input, {marginTop: 20}]} placeholder={this.state.albumTitle}/>
 
             <Text style={{marginLeft:15, marginTop:30, marginBottom:15, fontSize:15}}>访问权限:</Text>
 
@@ -97,7 +118,6 @@ export default class AlbumSetting extends React.Component {
                 </View>
               </View>
             </TouchableOpacity>
-
           </View>
         </View>
     );

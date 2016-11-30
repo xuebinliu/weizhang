@@ -68,11 +68,14 @@ export default class Login extends React.Component {
 
     const that = this;
     AV.User.logIn(account, pwd).then(function (loginedUser) {
+      // refresh center ui
+      const {route} = that.props;
+      route.callback();
+
       toastShort('登陆成功');
       that.onBackHandle();
     }, function (error) {
-      console.error(error);
-      toastShort('登陆失败');
+      toastShort('用户名或密码错误');
     });
   }
 

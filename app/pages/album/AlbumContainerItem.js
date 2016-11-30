@@ -17,9 +17,11 @@ import AlbumSetting from './AlbumSetting';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AV from 'leancloud-storage';
 
-export default class Album extends React.Component {
+export default class AlbumContainerItem extends React.Component {
   constructor(props){
     super(props);
+
+    console.log('AlbumContainerItem constructor');
   }
 
   // 点击添加相册按钮
@@ -51,32 +53,31 @@ export default class Album extends React.Component {
       // 相册存在，获取相册对象Albums
       var queryAlbums = new AV.Query('Albums');
       queryAlbums.get(album_id).then(function (albumObj) {
-        console.log('albumSettingChange get albumObj', albumObj.content);
-
-        if(!albumObj.content) {
-          albumObj.content = [];
-        }
+        let content = albumObj.get('content');
+        console.log('albumSettingChange get albumObj', content);
 
         // 相册已存在则覆盖修改的值，不存在则保存
         let isFind = false;
-        for(let i=0; i<albumObj.content.length; i++) {
-          if(albumObj.content[i].id == albumSetting.id) {
-            albumObj.content[i].name = albumSetting.name;
-            albumObj.content[i].power = albumSetting.power;
+        for(let i=0; i<content.length; i++) {
+          if(content[i].id == albumSetting.id) {
+            content[i].name = albumSetting.name;
+            content[i].power = albumSetting.power;
             isFind = true;
-            console.log('albumSettingChange find&modify', albumObj.content[i]);
+            console.log('albumSettingChange find&modify', content[i]);
             break;
           }
         }
         if(!isFind) {
-          albumObj.content.push(albumSetting);
+          content.push(albumSetting);
         }
 
-        console.log('albumSettingChange will save albumObj', albumObj.content);
+        console.log('albumSettingChange will save albumObj', content);
 
-        // save
+        // save to server
+        albumObj.set('content', content);
         albumObj.save().then(function (obj) {
-          console.log('albumSettingChange save albumObj ok', obj.content);
+          console.log('albumSettingChange save albumObj ok', obj);
+          // update ui
           that.props.refresh();
         }, function (error) {
           console.log('albumSettingChange save albumObj error', error);
@@ -89,6 +90,8 @@ export default class Album extends React.Component {
 
   // 渲染此行的第一个相册
   renderItem0= ()=>{
+    console.log('renderItem0', this.props.rowData[0]);
+
     if(this.props.rowData[0].addBtn){
       // 渲染加号按钮
       return (
@@ -98,12 +101,14 @@ export default class Album extends React.Component {
         </TouchableOpacity>
       );
     } else {
-
+      return(<View style={styles.itemView}/>);
     }
   };
 
   // 渲染此行的第二个相册
   renderItem1= ()=>{
+    console.log('renderItem1', this.props.rowData[1]);
+
     if(this.props.rowData[1]){
       return(<View style={styles.itemView}/>);
     } else {
@@ -129,7 +134,7 @@ const styles = StyleSheet.create({
   },
 
   itemView:{
-    width:(Dimensions.get('screen').width - 20*3)/2,
+    width:(Dimensions.get('screen').width - 20*4)/2,
     margin:20,
     backgroundColor:"#ffffff",
     alignItems:'center',

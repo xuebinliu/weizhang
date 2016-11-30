@@ -48,10 +48,11 @@ export default class AlbumContainer extends React.Component {
       // 相册存在，获取相册
       var query = new AV.Query('Albums');
       query.get(album_id).then(function (albumObj) {
-        console.log('loadAlbums get albumObj content', albumObj.content);
-        if(albumObj.content) {
+        let content = albumObj.get('content');
+        console.log('loadAlbums get albumObj content', content);
+        if(content) {
           that.setState({
-            albums:that.getListItemData(albumObj.content)
+            items:that.getListItemData(content)
           })
         }
       }, function (error) {
@@ -63,8 +64,6 @@ export default class AlbumContainer extends React.Component {
       var albumObj = new Albums();
       albumObj.set('content', []);
       albumObj.save().then(function (albumObj) {
-        console.log('albumObj is ' + albumObj);
-
         // 保存相册id到user中
         AV.User.current().set('album_id', albumObj.id);
         AV.User.current().save();
@@ -83,8 +82,12 @@ export default class AlbumContainer extends React.Component {
     // 每行显示两个相册，所以对原相册对象进行分组，两个一组
     let items = [];
     let rowCount = parseInt(content.length / 2);
-    for(let i=0; i<=rowCount; i+=2){
-      items.push([content[i], content[i+1]]);
+    for(let i=0; i<=rowCount; i++){
+      if(content[i*2+1]) {
+        items.push([content[i*2], content[i*2+1]]);
+      } else {
+        items.push([content[i*2]]);
+      }
     }
 
     console.log('getListItemData items', items);
@@ -100,16 +103,14 @@ export default class AlbumContainer extends React.Component {
   // 当相册改变状态时，刷新相册容器
   onRefresh= ()=>{
     console.log('onRefresh');
-
     this.loadAlbums();
   };
 
   renderRow= (rowData, sectionId, rowId)=>{
-    console.log('renderRow', rowData[0], rowData[1], sectionId, rowId);
-
-    const {navigator} = this.props;
+    console.log('renderRow', rowData, sectionId, rowId);
 
     // 渲染一个相册容器的item
+    const {navigator} = this.props;
     return <AlbumContainerItem
               refresh={this.onRefresh}
               navigator={navigator}
@@ -129,6 +130,7 @@ export default class AlbumContainer extends React.Component {
             <ListView
                 dataSource={this.state.items}
                 renderRow={this.renderRow}
+                enableEmptySections={true}
             />
           </View>
         </View>

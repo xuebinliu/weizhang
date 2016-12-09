@@ -95,13 +95,18 @@ export default class AlbumContainerItem extends React.Component {
     if(this.props.rowData[0].addBtn){
       // 渲染加号按钮
       return (
-        <TouchableOpacity onPress={this.onAddAlbum} style={[styles.itemView, {borderWidth:1, borderColor:'#dddddd'}]}>
+        <TouchableOpacity onPress={this.onAddAlbum} style={styles.addBtn}>
           <Ionicons name={"ios-add-outline"} size={60} color="blue" />
           <Text style={{color:'blue'}}>添加相册</Text>
         </TouchableOpacity>
       );
     } else {
-      return(<View style={styles.itemView}/>);
+      return(
+        <View style={styles.itemView}>
+          {this.renderItemImage(this.props.rowData[0])}
+          <Text style={styles.itemName}>name</Text>
+        </View>
+      );
     }
   };
 
@@ -110,9 +115,28 @@ export default class AlbumContainerItem extends React.Component {
     console.log('renderItem1', this.props.rowData[1]);
 
     if(this.props.rowData[1]){
-      return(<View style={styles.itemView}/>);
+      return(
+          <View style={styles.itemView}>
+            {this.renderItemImage(this.props.rowData[1])}
+            <Text style={styles.itemName}>name</Text>
+          </View>
+      );
     } else {
 
+    }
+  };
+
+  renderItemImage= (rowData)=>{
+    if(!rowData) {
+      return;
+    }
+
+    console.log('renderItemImage rowData', rowData);
+
+    if(rowData.coverage_url){
+
+    } else {
+      return (<Image resizeMode='stretch' style={styles.itemImage} source={require('../../img/default_image.png')}/>);
     }
   };
 
@@ -133,11 +157,32 @@ const styles = StyleSheet.create({
     height:200,
   },
 
-  itemView:{
+  addBtn:{
     width:(Dimensions.get('screen').width - 20*4)/2,
+    height:(Dimensions.get('screen').width - 20*4)/2 + 40,
     margin:20,
     backgroundColor:"#ffffff",
-    alignItems:'center',
+    borderWidth:1,
+    borderColor:'#dddddd',
     justifyContent:'center',
-  }
+    alignItems:'center',
+  },
+
+  itemView:{
+    width:(Dimensions.get('screen').width - 20*4)/2,
+    height:(Dimensions.get('screen').width - 20*4)/2 + 40,
+    margin:20,
+    backgroundColor:"#ffffff",
+  },
+
+  itemImage:{
+    width:(Dimensions.get('screen').width - 20*4)/2,
+    height:(Dimensions.get('screen').width - 20*4)/2 + 40,
+  },
+
+  itemName:{
+    fontSize:16,
+    color:'red',
+  },
+
 });

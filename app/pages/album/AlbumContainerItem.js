@@ -17,6 +17,9 @@ import AlbumSetting from './AlbumSetting';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AV from 'leancloud-storage';
 
+// 相册大小（正方形）,根据屏幕宽度计算
+let imageSize = (Dimensions.get('screen').width - 20*4)/2;
+
 export default class AlbumContainerItem extends React.Component {
   constructor(props){
     super(props);
@@ -88,6 +91,23 @@ export default class AlbumContainerItem extends React.Component {
     }
   };
 
+  /**
+   * 获取相册权限提示文字
+   * @param power
+   * @returns {*}
+   */
+  getAlbumPower= (power)=> {
+    if(power == 0) {
+      return '不限制访问';
+    } else if(power == 1) {
+      return '付费访问';
+    } else if(power == 2) {
+      return '禁止其他人访问';
+    } else {
+      return '未知';
+    }
+  };
+
   // 渲染此行的第一个相册
   renderItem0= ()=>{
     console.log('renderItem0', this.props.rowData[0]);
@@ -104,7 +124,8 @@ export default class AlbumContainerItem extends React.Component {
       return(
         <View style={styles.itemView}>
           {this.renderItemImage(this.props.rowData[0])}
-          <Text style={styles.itemName}>name</Text>
+          <Text style={styles.itemName}>{this.props.rowData[0].name}</Text>
+          <Text style={styles.itemName}>{this.getAlbumPower(this.props.rowData[0].power)}</Text>
         </View>
       );
     }
@@ -118,7 +139,8 @@ export default class AlbumContainerItem extends React.Component {
       return(
           <View style={styles.itemView}>
             {this.renderItemImage(this.props.rowData[1])}
-            <Text style={styles.itemName}>name</Text>
+            <Text style={styles.itemName}>{this.props.rowData[1].name}</Text>
+            <Text style={styles.itemName}>{this.getAlbumPower(this.props.rowData[1].power)}</Text>
           </View>
       );
     } else {
@@ -127,16 +149,15 @@ export default class AlbumContainerItem extends React.Component {
   };
 
   renderItemImage= (rowData)=>{
+    console.log('renderItemImage rowData', rowData);
     if(!rowData) {
       return;
     }
 
-    console.log('renderItemImage rowData', rowData);
-
     if(rowData.coverage_url){
-
+      return (<Image resizeMode='stretch' style={{width:imageSize, height:imageSize,alignSelf:'center'}} source={{uri:rowData.coverage_url}}/>);
     } else {
-      return (<Image resizeMode='stretch' style={styles.itemImage} source={require('../../img/default_image.png')}/>);
+      return (<Ionicons name="ios-image" size={imageSize} style={{alignSelf:'center'}} color="coral"/>);
     }
   };
 
@@ -158,8 +179,8 @@ const styles = StyleSheet.create({
   },
 
   addBtn:{
-    width:(Dimensions.get('screen').width - 20*4)/2,
-    height:(Dimensions.get('screen').width - 20*4)/2 + 40,
+    width:imageSize,
+    height:imageSize + 40,
     margin:20,
     backgroundColor:"#ffffff",
     borderWidth:1,
@@ -169,20 +190,21 @@ const styles = StyleSheet.create({
   },
 
   itemView:{
-    width:(Dimensions.get('screen').width - 20*4)/2,
-    height:(Dimensions.get('screen').width - 20*4)/2 + 40,
+    flexDirection:'column',
+    justifyContent:'flex-start',
+    alignItems:'flex-start',
+    width:imageSize,
+    height:imageSize + 40,
     margin:20,
     backgroundColor:"#ffffff",
   },
 
   itemImage:{
-    width:(Dimensions.get('screen').width - 20*4)/2,
-    height:(Dimensions.get('screen').width - 20*4)/2 + 40,
+    alignSelf:'center',
   },
 
   itemName:{
     fontSize:16,
-    color:'red',
   },
 
 });

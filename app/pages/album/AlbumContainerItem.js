@@ -14,6 +14,7 @@ import{
 } from 'react-native';
 
 import AlbumSetting from './AlbumSetting';
+import Album from './Album';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AV from 'leancloud-storage';
 
@@ -108,6 +109,21 @@ export default class AlbumContainerItem extends React.Component {
     }
   };
 
+  /**
+   * 打开相册
+   * @param itemData
+   */
+  openAlbum= (itemData)=>{
+    console.log('openAlbum rowData=', itemData);
+
+    const {navigator} = this.props;
+    navigator.push({
+      component:Album,
+      itemData:itemData,
+    });
+
+  };
+
   // 渲染此行的第一个相册
   renderItem0= ()=>{
     console.log('renderItem0', this.props.rowData[0]);
@@ -121,12 +137,13 @@ export default class AlbumContainerItem extends React.Component {
         </TouchableOpacity>
       );
     } else {
+      let itemData = this.props.rowData[0];
       return(
-        <View style={styles.itemView}>
-          {this.renderItemImage(this.props.rowData[0])}
-          <Text style={styles.itemName}>{this.props.rowData[0].name}</Text>
-          <Text style={styles.itemName}>{this.getAlbumPower(this.props.rowData[0].power)}</Text>
-        </View>
+          <TouchableOpacity onPress={()=>{this.openAlbum(itemData)}} style={styles.itemView}>
+            {this.renderItemImage(itemData)}
+            <Text style={styles.itemName}>{itemData.name}</Text>
+            <Text style={styles.itemName}>{this.getAlbumPower(itemData.power)}</Text>
+          </TouchableOpacity>
       );
     }
   };
@@ -135,27 +152,26 @@ export default class AlbumContainerItem extends React.Component {
   renderItem1= ()=>{
     console.log('renderItem1', this.props.rowData[1]);
 
+    let itemData = this.props.rowData[1];
     if(this.props.rowData[1]){
       return(
-          <View style={styles.itemView}>
-            {this.renderItemImage(this.props.rowData[1])}
-            <Text style={styles.itemName}>{this.props.rowData[1].name}</Text>
-            <Text style={styles.itemName}>{this.getAlbumPower(this.props.rowData[1].power)}</Text>
-          </View>
+          <TouchableOpacity onPress={()=>{this.openAlbum(itemData)}} style={styles.itemView}>
+            {this.renderItemImage(itemData)}
+            <Text style={styles.itemName}>{itemData.name}</Text>
+            <Text style={styles.itemName}>{this.getAlbumPower(itemData.power)}</Text>
+          </TouchableOpacity>
       );
-    } else {
-
     }
   };
 
-  renderItemImage= (rowData)=>{
-    console.log('renderItemImage rowData', rowData);
-    if(!rowData) {
+  renderItemImage= (itemData)=>{
+    console.log('renderItemImage rowData', itemData);
+    if(!itemData) {
       return;
     }
 
-    if(rowData.coverage_url){
-      return (<Image resizeMode='stretch' style={{width:imageSize, height:imageSize,alignSelf:'center'}} source={{uri:rowData.coverage_url}}/>);
+    if(itemData.coverage_url){
+      return (<Image resizeMode='stretch' style={{width:imageSize, height:imageSize,alignSelf:'center'}} source={{uri:itemData.coverage_url}}/>);
     } else {
       return (<Ionicons name="ios-image" size={imageSize} style={{alignSelf:'center'}} color="coral"/>);
     }

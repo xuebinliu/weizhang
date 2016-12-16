@@ -7,13 +7,11 @@
 import React from 'react';
 import{
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   Image,
   Dimensions,
   ListView,
-  PixelRatio,
   NativeModules,
 } from 'react-native';
 
@@ -21,7 +19,6 @@ import {
   gstyles,
   NavigationBar,
   naviGoBack,
-  toastShort,
   loaderHandler,
 } from '../../header';
 
@@ -39,17 +36,12 @@ let imageSize = (Dimensions.get('screen').width - IMAGE_MARGIN*6)/3;
 const dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 export default class Album extends React.Component {
-
   constructor(props){
     super(props);
 
     this.state = {
       items:this.getListItemData([]),
     };
-  }
-
-  componentDidMount() {
-
   }
 
   getListItemData(content) {
@@ -66,13 +58,29 @@ export default class Album extends React.Component {
     return naviGoBack(navigator);
   };
 
+  /**
+   * 修改相册参数回调函数
+   * @param settingData
+   * @param isDel
+   */
+  albumSettingChange= (settingData, isDel)=>{
+    const {route} = this.props;
+    route.albumSettingChange(settingData, isDel);
+
+    // 如果删除相册，则直接返回上级页面
+    if(isDel) {
+      this.onBackHandle();
+    }
+  };
+
+  /**
+   * 打开相册设置
+   */
   onAlbumSetting= ()=>{
     const {navigator, route} = this.props;
     navigator.push({
       component:AlbumSetting,
-      isCreate:false,
-      power:route.itemData.power,
-      albumTitle:route.itemData.name,
+      settingData:route.settingData,
       albumSettingChange:this.albumSettingChange,
     });
   };
@@ -97,8 +105,6 @@ export default class Album extends React.Component {
           if(!error){
             return;
           }
-
-
 
           // 更新当前界面
           that.forceUpdate();

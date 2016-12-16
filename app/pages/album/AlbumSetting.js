@@ -21,18 +21,22 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // 用户点击提交时，保存的标题
-var title='';
+let title='';
+let settingData;
 
 export default class AlbumSetting extends React.Component {
   constructor(props) {
     super(props);
 
+    // 获取相册数据
     const {route} = this.props;
+    settingData = route.settingData;
+
     this.state = {
-      isCreate: route.isCreate,    // 是否新建相册
-      power:route.power,           // 相册权限
-      albumTitle:route.albumTitle, // 相册标题
+      power: settingData == null ? 0 : settingData.power,
     };
+
+    console.log('AlbumSetting constructor settingData=', settingData);
   }
 
   onBackHandle=()=> {
@@ -41,11 +45,9 @@ export default class AlbumSetting extends React.Component {
   };
 
   onSubmit= ()=>{
-    const {route} = this.props;
-    let albumSetting;
-    if(route.isCreate) {
+    if(settingData == null) {
       // 创建一个相册对象
-      albumSetting = {
+      settingData = {
         id: new Date().getTime(),
         index:0,
         name:title,
@@ -53,14 +55,16 @@ export default class AlbumSetting extends React.Component {
       };
     } else {
       // 修改相册
-      albumSetting = {
-
+      settingData = {
+        name:title,
+        power:this.state.power
       };
     }
 
-    console.log('AlbumSetting onSubmit albumSetting', albumSetting);
+    console.log('AlbumSetting onSubmit albumSetting', settingData);
 
-    route.albumSettingChange(albumSetting);
+    const {route} = this.props;
+    route.albumSettingChange(settingData, false);
 
     this.onBackHandle();
     toastShort('添加相册成功');
@@ -70,6 +74,26 @@ export default class AlbumSetting extends React.Component {
     this.setState({
       power:value
     });
+  };
+
+  onDelAlbum= ()=>{
+    const {route} = this.props;
+    route.albumSettingChange(settingData, true);
+    this.onBackHandle();
+    toastShort('删除相册成功');
+  };
+
+  /**
+   * 非新建相册时，渲染删除按钮
+   */
+  renderDelBtn= ()=>{
+    if(settingData != null){
+      return (
+          <TouchableOpacity onPress={this.onDelAlbum} style={[gstyles.button, {marginTop:30}]}>
+            <Text style={{color:'white'}} >删除相册</Text>
+          </TouchableOpacity>
+      );
+    }
   };
 
   render() {
@@ -85,7 +109,7 @@ export default class AlbumSetting extends React.Component {
           />
 
           <View style={gstyles.content}>
-            <TextInput onChangeText={(text)=> {title=text}} style={[gstyles.input, {marginTop: 20}]} placeholder={this.state.albumTitle}/>
+            <TextInput onChangeText={(text)=> {title=text}} style={[gstyles.input, {marginTop: 20}]} placeholder={settingData==null? '请输入相册名称' : settingData.name}/>
 
             <Text style={{marginLeft:15, marginTop:30, marginBottom:15, fontSize:15}}>访问权限:</Text>
 
@@ -118,6 +142,9 @@ export default class AlbumSetting extends React.Component {
                 </View>
               </View>
             </TouchableOpacity>
+
+            {this.renderDelBtn()}
+
           </View>
         </View>
     );

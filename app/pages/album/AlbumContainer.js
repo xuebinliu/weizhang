@@ -5,13 +5,14 @@
  */
 import React from 'react';
 import{
-    View,
-    ListView,
-    StyleSheet,
+  View,
+  ListView,
+  Dimensions,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Text,
 } from 'react-native';
-
-import AV from 'leancloud-storage';
-import AlbumContainerItem from './AlbumContainerItem';
 
 import {
     gstyles,
@@ -19,7 +20,17 @@ import {
     naviGoBack,
 } from '../../header';
 
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import AV from 'leancloud-storage';
+import AlbumSetting from './AlbumSetting';
+import Album from './Album';
+
+// 数据源
 const dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+// 相册大小（正方形）,根据屏幕宽度计算
+let imageSize = (Dimensions.get('screen').width - 20*4)/2;
+// 当前相册对象  {id, content{id,index,coverage_url,name,power,image_url[...]}}
+let currentAlbumObj;
 
 /**
  * 可以查看自己的相册和他人的相册，只有查看自己的相册时，可以添加新相册
@@ -29,7 +40,7 @@ export default class AlbumContainer extends React.Component {
     super(props);
 
     this.state = {
-      items:this.getListItemData([]),
+      content:this.getListItemData([]),
     };
   }
 
@@ -38,6 +49,7 @@ export default class AlbumContainer extends React.Component {
   }
 
   // TODO 加载对应用户的相册
+  // 重新加载相册数据
   loadAlbums() {
     const that = this;
     let album_id = AV.User.current().get('album_id');
@@ -46,13 +58,14 @@ export default class AlbumContainer extends React.Component {
 
     if(album_id) {
       // 相册存在，获取相册
-      var query = new AV.Query('Albums');
+      let query = new AV.Query('Albums');
       query.get(album_id).then(function (albumObj) {
-        let content = albumObj.get('content');
+        currentAlbumObj = albumObj;
+        let content = currentAlbumObj.get('content');
         console.log('loadAlbums get albumObj content', content);
         if(content) {
           that.setState({
-            items:that.getListItemData(content)
+            content:that.getListItemData(content)
           })
         }
       }, function (error) {
@@ -60,39 +73,29 @@ export default class AlbumContainer extends React.Component {
       });
     } else {
       // 相册不存在，相册对象Albums，并创建一个空相册放入content中
-      var Albums = AV.Object.extend('Albums');
-      var albumObj = new Albums();
+      let Albums = AV.Object.extend('Albums');
+      let albumObj = new Albums();
       albumObj.set('content', []);
       albumObj.save().then(function (albumObj) {
+        currentAlbumObj = albumObj;
         // 保存相册id到user中
-        AV.User.current().set('album_id', albumObj.id);
+        AV.User.current().set('album_id', currentAlbumObj.id);
         AV.User.current().save();
       }, function (error) {
-        console.error(error);
+        console.log('save album errro', error);
       });
     }
   }
 
   getListItemData(content) {
-    console.log('getListItemData content', content);
+    let tempContent = content.slice(0);
 
     // TODO: 查看别人相册不显示加号
-    content.unshift({addBtn:true});
+    tempContent.unshift({addBtn:true});
 
-    // 每行显示两个相册，所以对原相册对象进行分组，两个一组
-    let items = [];
-    let rowCount = parseInt(content.length / 2);
-    for(let i=0; i<=rowCount; i++){
-      if(content[i*2+1]) {
-        items.push([content[i*2], content[i*2+1]]);
-      } else {
-        items.push([content[i*2]]);
-      }
-    }
+    console.log('getListItemData content', tempContent);
 
-    console.log('getListItemData items', items);
-
-    return dataSource.cloneWithRows(items);
+    return dataSource.cloneWithRows(tempContent);
   }
 
   onBackHandle=()=> {
@@ -100,21 +103,89 @@ export default class AlbumContainer extends React.Component {
     return naviGoBack(navigator);
   };
 
-  // 当相册改变状态时，刷新相册容器
-  onRefresh= ()=>{
-    console.log('onRefresh');
-    this.loadAlbums();
+  /**
+   * 点击添加相册
+   */
+  onAddAlbum= ()=>{
+    const {navigator} = this.props;
+    navigator.push({
+      component:AlbumSetting,
+      settingData:null,
+      albumSettingChange:this.albumSettingChange,
+    });
   };
 
-  renderRow= (rowData, sectionId, rowId)=>{
-    console.log('renderRow', rowData, sectionId, rowId);
+  /**
+   * 点击打开相册
+   * @param itemData
+   */
+  openAlbum= (itemData)=>{
+    console.log('openAlbum itemData=', itemData);
 
-    // 渲染一个相册容器的item
     const {navigator} = this.props;
-    return <AlbumContainerItem
-              refresh={this.onRefresh}
-              navigator={navigator}
-              rowData={rowData}/>;
+    navigator.push({
+      component:Album,
+      settingData:itemData,
+      albumSettingChange:this.albumSettingChange,
+    });
+
+  };
+
+  /**
+   * 获取相册权限提示文字
+   * @param power
+   * @returns {*}
+   */
+  getAlbumPower= (power)=> {
+    if(power == 0) {
+      return '不限制访问';
+    } else if(power == 1) {
+      return '付费访问';
+    } else if(power == 2) {
+      return '禁止其他人访问';
+    } else {
+      return '未知';
+    }
+  };
+
+  renderRow= (itemData, sectionId, rowId)=>{
+    console.log('renderRow', itemData, sectionId, rowId);
+    if(itemData.addBtn == true) {
+      // 渲染加号按钮
+      return (
+          <TouchableOpacity onPress={this.onAddAlbum} style={styles.addBtn}>
+            <Ionicons name={"ios-add-outline"} size={60} color="blue" />
+            <Text style={{color:'blue'}}>添加相册</Text>
+          </TouchableOpacity>
+      );
+    } else {
+      // 相册名字(名称+照片个数)
+      let title = itemData.name;
+      if(typeof itemData.image_url != 'undefined'){
+        title = title  + '('+ itemData.image_url.length + ')';
+      }
+
+      return(
+          <TouchableOpacity onPress={()=>{this.openAlbum(itemData)}} style={styles.itemView}>
+            {this.renderItemImage(itemData)}
+            <Text style={styles.itemName}>{title}</Text>
+            <Text style={styles.itemName}>{this.getAlbumPower(itemData.power)}</Text>
+          </TouchableOpacity>
+      );
+    }
+  };
+
+  /**
+   * 渲染相册封面
+   * @param itemData
+   * @returns {XML}
+   */
+  renderItemImage= (itemData)=>{
+    if(itemData.coverage_url){
+      return (<Image resizeMode='stretch' style={styles.itemImage} source={{uri:itemData.coverage_url}}/>);
+    } else {
+      return (<Image resizeMode='stretch' style={styles.itemImage} source={require('../../img/default_image.png')}/>);
+    }
   };
 
   render() {
@@ -128,12 +199,98 @@ export default class AlbumContainer extends React.Component {
 
           <View style={gstyles.content}>
             <ListView
-                dataSource={this.state.items}
+                dataSource={this.state.content}
                 renderRow={this.renderRow}
                 enableEmptySections={true}
+                contentContainerStyle={{flexDirection:'row', flexWrap:'wrap'}}
             />
           </View>
         </View>
     );
   }
+
+  /**
+   * 修改相册
+   * @param albumSetting
+   * @param isDel 是否删除
+   */
+  albumSettingChange= (albumSetting, isDel)=>{
+    console.log('AlbumContainer albumSettingChange albumSetting', albumSetting);
+
+    // 相册已存在则覆盖修改的值，不存在则添加
+    let content = currentAlbumObj.get('content');
+    let index = -1;
+    for(let i=0; i<content.length; i++) {
+      if(content[i].id == albumSetting.id) {
+        index = i;
+        break;
+      }
+    }
+
+    if(isDel){
+      // 需要删除
+      content.splice(index, 1);
+    } else {
+      if(index == -1) {
+        // 没找到则插入
+        content.push(albumSetting);
+      } else {
+        // 找到了，则修改其值
+        content[index].name = albumSetting.name;
+        content[index].power = albumSetting.power;
+      }
+    }
+
+    // save to server
+    const that = this;
+    currentAlbumObj.set('content', content);
+    currentAlbumObj.save().then(function (albumObj) {
+      currentAlbumObj = albumObj;
+      console.log('albumSettingChange save currentAlbumObj success', albumObj);
+      // update ui
+      that.loadAlbums();
+    }, function (error) {
+      console.log('albumSettingChange save currentAlbumObj error', error);
+    });
+  };
 }
+
+const styles = StyleSheet.create({
+  container:{
+    flex:1,
+    flexDirection:'row',
+    height:200,
+  },
+
+  addBtn:{
+    width:imageSize,
+    height:imageSize + 50,
+    margin:20,
+    backgroundColor:"#ffffff",
+    borderWidth:1,
+    borderColor:'#dddddd',
+    justifyContent:'center',
+    alignItems:'center',
+  },
+
+  itemView:{
+    flexDirection:'column',
+    justifyContent:'flex-start',
+    alignItems:'flex-start',
+    width:imageSize,
+    height:imageSize + 50,
+    margin:20,
+    backgroundColor:"#ffffff",
+  },
+
+  itemImage:{
+    alignSelf:'center',
+    width:imageSize,
+    height:imageSize,
+  },
+
+  itemName:{
+    fontSize:16,
+  },
+
+});

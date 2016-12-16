@@ -67,10 +67,11 @@ export default class Profile extends React.Component {
   onModifyHead= ()=>{
     const that = this;
 
+    // 获取头像
     ImagePicker.openPicker({
       width: parseInt(60 * PixelRatio.get()),
       height: parseInt(60 * PixelRatio.get()),
-      cropping: true
+      cropping: true,
     }).then((image)=>{
       // 上传前，显示加载框
       loaderHandler.showLoader('正在上传...');
@@ -78,7 +79,13 @@ export default class Profile extends React.Component {
       // save to server via native
       NativeModules.FileUpload.upload(image.path, function (error, url) {
         // 取消加载框
-        DeviceEventEmitter.emit('changeLoadingEffect', {isVisible: false});
+        loaderHandler.hideLoader();
+
+        if(!error){
+          console.log('upload avatar failed', error);
+          toastShort('更改头像失败');
+          return;
+        }
 
         // 头像上传成功后，把url地址保存到User中
         AV.User.current().set('avatar_url', url);
@@ -87,18 +94,16 @@ export default class Profile extends React.Component {
         // 更新当前界面
         that.forceUpdate();
 
-        // 更新我的界面
+        // 更新上一级界面（我的）
         const {route} = that.props;
         route.callback();
 
         toastShort('更改头像成功');
 
-        console.log("onModifyHead url=", url);
+        console.log("onModifyHead success avatar url=", url);
       });
     }).catch((e)=>{
-      // 取消加载框
-      loaderHandler.hideLoader();
-      toastShort('更改头像失败');
+      console.log('onModifyHead e', e);
     });
   };
 

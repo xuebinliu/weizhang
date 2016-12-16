@@ -12,9 +12,6 @@ import Publish from './pages/Publish';
 import Profile from './pages/me/Profile';
 import AlbumContainer from './pages/album/AlbumContainer';
 
-// module
-import UserProfile from './module/UserProfile';
-
 // utils
 import gstyles from './gstyles';
 import DeviceStorage from './utils/Storage';
@@ -34,7 +31,6 @@ export {
     Location,
     Publish,
     Profile,
-    UserProfile,
     AlbumContainer,
 
     gstyles,

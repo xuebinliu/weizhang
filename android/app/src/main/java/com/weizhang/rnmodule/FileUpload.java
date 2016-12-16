@@ -56,10 +56,9 @@ public class FileUpload extends ReactContextBaseJavaModule {
                 }
             });
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
+            // 失败
+            callback.invoke(false, "");
         }
     }
 }

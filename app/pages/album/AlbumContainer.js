@@ -19,7 +19,7 @@ import {
     naviGoBack,
 } from '../../header';
 
-var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+const dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 /**
  * 可以查看自己的相册和他人的相册，只有查看自己的相册时，可以添加新相册
@@ -76,7 +76,7 @@ export default class AlbumContainer extends React.Component {
   getListItemData(content) {
     console.log('getListItemData content', content);
 
-    // 查看自己相册时，显示加号
+    // TODO: 查看别人相册不显示加号
     content.unshift({addBtn:true});
 
     // 每行显示两个相册，所以对原相册对象进行分组，两个一组

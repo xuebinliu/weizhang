@@ -16,6 +16,7 @@ import {
   gstyles,
   NavigationBar,
   naviGoBack,
+  loaderHandler,
 } from '../../header';
 
 export default class PreviewImage extends React.Component {
@@ -26,6 +27,7 @@ export default class PreviewImage extends React.Component {
     const {route} = this.props;
     this.state = {
       url:route.url,
+      isOwnPicture:route.isOwnPicture,
     };
 
     console.log('PreviewImage constructor url', this.state.url);
@@ -54,25 +56,40 @@ export default class PreviewImage extends React.Component {
     );
   };
 
+  /**
+   * 渲染导航栏，当前用户查看自己的照片时，导航栏显示'删除'功能
+   * @returns {XML}
+   */
+  renderNavigator= ()=>{
+    if(this.state.isOwnPicture) {
+      return (<NavigationBar
+          title={'大图预览'}
+          leftButtonIcon="md-arrow-back"
+          onLeftButtonPress={this.onBackHandle}
+          rightButtonTitle='删除'
+          onRightButtonPress={this.onDeleteImage}
+          rightButtonTitleColor={'white'}
+      />);
+    } else {
+      return (<NavigationBar
+          title={'大图预览'}
+          leftButtonIcon="md-arrow-back"
+          onLeftButtonPress={this.onBackHandle}
+      />);
+    }
+  };
+
   render(){
     return (
         <View style={gstyles.container}>
-          <NavigationBar
-              title={'预览'}
-              leftButtonIcon="md-arrow-back"
-              onLeftButtonPress={this.onBackHandle}
-              rightButtonTitle='删除'
-              onRightButtonPress={this.onDeleteImage}
-              rightButtonTitleColor={'white'}
-          />
+          {this.renderNavigator()}
 
           <View style={gstyles.content}>
             <Image
-                   source={{uri:this.state.url}}
-                   style={{
-                     width:Dimensions.get('window').width,
-                     height:Dimensions.get('window').height,
-                   }}/>
+               source={{uri:this.state.url}}
+               style={{width:Dimensions.get('window').width, height:Dimensions.get('window').height}}
+               onLoadStart={()=>loaderHandler.showLoader('加载中,请稍后')}
+               onLoadEnd={()=>loaderHandler.hideLoader()}/>
           </View>
 
         </View>

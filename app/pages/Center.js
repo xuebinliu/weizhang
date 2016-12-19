@@ -115,13 +115,13 @@ export default class Center extends React.Component {
 
   // 相册
   onPressAlbum = ()=>{
-    console.log('onPressAlbum');
     const that = this;
     AV.User.currentAsync().then((currentUser)=>{
       const {navigator} = that.props;
       if(currentUser) {
         navigator.push({
           component: AlbumContainer,
+          currentUser:currentUser,
         });
       } else {
         navigator.push({

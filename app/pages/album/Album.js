@@ -22,6 +22,7 @@ import {
   loaderHandler,
 } from '../../header';
 
+import AV from 'leancloud-storage';
 import ImagePicker from 'react-native-image-crop-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -35,6 +36,9 @@ let imageSize = (Dimensions.get('screen').width - IMAGE_MARGIN*6)/3;
 
 const dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
+// 用户对象
+let currentUser;
+// 相册相关数据
 let settingData;
 
 export default class Album extends React.Component {
@@ -42,6 +46,8 @@ export default class Album extends React.Component {
     super(props);
 
     const {route} = this.props;
+    currentUser = route.currentUser;
+
     settingData = route.settingData;
     if(!settingData.image_urls){
       settingData.image_urls = [];
@@ -55,8 +61,9 @@ export default class Album extends React.Component {
   getListItemData(content) {
     let tmpContent = content.slice(0);
 
-    // TODO: 查看别人相册不显示加号
-    tmpContent.unshift({addBtn:true});
+    if(AV.User.current().getUsername() == currentUser.getUsername()) {
+      tmpContent.unshift({addBtn:true});
+    }
 
     return dataSource.cloneWithRows(tmpContent);
   }
@@ -113,7 +120,7 @@ export default class Album extends React.Component {
 
           if(url && url.length > 0){
             // 记录上传的照片
-            settingData.image_urls.push({url:url, thumbUrl:thumbUrl});
+            settingData.image_urls.unshift({url:url, thumbUrl:thumbUrl});
             settingData.coverage_url = thumbUrl;
             that.setState({
               items:that.getListItemData(settingData.image_urls)
@@ -147,6 +154,7 @@ export default class Album extends React.Component {
     navigator.push({
       component:PreviewImage,
       url:rowData.url,
+      isOwnPicture:(AV.User.current().getUsername() == currentUser.getUsername()),
       deletePictureCallback:this.deletePictureCallback,
     });
   };
@@ -158,6 +166,12 @@ export default class Album extends React.Component {
       let image = settingData.image_urls[i];
       if(image.url == url) {
         settingData.image_urls.splice(i, 1);
+
+        if(image.thumbUrl == settingData.coverage_url && settingData.image_urls[0].thumbUrl) {
+          settingData.coverage_url = settingData.image_urls[0].thumbUrl;
+          console.log('deletePictureCallback modify coverage_url', settingData.coverage_url);
+        }
+
         console.log('deletePictureCallback find and delete image', image);
 
         // save to server
@@ -194,18 +208,33 @@ export default class Album extends React.Component {
     }
   };
 
+  /**
+   * 渲染导航栏，当前用户查看自己的相册时，导航栏显示'设置'功能
+   * @returns {XML}
+   */
+  renderNavigator= ()=>{
+    if(AV.User.current().getUsername() == currentUser.getUsername()) {
+      return (<NavigationBar
+          title={'相册'}
+          leftButtonIcon="md-arrow-back"
+          onLeftButtonPress={this.onBackHandle}
+          rightButtonTitle='设置'
+          onRightButtonPress={this.onAlbumSetting}
+          rightButtonTitleColor={'white'}
+      />);
+    } else {
+      return (<NavigationBar
+          title={'相册'}
+          leftButtonIcon="md-arrow-back"
+          onLeftButtonPress={this.onBackHandle}
+      />);
+    }
+  };
+
   render() {
     return (
         <View style={gstyles.container}>
-          <NavigationBar
-              title={'相册'}
-              leftButtonIcon="md-arrow-back"
-              onLeftButtonPress={this.onBackHandle}
-              rightButtonTitle='设置'
-              onRightButtonPress={this.onAlbumSetting}
-              rightButtonTitleColor={'white'}
-          />
-
+          {this.renderNavigator()}
           <View style={gstyles.content}>
             <ListView
                 contentContainerStyle={{flexDirection:'row', flexWrap:'wrap'}}
@@ -214,7 +243,6 @@ export default class Album extends React.Component {
                 enableEmptySections={true}
             />
           </View>
-
         </View>
     );
   }

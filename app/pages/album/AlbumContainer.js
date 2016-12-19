@@ -25,12 +25,17 @@ import AV from 'leancloud-storage';
 import AlbumSetting from './AlbumSetting';
 import Album from './Album';
 
+
+// 相册大小（正方形）,根据屏幕宽度计算
+const IMAGE_SIZE = (Dimensions.get('screen').width - 20*4)/2;
+
+// 用户对象
+let currentUser;
+// 当前相册对象       {id, content{id,index,coverage_url,name,power,image_urls[...]}}
+let currentAlbumObj;
+
 // 数据源
 const dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-// 相册大小（正方形）,根据屏幕宽度计算
-let imageSize = (Dimensions.get('screen').width - 20*4)/2;
-// 当前相册对象  {id, content{id,index,coverage_url,name,power,image_url[...]}}
-let currentAlbumObj;
 
 /**
  * 可以查看自己的相册和他人的相册，只有查看自己的相册时，可以添加新相册
@@ -38,6 +43,9 @@ let currentAlbumObj;
 export default class AlbumContainer extends React.Component {
   constructor(props){
     super(props);
+
+    const {route} = this.props;
+    currentUser = route.currentUser;
 
     this.state = {
       content:this.getListItemData([]),
@@ -48,11 +56,10 @@ export default class AlbumContainer extends React.Component {
     this.loadAlbums();
   }
 
-  // TODO 加载对应用户的相册
   // 重新加载相册数据
   loadAlbums() {
     const that = this;
-    let album_id = AV.User.current().get('album_id');
+    let album_id = currentUser.get('album_id');
 
     console.log('loadAlbums album_id', album_id);
 
@@ -88,12 +95,13 @@ export default class AlbumContainer extends React.Component {
   }
 
   getListItemData(content) {
+    // 复制相册数据
     let tempContent = content.slice(0);
 
-    // TODO: 查看别人相册不显示加号
-    tempContent.unshift({addBtn:true});
-
-    console.log('getListItemData content', tempContent);
+    if(AV.User.current().getUsername() == currentUser.getUsername()) {
+      // 查看自己 增加添加相册按钮
+      tempContent.unshift({addBtn:true});
+    }
 
     return dataSource.cloneWithRows(tempContent);
   }
@@ -126,6 +134,7 @@ export default class AlbumContainer extends React.Component {
     navigator.push({
       component:Album,
       settingData:itemData,
+      currentUser:currentUser,
       albumSettingChange:this.albumSettingChange,
     });
 
@@ -239,7 +248,7 @@ export default class AlbumContainer extends React.Component {
         content[index].name = albumSetting.name;
         content[index].power = albumSetting.power;
         content[index].image_urls = albumSetting.image_urls;
-        content[index].coverage_url = albumSetting.coverage_url;0
+        content[index].coverage_url = albumSetting.coverage_url;
       }
     }
 
@@ -265,8 +274,8 @@ const styles = StyleSheet.create({
   },
 
   addBtn:{
-    width:imageSize,
-    height:imageSize + 50,
+    width:IMAGE_SIZE,
+    height:IMAGE_SIZE + 50,
     margin:20,
     backgroundColor:"#ffffff",
     borderWidth:1,
@@ -279,16 +288,16 @@ const styles = StyleSheet.create({
     flexDirection:'column',
     justifyContent:'flex-start',
     alignItems:'flex-start',
-    width:imageSize,
-    height:imageSize + 50,
+    width:IMAGE_SIZE,
+    height:IMAGE_SIZE + 50,
     margin:20,
     backgroundColor:"#ffffff",
   },
 
   itemImage:{
     alignSelf:'center',
-    width:imageSize,
-    height:imageSize,
+    width:IMAGE_SIZE,
+    height:IMAGE_SIZE,
   },
 
   itemName:{

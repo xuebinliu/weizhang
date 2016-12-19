@@ -24,9 +24,9 @@ import {
 
 import ImagePicker from 'react-native-image-crop-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AV from 'leancloud-storage';
 
 import AlbumSetting from './AlbumSetting';
+import PreviewImage from './PreviewImage';
 
 // 照片间距
 const IMAGE_MARGIN = 5;
@@ -35,22 +35,30 @@ let imageSize = (Dimensions.get('screen').width - IMAGE_MARGIN*6)/3;
 
 const dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
+let settingData;
+
 export default class Album extends React.Component {
   constructor(props){
     super(props);
 
+    const {route} = this.props;
+    settingData = route.settingData;
+    if(!settingData.image_urls){
+      settingData.image_urls = [];
+    }
+
     this.state = {
-      items:this.getListItemData([]),
+      items:this.getListItemData(settingData.image_urls),
     };
   }
 
   getListItemData(content) {
-    console.log('getListItemData content', content);
+    let tmpContent = content.slice(0);
 
     // TODO: 查看别人相册不显示加号
-    content.unshift({addBtn:true});
+    tmpContent.unshift({addBtn:true});
 
-    return dataSource.cloneWithRows(content);
+    return dataSource.cloneWithRows(tmpContent);
   }
 
   onBackHandle=()=> {
@@ -95,32 +103,79 @@ export default class Album extends React.Component {
       console.log('onAddPicture', images);
 
       // 上传前，显示加载框
-      loaderHandler.showLoader('正在上传...');
-
+      loaderHandler.showLoader('开始上传...');
+      var completeCount = 0;
       for(let image of images) {
         // save to server via native
         console.log('start upload image path=', image.path);
-        NativeModules.FileUpload.upload(image.path, function (error, url) {
-          console.log('end upload image url=', url);
-          if(!error){
-            return;
+        NativeModules.FileUpload.upload(image.path, function (error, url, thumbUrl) {
+          console.log('complete upload image url=', url, image.path, thumbUrl);
+
+          if(url && url.length > 0){
+            // 记录上传的照片
+            settingData.image_urls.push({url:url, thumbUrl:thumbUrl});
+            settingData.coverage_url = thumbUrl;
+            that.setState({
+              items:that.getListItemData(settingData.image_urls)
+            });
+
+            that.albumSettingChange(settingData, false);
+
+            console.log('save upload image url', url);
           }
 
-          // 更新当前界面
-          that.forceUpdate();
-
+          completeCount++;
+          if(completeCount == images.length) {
+            // 上传完成
+            console.log('end upload images completeCount', completeCount);
+            loaderHandler.hideLoader();
+          }
         });
       }
     }).catch((e)=>{
     });
   };
 
-  onOpenPicture= ()=>{
+  /**
+   * 打开大图
+   * @param rowData
+   */
+  onOpenPicture= (rowData)=>{
+    console.log('renderRow rowData', rowData);
 
+    const {navigator} = this.props;
+    navigator.push({
+      component:PreviewImage,
+      url:rowData.url,
+      deletePictureCallback:this.deletePictureCallback,
+    });
+  };
+
+  // 查看大图时，删除照片回调函数
+  deletePictureCallback= (url)=>{
+    console.log('deletePictureCallback url', url);
+    for(let i=0; i<settingData.image_urls.length; i++) {
+      let image = settingData.image_urls[i];
+      if(image.url == url) {
+        settingData.image_urls.splice(i, 1);
+        console.log('deletePictureCallback find and delete image', image);
+
+        // save to server
+        this.albumSettingChange(settingData, false);
+
+        // update ui
+        this.setState({
+          items:this.getListItemData(settingData.image_urls)
+        });
+
+        break;
+      }
+    }
+    console.log('deletePictureCallback current image_urls', settingData.image_urls);
   };
 
   renderRow= (rowData, sectionId, rowId)=>{
-    console.log('renderRow', rowData, sectionId, rowId);
+    console.log('renderRow rowData', rowData, sectionId, rowId);
 
     if(rowData.addBtn == true) {
       return (
@@ -132,8 +187,8 @@ export default class Album extends React.Component {
     } else {
       return (
           // render picture
-          <TouchableOpacity>
-            <Image/>
+          <TouchableOpacity onPress={()=>this.onOpenPicture(rowData)}>
+            <Image style={styles.image} source={{uri:rowData.thumbUrl}} />
           </TouchableOpacity>
       );
     }
@@ -173,6 +228,14 @@ const styles = StyleSheet.create({
     backgroundColor:"#ffffff",
     borderWidth:1,
     borderColor:'#dddddd',
+    justifyContent:'center',
+    alignItems:'center',
+  },
+
+  image:{
+    width:imageSize,
+    height:imageSize,
+    margin:IMAGE_MARGIN,
     justifyContent:'center',
     alignItems:'center',
   },

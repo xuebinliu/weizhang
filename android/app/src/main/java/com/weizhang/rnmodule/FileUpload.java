@@ -43,7 +43,9 @@ public class FileUpload extends ReactContextBaseJavaModule {
                     // 成功或失败处理...
                     if(e == null) {
                         // 成功
-                        callback.invoke(true, file.getUrl());
+                        String thumbUrl = file.getThumbnailUrl(true, 300, 300);
+
+                        callback.invoke(true, file.getUrl(), thumbUrl);
                     } else {
                         // 失败
                         callback.invoke(false, "");

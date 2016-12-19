@@ -67,7 +67,6 @@ export default class AlbumSetting extends React.Component {
     route.albumSettingChange(settingData, false);
 
     this.onBackHandle();
-    toastShort('添加相册成功');
   };
 
   setPower= (value)=>{

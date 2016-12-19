@@ -161,8 +161,8 @@ export default class AlbumContainer extends React.Component {
     } else {
       // 相册名字(名称+照片个数)
       let title = itemData.name;
-      if(typeof itemData.image_url != 'undefined'){
-        title = title  + '('+ itemData.image_url.length + ')';
+      if(typeof itemData.image_urls != 'undefined'){
+        title = title  + '('+ itemData.image_urls.length + ')';
       }
 
       return(
@@ -238,6 +238,8 @@ export default class AlbumContainer extends React.Component {
         // 找到了，则修改其值
         content[index].name = albumSetting.name;
         content[index].power = albumSetting.power;
+        content[index].image_urls = albumSetting.image_urls;
+        content[index].coverage_url = albumSetting.coverage_url;0
       }
     }
 

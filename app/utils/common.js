@@ -13,19 +13,12 @@ export function naviGoBack(navigator) {
   return false;
 }
 
-export function isEmptyObject(obj) {
-  for (var name in obj) {
-    return false;
-  }
-  return true;
-}
-
 // 根据当前IP获取所在城市
 export async function getCurrentCity() {
   try {
     let city = await DeviceStorage.get(SK_CURR_CITY);
     if(city){
-      console.log(city);
+      console.log('getCurrentCity from cache', city);
       return city;
     } else {
       let response = await fetch(BD_MAP_IP_URL);
@@ -34,7 +27,7 @@ export async function getCurrentCity() {
       let city = json.content.address_detail.city;
       // 存储
       DeviceStorage.save(SK_CURR_CITY, city);
-      console.log(city);
+      console.log('getCurrentCity from baidu', city);
       return city;
     }
   } catch (error) {
@@ -44,15 +37,15 @@ export async function getCurrentCity() {
 }
 
 // 获取城市列表,包含了当前用户所在城市
-export function getCityList(callback) {
-  try {
-    setTimeout(function () {
-      getCurrentCity().then((city)=>{
-        CITIES.当前[0]=city;
-        callback(CITIES);
-      });
-    }, 0);
-  } catch (error) {
-    console.error(error);
-  }
+export function getCityList() {
+  let promise = new Promise(function (resolve, reject) {
+    getCurrentCity().then((city)=>{
+      CITIES.当前[0]=city;
+      resolve(CITIES);
+    }).catch(function (error) {
+      reject(error);
+    });
+  });
+
+  return promise;
 }

@@ -15,7 +15,7 @@ import {
     getCurrentCity,
     Location,
     Publish,
-} from '../header';
+} from '../../header';
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -34,6 +34,7 @@ export default class Home extends React.Component {
     InteractionManager.runAfterInteractions(() => {
       navigator.push({
         component: Location,
+        refreshCity:this.refreshCity,
       });
     });
   };
@@ -48,14 +49,23 @@ export default class Home extends React.Component {
   }
 
   componentDidMount(){
+    this.refreshCity();
+  }
+
+  /**
+   * 刷新当前城市
+   */
+  refreshCity= ()=> {
+    console.log('refreshCity current', this.state.city);
+    const that = this;
     getCurrentCity().then((city)=>{
       if(city !== 'error') {
-        this.setState({
+        that.setState({
           city:city
         });
       }
     });
-  }
+  };
 
   render(){
     return (

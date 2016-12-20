@@ -4,10 +4,9 @@
  */
 
 
+
 export const IC_NAV_BACK  = 'md-arrow-back';      // 后退
 export const IC_NAV_CHECK = 'md-checkmark';       // 确认
-
-
 
 
 // storage key

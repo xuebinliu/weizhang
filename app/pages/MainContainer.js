@@ -9,7 +9,7 @@ import React from 'react';
 import TabNavigator from 'react-native-tab-navigator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import Home from './Hall';
+import Hall from './hall/Hall';
 import News from './News';
 import Center from './Center';
 
@@ -33,7 +33,7 @@ export default class Main extends React.Component {
             renderIcon={() => <Ionicons name="ios-home-outline" size={28} color="gray"/>}
             renderSelectedIcon={() => <Ionicons name="ios-home" size={28} color="green"/>}
             onPress={() => this.setState({ selectedTab: 'home' })}>
-          <Home {...this.props}/>
+          <Hall {...this.props}/>
         </TabNavigator.Item>
 
         <TabNavigator.Item

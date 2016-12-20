@@ -21,60 +21,57 @@ import {
     LoadingView,
     naviGoBack,
     getCityList,
-} from '../header';
+} from '../../header';
 
-import {SK_CURR_CITY} from '../const';
+import * as Const from '../../const';
 
 export default class Location extends React.Component {
-
   constructor(props){
     super(props);
-
-    this.renderRow = this.renderRow.bind(this);
-    this.renderSectionHeader = this.renderSectionHeader.bind(this);
-    this.renderSeparator = this.renderSeparator.bind(this);
-    this.onPressRow = this.onPressRow.bind(this);
-
-    this.renderListView = this.renderListView.bind(this);
-  }
-
-  componentWillMount() {
-    this.props = {
-        isLoading : true
+    this.state = {
+      isLoading:true,
     };
   }
 
   componentDidMount() {
-    getCityList((cities) => {
-      let ds = new ListView.DataSource({
-        rowHasChanged:(r1, r2)=> r1 !== r2,
-        sectionHeaderHasChanged:(s1, s2)=> s1!== s2,
-      });
+    const that = this;
+    setTimeout(function () {
+      getCityList().then(function (cities) {
+        let ds = new ListView.DataSource({
+          rowHasChanged:(r1, r2)=> r1 !== r2,
+          sectionHeaderHasChanged:(s1, s2)=> s1!== s2,
+        });
 
-      // 数据加载完成
-      this.props.isLoading = false;
-
-      // 触发下一次绘制
-      this.setState({
-        dataSource : ds.cloneWithRowsAndSections(cities)
+        // 数据加载完成
+        that.setState({
+          isLoading:false,
+          dataSource : ds.cloneWithRowsAndSections(cities)
+        });
+      }, function (error) {
+        console.log('Location getCityList err', error);
       });
-    });
+    }, 500);
   }
 
-  onBackHandle=()=> {
+  onBackHandle= ()=> {
     const {navigator} = this.props;
     return naviGoBack(navigator);
   };
 
-  onPressRow(rowData) {
+  onPressRow= (rowData)=> {
+    // save to storage
+    DeviceStorage.save(Const.SK_CURR_CITY, rowData);
+
+    // refresh ui
+    const {route} = this.props;
+    route.refreshCity();
+
     toastShort('已切换到 '+rowData);
 
-    DeviceStorage.save(SK_CURR_CITY, rowData);
+    this.onBackHandle()
+  };
 
-    setTimeout(()=>this.onBackHandle(), 500);
-  }
-
-  renderRow(rowData, sectionId, rowId) {
+  renderRow= (rowData, sectionId, rowId)=> {
     return (
       <TouchableHighlight key={`${sectionId}-${rowId}`}
                           style={styles.listItemContainer}
@@ -83,53 +80,50 @@ export default class Location extends React.Component {
         <Text style={styles.listItemText}>{rowData}</Text>
       </TouchableHighlight>
     );
-  }
+  };
 
-  renderSeparator(sectionId, rowId, adjacentRowHighlighted){
+  renderSeparator= (sectionId, rowId, adjacentRowHighlighted)=> {
     return (
         <View key={`${sectionId}-${rowId}`} style={gstyles.line}></View>
     );
-  }
+  };
 
-  renderSectionHeader(sectionData, sectionId) {
+  renderSectionHeader= (sectionData, sectionId)=> {
     return (
       <View style={styles.listHeaderContainer}>
         <Text style={styles.listHeaderText}>{sectionId}</Text>
       </View>
     );
-  }
+  };
 
   renderListView() {
-    if(!this.props.isLoading) {
-      return (
-          <View style={gstyles.content}>
-            <ListView
-                initialListSize={10}
-                pageSize={20}
-                dataSource={this.state.dataSource}
-                renderSectionHeader={this.renderSectionHeader}
-                renderSeparator={this.renderSeparator}
-                renderLoading
-                renderRow={this.renderRow}/>
-          </View>
-      );
-    } else {
+    if(this.state.isLoading) {
       return (<LoadingView/>);
+    } else {
+      return (
+        <ListView
+            initialListSize={20}
+            pageSize={30}
+            dataSource={this.state.dataSource}
+            renderSectionHeader={this.renderSectionHeader}
+            renderSeparator={this.renderSeparator}
+            renderRow={this.renderRow}/>
+      );
     }
   }
 
   render(){
     return(
         <View style={gstyles.container}>
-
           <NavigationBar
               title={'选择城市'}
               leftButtonIcon="md-arrow-back"
               onLeftButtonPress={this.onBackHandle}
           />
 
+          <View style={gstyles.content}>
           {this.renderListView()}
-
+          </View>
         </View>
     );
   }

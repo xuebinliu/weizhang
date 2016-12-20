@@ -27,11 +27,8 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AV from 'leancloud-storage';
 
-import ModifyAge from './ModifyAge';
-import ModifyEmail from './ModifyEmail';
-import ModifyName from './ModifyName';
 import ModifySex from './ModifySex';
-import ModifyMind from './ModifyMind';
+import ModifyText from './ModifyText';
 
 export default class Profile extends React.Component {
 
@@ -110,15 +107,19 @@ export default class Profile extends React.Component {
   onModifyNickName= ()=>{
     const {navigator} = this.props;
     navigator.push({
-      component: ModifyName,
+      component: ModifyText,
+      value:this.state.userinfo.get('nickname'),
+      modifyKey:'nickname',
       callback:this.updateUserProfile
     });
   };
 
-  onModifyEMail= ()=>{
+  onModifyAddress= ()=>{
     const {navigator} = this.props;
     navigator.push({
-      component: ModifyEmail,
+      component: ModifyText,
+      value:this.state.userinfo.get('address'),
+      modifyKey:'address',
       callback:this.updateUserProfile
     });
   };
@@ -134,7 +135,9 @@ export default class Profile extends React.Component {
   onModifyAge= ()=>{
     const {navigator} = this.props;
     navigator.push({
-      component: ModifyAge,
+      component: ModifyText,
+      value:this.state.userinfo.get('age'),
+      modifyKey:'age',
       callback:this.updateUserProfile
     });
   };
@@ -142,7 +145,9 @@ export default class Profile extends React.Component {
   onModifyMind= ()=>{
     const {navigator} = this.props;
     navigator.push({
-      component: ModifyMind,
+      component: ModifyText,
+      value:this.state.userinfo.get('mind'),
+      modifyKey:'mind',
       callback:this.updateUserProfile
     });
   };
@@ -157,15 +162,6 @@ export default class Profile extends React.Component {
       return '保密';
     } else {
       return '未设置';
-    }
-  };
-
-  getMind= ()=>{
-    let mind = this.state.userinfo.get('mind');
-    if(mind) {
-      return mind;
-    } else {
-      return '未知';
     }
   };
 
@@ -228,7 +224,7 @@ export default class Profile extends React.Component {
             <View style={[gstyles.listItem, styles.item]}>
               <Text>心情</Text>
               <View style={{flex:1, flexDirection:'row', marginRight:10, justifyContent:'flex-end'}}>
-                <Text>{this.getMind()}</Text>
+                <Text>{this.state.userinfo.get('mind') ? this.state.userinfo.get('mind') : '未设置'}</Text>
               </View>
               <Ionicons name="ios-arrow-forward" size={20} color="gray"/>
             </View>
@@ -250,18 +246,18 @@ export default class Profile extends React.Component {
             <View style={[gstyles.listItem, styles.item]}>
               <Text>年龄</Text>
               <View style={{flex:1, flexDirection:'row', marginRight:10, justifyContent:'flex-end'}}>
-                <Text>未设置</Text>
+                <Text>{this.state.userinfo.get('age') ? this.state.userinfo.get('age') : '未设置'}</Text>
               </View>
               <Ionicons name="ios-arrow-forward" size={20} color="gray"/>
             </View>
           </TouchableOpacity>
           <View style={gstyles.line}/>
 
-          <TouchableOpacity onPress={this.onModifyEMail}>
+          <TouchableOpacity onPress={this.onModifyAddress}>
             <View style={[gstyles.listItem, styles.item]}>
-              <Text>邮箱</Text>
+              <Text>地址</Text>
               <View style={{flex:1, flexDirection:'row', marginRight:10, justifyContent:'flex-end'}}>
-                <Text>未绑定</Text>
+                <Text>{this.state.userinfo.get('address') ? this.state.userinfo.get('address') : '未设置'}</Text>
               </View>
               <Ionicons name="ios-arrow-forward" size={20} color="gray"/>
             </View>

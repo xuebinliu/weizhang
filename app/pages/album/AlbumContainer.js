@@ -168,17 +168,19 @@ export default class AlbumContainer extends React.Component {
           </TouchableOpacity>
       );
     } else {
-      // 相册名字(名称+照片个数)
-      let title = itemData.name;
-      if(typeof itemData.image_urls != 'undefined'){
-        title = title  + '('+ itemData.image_urls.length + ')';
+      // itemPower(照片个数+权限)
+      let power = '';
+      if(itemData.image_urls){
+        power = itemData.image_urls.length + '张 ' + this.getAlbumPower(itemData.power);
+      } else {
+        power = '0张 ' + this.getAlbumPower(itemData.power);
       }
 
       return(
           <TouchableOpacity onPress={()=>{this.openAlbum(itemData)}} style={styles.itemView}>
             {this.renderItemImage(itemData)}
-            <Text style={styles.itemName}>{title}</Text>
-            <Text style={styles.itemName}>{this.getAlbumPower(itemData.power)}</Text>
+            <Text style={styles.itemName}>{itemData.name}</Text>
+            <Text style={styles.itemPower}>{power}</Text>
           </TouchableOpacity>
       );
     }
@@ -275,13 +277,14 @@ const styles = StyleSheet.create({
 
   addBtn:{
     width:IMAGE_SIZE,
-    height:IMAGE_SIZE + 50,
-    margin:20,
+    height:IMAGE_SIZE,
     backgroundColor:"#ffffff",
     borderWidth:1,
     borderColor:'#dddddd',
     justifyContent:'center',
     alignItems:'center',
+    marginHorizontal:20,
+    marginVertical:5,
   },
 
   itemView:{
@@ -289,9 +292,10 @@ const styles = StyleSheet.create({
     justifyContent:'flex-start',
     alignItems:'flex-start',
     width:IMAGE_SIZE,
-    height:IMAGE_SIZE + 50,
-    margin:20,
-    backgroundColor:"#ffffff",
+    height:IMAGE_SIZE + 40,
+    backgroundColor:"#ececec",
+    marginHorizontal:20,
+    marginVertical:5,
   },
 
   itemImage:{
@@ -301,7 +305,12 @@ const styles = StyleSheet.create({
   },
 
   itemName:{
-    fontSize:16,
+    fontSize:15,
+    color:'black',
   },
+
+  itemPower:{
+    fontSize:12,
+  }
 
 });

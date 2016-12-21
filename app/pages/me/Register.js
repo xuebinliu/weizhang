@@ -6,18 +6,21 @@
 
 import React from 'react';
 import{
-    View,
-    Text,
-    TouchableOpacity,
-    TextInput,
-    Alert,
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  Alert,
+  ScrollView,
 } from 'react-native';
 
 import {
-    gstyles,
-    NavigationBar,
-    naviGoBack,
-    toastShort,
+  gstyles,
+  NavigationBar,
+  naviGoBack,
+  toastShort,
+  getCurrentCity,
+  Location,
 } from '../../header';
 
 import AV from 'leancloud-storage';
@@ -31,16 +34,31 @@ export default class Register extends React.Component {
   constructor(props) {
     super(props);
 
-    this.onBackHandle = this.onBackHandle.bind(this);
-    this.onRegister = this.onRegister.bind(this);
+    this.state = {
+      city:'未知',
+    }
   }
 
-  onBackHandle() {
+  componentDidMount() {
+    this.refreshCity();
+  }
+
+  refreshCity= ()=>{
+    // 获取当前城市
+    const that = this;
+    getCurrentCity().then(function (city) {
+      that.setState({
+        city:city,
+      });
+    });
+  };
+
+  onBackHandle= ()=> {
     const {navigator} = this.props;
     return naviGoBack(navigator);
   };
 
-  onRegister() {
+  onRegister= ()=> {
     if(nickName == undefined || nickName.length < 1) {
       Alert.alert('提示', '请输入昵称');
       return;
@@ -66,7 +84,7 @@ export default class Register extends React.Component {
       return;
     }
 
-    var user = new AV.User();
+    let user = new AV.User();
     user.setUsername(account);
     user.setPassword(pwd);
 
@@ -75,16 +93,15 @@ export default class Register extends React.Component {
       user.setEmail(account);
     }
 
+    user.set('city', this.state.city);
+
     const that = this;
     user.signUp().then(function (loginedUser) {
       // register successful
-      console.log(JSON.stringify(loginedUser));
-
       toastShort('亲注册成功,请登录');
+
       that.onBackHandle();
     }, (function (error) {
-      console.log(JSON.stringify(error));
-
       if(error.code === 202) {
         toastShort('用户名重复');
       } else if(error.code === 203) {
@@ -93,7 +110,15 @@ export default class Register extends React.Component {
         toastShort('手机号重复');
       }
     }));
-  }
+  };
+
+  onModifyCity= ()=>{
+    const {navigator} = this.props;
+    navigator.push({
+      component: Location,
+      refreshCity:this.refreshCity,
+    });
+  };
 
   render() {
     return (
@@ -105,9 +130,9 @@ export default class Register extends React.Component {
               onLeftButtonPress={this.onBackHandle}
           />
 
-          <View style={gstyles.content}>
+          <ScrollView style={gstyles.content}>
 
-            <TextInput onChangeText={(text)=> nickName=text} style={[gstyles.input, {marginTop: 20}]} placeholder={"昵称"}/>
+            <TextInput onChangeText={(text)=> nickName=text} style={[gstyles.input, {marginTop: 15}]} placeholder={"昵称"}/>
 
             <TextInput onChangeText={(text)=> account=text} style={gstyles.input} placeholder={"账号(邮箱/手机号)"}/>
 
@@ -115,10 +140,15 @@ export default class Register extends React.Component {
 
             <TextInput onChangeText={(text)=> confirmPwd=text} secureTextEntry={true} style={gstyles.input} placeholder={"确认密码"}/>
 
-            <TouchableOpacity onPress={this.onRegister} style={[gstyles.button, {marginTop:30}]}>
+            <TouchableOpacity style={{height: 60, marginHorizontal:15,}} onPress={this.onModifyCity}>
+              <Text style={[{fontSize:14, marginTop:15}]}>城市: {this.state.city}</Text>
+              <View style={{marginTop:15, height:1, backgroundColor:'dimgray'}} />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={this.onRegister} style={[gstyles.button, {marginTop:40}]}>
               <Text style={{color:'white'}} >注册</Text>
             </TouchableOpacity>
-          </View>
+          </ScrollView>
 
         </View>
     );

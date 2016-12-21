@@ -23,22 +23,21 @@ export async function getCurrentCity() {
     } else {
       let response = await fetch(BD_MAP_IP_URL);
       let json = await response.json();
-
       let city = json.content.address_detail.city;
+
       // 存储
       DeviceStorage.save(SK_CURR_CITY, city);
       console.log('getCurrentCity from baidu', city);
       return city;
     }
   } catch (error) {
-    console.error(error);
     return '未知';
   }
 }
 
 // 获取城市列表,包含了当前用户所在城市
 export function getCityList() {
-  let promise = new Promise(function (resolve, reject) {
+  return new Promise(function (resolve, reject) {
     getCurrentCity().then((city)=>{
       CITIES.当前[0]=city;
       resolve(CITIES);
@@ -46,6 +45,4 @@ export function getCityList() {
       reject(error);
     });
   });
-
-  return promise;
 }

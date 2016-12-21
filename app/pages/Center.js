@@ -49,16 +49,25 @@ export default class Center extends React.Component {
    * 更新头像、昵称状态
    */
   setUser = ()=>{
+    const that = this;
     AV.User.currentAsync().then((currentUser)=>{
+      console.log('setUser currentUser', currentUser);
       let nickName='未登录';
       if(currentUser) {
         nickName = this.getNickName(currentUser);
       }
 
-      this.setState({
+      that.setState({
         nickName:nickName,
         mind:currentUser.get('mind'),
         avatar_url:currentUser.get('avatar_url'),
+      });
+    }).catch(function (error) {
+      console.log('setUser no user info', error);
+      that.setState({
+        nickName:'未登陆',
+        mind:'',
+        avatar_url:null,
       });
     });
   };

@@ -53,7 +53,7 @@ export default class AlbumContainer extends React.Component {
   }
 
   componentDidMount() {
-    this.loadAlbums();
+    setTimeout(()=>this.loadAlbums(), 200);
   }
 
   // 重新加载相册数据

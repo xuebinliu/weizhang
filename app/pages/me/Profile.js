@@ -58,6 +58,11 @@ export default class Profile extends React.Component {
   onLogout= ()=>{
     AV.User.logOut();
     toastShort('退出登录成功');
+
+    // 更新我的界面
+    const {route} = this.props;
+    route.callback();
+
     this.onBackHandle();
   };
 

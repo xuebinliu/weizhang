@@ -141,7 +141,7 @@ export default class Register extends React.Component {
             <TextInput onChangeText={(text)=> confirmPwd=text} secureTextEntry={true} style={gstyles.input} placeholder={"确认密码"}/>
 
             <TouchableOpacity style={{height: 60, marginHorizontal:15,}} onPress={this.onModifyCity}>
-              <Text style={[{fontSize:14, marginTop:15}]}>城市: {this.state.city}</Text>
+              <Text style={[{fontSize:14, marginTop:15, color:'#777'}]}>城市: {this.state.city}</Text>
               <View style={{marginTop:15, height:1, backgroundColor:'dimgray'}} />
             </TouchableOpacity>
 

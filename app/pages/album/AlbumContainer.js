@@ -269,12 +269,6 @@ export default class AlbumContainer extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container:{
-    flex:1,
-    flexDirection:'row',
-    height:200,
-  },
-
   addBtn:{
     width:IMAGE_SIZE,
     height:IMAGE_SIZE,

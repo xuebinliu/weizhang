@@ -35,6 +35,7 @@ export default class Location extends React.Component {
 
   componentDidMount() {
     const that = this;
+    // 延迟加载避免卡顿
     setTimeout(function () {
       getCityList().then(function (cities) {
         let ds = new ListView.DataSource({
@@ -73,11 +74,14 @@ export default class Location extends React.Component {
 
   renderRow= (rowData, sectionId, rowId)=> {
     return (
-      <TouchableHighlight key={`${sectionId}-${rowId}`}
-                          style={styles.listItemContainer}
-                          underlayColor='rgba(24,36,35,0.1)'
-                          onPress={() => this.onPressRow(rowData)}>
+      <TouchableHighlight
+          key={`${sectionId}-${rowId}`}
+          style={styles.listItemContainer}
+          underlayColor='rgba(24,36,35,0.1)'
+          onPress={() => this.onPressRow(rowData)}>
+
         <Text style={styles.listItemText}>{rowData}</Text>
+
       </TouchableHighlight>
     );
   };

@@ -10,8 +10,10 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  Modal,
+  TouchableOpacity,
   BackAndroid,
+  ListView,
+  Image,
 } from 'react-native';
 
 import {
@@ -19,7 +21,15 @@ import {
   NavigationBar,
   getCurrentCity,
   Location,
+  LoadingView,
 } from '../../header';
+
+import HallDataMgr from './HallDataMgr.js';
+
+
+const dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
+let userCache;
 
 export default class Hall extends React.Component {
   constructor(props) {
@@ -28,11 +38,47 @@ export default class Hall extends React.Component {
     this.onClickCity = this.onClickCity.bind(this);
     this.onClickFilter = this.onClickFilter.bind(this);
 
+    userCache = [];
     this.state = {
       city:'未知',
       showFilterDialog:false,
+      isLoading:true,
+      peopleItems:dataSource.cloneWithRows(userCache),
     };
   }
+
+  componentDidMount(){
+    this.refreshCity();
+
+    this.getPeopleList(userCache.length);
+
+    BackAndroid.addEventListener('hardwareBackPress', this.onBackHandler);
+  }
+
+  componentWillMount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackHandler);
+  }
+
+  getPeopleList= (index)=>{
+    const that = this;
+    HallDataMgr.getDefaultPeopleList(index).then(function (data) {
+      console.log('getPeopleList ok', data);
+      for(let item of data) {
+        userCache.push(item);
+      }
+      that.setState({
+        isLoading:false,
+        peopleItems:dataSource.cloneWithRows(userCache),
+      });
+    }).catch(function (error) {
+      console.log('getPeopleList err', error);
+
+      that.setState({
+        isLoading:false,
+        peopleItems:dataSource.cloneWithRows(userCache),
+      });
+    });
+  };
 
   onClickCity(){
     const {navigator} = this.props;
@@ -50,19 +96,17 @@ export default class Hall extends React.Component {
     });
   }
 
-  componentDidMount(){
-    this.refreshCity();
-
-    BackAndroid.addEventListener('hardwareBackPress', this.onBackHandler);
-  }
-
-  componentWillMount() {
-    BackAndroid.removeEventListener('hardwareBackPress', this.onBackHandler);
-  }
-
+  /**
+   * 弹框时，截获触摸事件
+   * @param evt
+   * @returns {boolean}
+   */
   onStartShouldSetResponderCapture= (evt)=>{
     if(this.state.showFilterDialog) {
-      return true;
+      if(evt.pageY < DIALOG_TOP || evt.pageY > DIALOG_TOP + DIALOG_HEIGHT) {
+        // 点击的Y坐标不在弹框范围内，执行拦截
+        return true;
+      }
     }
     return false;
   };
@@ -95,6 +139,53 @@ export default class Hall extends React.Component {
     }
   };
 
+  onPressDialogBtn= (isOk)=>{
+    this.setState({
+      showFilterDialog:false,
+    });
+
+    if(isOk) {
+
+    }
+  };
+
+  onPressRow= (rowData)=>{
+
+  };
+
+  renderItemImage= (rowData)=>{
+    if(rowData.avatar_url && rowData.avatar_url.length > 0){
+      return (<Image resizeMode='stretch' style={styles.itemImage} source={{uri:rowData.avatar_url}}/>);
+    } else {
+      return (<Image resizeMode='stretch' style={styles.itemImage} source={require('../../img/default_image.png')}/>);
+    }
+  };
+
+  renderRow = (rowData, secId, rowId)=>{
+    console.log('renderRow', rowData, secId, rowId);
+    let user = rowData._serverData;
+    return (
+      <TouchableOpacity onPress={()=>{this.openAlbum(user)}} style={styles.itemView}>
+        {this.renderItemImage(user)}
+        <Text style={styles.itemName}>{user.nickname}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  renderListView() {
+    if(this.state.isLoading) {
+      return (<LoadingView/>);
+    } else {
+      return (
+        <ListView
+          contentContainerStyle={{flexDirection:'row', flexWrap:'wrap'}}
+          enableEmptySections={true}
+          dataSource={this.state.peopleItems}
+          renderRow={this.renderRow}/>
+      );
+    }
+  }
+
   render(){
     return (
         <View style={gstyles.container} onStartShouldSetResponderCapture={this.onStartShouldSetResponderCapture}>
@@ -107,7 +198,8 @@ export default class Hall extends React.Component {
               rightButtonIcon={'md-add'}
           />
 
-          <View style={[gstyles.content, {backgroundColor:'white',}]}>
+          <View style={[gstyles.content,]}>
+            {this.renderListView()}
           </View>
 
           {this.renderFilterDialog()}
@@ -123,34 +215,77 @@ export default class Hall extends React.Component {
   renderFilterDialog= ()=>{
     if(this.state.showFilterDialog) {
       return (
-        <View style={styles.filterDialogContainer}>
-          <View style={styles.titleView}>
-            <Text style={{color:'white', fontSize:15}}>过滤</Text>
+        <View style={styles.dialogContainer}>
+          <View style={styles.dialogTitleView}>
+            <Text style={styles.dialogBtnText}>过滤</Text>
           </View>
 
+          <View style={{flex:1}}/>
+
+          <View style={{flexDirection:'row', height:40, backgroundColor:'darkgrey'}}>
+            <TouchableOpacity onPress={()=>this.onPressDialogBtn(false)} style={styles.dialogBtn}>
+              <Text style={styles.dialogBtnText}>取消</Text>
+            </TouchableOpacity>
+            <View style={{height:40, width:1, backgroundColor:'white'}}/>
+            <TouchableOpacity onPress={()=>this.onPressDialogBtn(true)} style={styles.dialogBtn}>
+              <Text style={styles.dialogBtnText}>确定</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       );
     }
   };
 }
 
-const FILTER_DIALOG_HEIGHT = 300;
-const FILTER_DIALOG_MARGIN = 20;
-const DIALOG_WIDTH = Dimensions.get('screen').width - FILTER_DIALOG_MARGIN*2;
+const DIALOG_HEIGHT = 300;
+const DIALOG_MARGIN = 20;
+const DIALOG_TOP = Dimensions.get('window').height/2 - DIALOG_HEIGHT/2;
+const DIALOG_WIDTH = Dimensions.get('window').width - DIALOG_MARGIN*2;
+const IMAGE_SIZE = (Dimensions.get('screen').width - 20*4)/2;
 const styles = StyleSheet.create({
-  filterDialogContainer:{
+  itemView:{
+    flexDirection:'column',
+    justifyContent:'flex-start',
+    alignItems:'flex-start',
+    width:IMAGE_SIZE,
+    height:IMAGE_SIZE + 40,
+    backgroundColor:"#ececec",
+    marginHorizontal:20,
+    marginVertical:5,
+  },
+
+  itemImage:{
+    alignSelf:'center',
+    width:IMAGE_SIZE,
+    height:IMAGE_SIZE,
+  },
+
+  itemName:{
+    fontSize:15,
+    color:'black',
+  },
+
+  itemPower:{
+    fontSize:12,
+  },
+
+  itemMind:{
+
+  },
+
+  dialogContainer:{
     position:'absolute',
     flexDirection:'column',
     borderRadius:10,
-    margin:FILTER_DIALOG_MARGIN,
-    top:Dimensions.get('screen').height/2 - FILTER_DIALOG_HEIGHT/2,
+    margin:DIALOG_MARGIN,
     left:0,
+    top:DIALOG_TOP,
     width:DIALOG_WIDTH,
-    height:FILTER_DIALOG_HEIGHT,
+    height:DIALOG_HEIGHT,
     backgroundColor:'#ececec',
   },
 
-  titleView:{
+  dialogTitleView:{
     width:DIALOG_WIDTH,
     height:40,
     backgroundColor:'dimgray',
@@ -159,5 +294,16 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
   },
+
+  dialogBtn:{
+    flex:1,
+    alignItems:'center',
+    justifyContent:'center',
+  },
+
+  dialogBtnText:{
+    fontSize:16,
+    color:'white'
+  }
 
 });

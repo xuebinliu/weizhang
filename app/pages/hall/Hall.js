@@ -35,9 +35,6 @@ export default class Hall extends React.Component {
   constructor(props) {
     super(props);
 
-    this.onClickCity = this.onClickCity.bind(this);
-    this.onClickFilter = this.onClickFilter.bind(this);
-
     userCache = [];
     this.state = {
       city:'未知',
@@ -48,8 +45,10 @@ export default class Hall extends React.Component {
   }
 
   componentDidMount(){
+    // 获取当前城市
     this.refreshCity();
 
+    // 获取当前城市的人
     this.getPeopleList(userCache.length);
 
     BackAndroid.addEventListener('hardwareBackPress', this.onBackHandler);
@@ -63,9 +62,8 @@ export default class Hall extends React.Component {
     const that = this;
     HallDataMgr.getDefaultPeopleList(index).then(function (data) {
       console.log('getPeopleList ok', data);
-      for(let item of data) {
-        userCache.push(item);
-      }
+
+      userCache = [].concat(userCache, data);
       that.setState({
         isLoading:false,
         peopleItems:dataSource.cloneWithRows(userCache),
@@ -80,21 +78,20 @@ export default class Hall extends React.Component {
     });
   };
 
-  onClickCity(){
+  onClickCity= ()=>{
     const {navigator} = this.props;
-    InteractionManager.runAfterInteractions(() => {
-      navigator.push({
-        component: Location,
-        refreshCity:this.refreshCity,
-      });
+    navigator.push({
+      component: Location,
+      refreshCity:this.refreshCity,
     });
   };
 
-  onClickFilter(){
+  onPressFilter= ()=>{
     this.setState({
       showFilterDialog:true,
     });
-  }
+    this.forceUpdate();
+  };
 
   /**
    * 弹框时，截获触摸事件
@@ -145,7 +142,7 @@ export default class Hall extends React.Component {
     });
 
     if(isOk) {
-
+      this.getPeopleList(userCache.length);
     }
   };
 
@@ -162,12 +159,11 @@ export default class Hall extends React.Component {
   };
 
   renderRow = (rowData, secId, rowId)=>{
-    console.log('renderRow', rowData, secId, rowId);
     let user = rowData._serverData;
+    console.log('renderRow', user, secId, rowId);
     return (
-      <TouchableOpacity onPress={()=>{this.openAlbum(user)}} style={styles.itemView}>
+      <TouchableOpacity style={styles.itemContainer} onPress={()=>{this.onPressRow(rowData)}}>
         {this.renderItemImage(user)}
-        <Text style={styles.itemName}>{user.nickname}</Text>
       </TouchableOpacity>
     );
   };
@@ -179,9 +175,10 @@ export default class Hall extends React.Component {
       return (
         <ListView
           contentContainerStyle={{flexDirection:'row', flexWrap:'wrap'}}
-          enableEmptySections={true}
           dataSource={this.state.peopleItems}
-          renderRow={this.renderRow}/>
+          renderRow={this.renderRow}
+          enableEmptySections={true}
+        />
       );
     }
   }
@@ -194,7 +191,7 @@ export default class Hall extends React.Component {
               leftButtonTitle={this.state.city}
               leftButtonTitleColor={'#fff'}
               onLeftButtonPress={this.onClickCity}
-              onRightButtonPress={this.onClickFilter}
+              onRightButtonPress={this.onPressFilter}
               rightButtonIcon={'md-add'}
           />
 
@@ -213,6 +210,7 @@ export default class Hall extends React.Component {
    * @returns {XML}
    */
   renderFilterDialog= ()=>{
+    console.log('renderFilterDialog state', this.state.showFilterDialog);
     if(this.state.showFilterDialog) {
       return (
         <View style={styles.dialogContainer}>
@@ -241,36 +239,20 @@ const DIALOG_HEIGHT = 300;
 const DIALOG_MARGIN = 20;
 const DIALOG_TOP = Dimensions.get('window').height/2 - DIALOG_HEIGHT/2;
 const DIALOG_WIDTH = Dimensions.get('window').width - DIALOG_MARGIN*2;
-const IMAGE_SIZE = (Dimensions.get('screen').width - 20*4)/2;
+const IMAGE_SIZE = (Dimensions.get('screen').width - 5*4)/2;
 const styles = StyleSheet.create({
-  itemView:{
-    flexDirection:'column',
-    justifyContent:'flex-start',
-    alignItems:'flex-start',
+  itemContainer:{
     width:IMAGE_SIZE,
-    height:IMAGE_SIZE + 40,
-    backgroundColor:"#ececec",
-    marginHorizontal:20,
-    marginVertical:5,
+    height:IMAGE_SIZE,
+    marginTop:5,
+    marginHorizontal:5,
+    borderRadius:2,
   },
 
   itemImage:{
-    alignSelf:'center',
     width:IMAGE_SIZE,
     height:IMAGE_SIZE,
-  },
-
-  itemName:{
-    fontSize:15,
-    color:'black',
-  },
-
-  itemPower:{
-    fontSize:12,
-  },
-
-  itemMind:{
-
+    borderRadius:2,
   },
 
   dialogContainer:{

@@ -33,20 +33,15 @@ let pwd;
 export default class Login extends React.Component {
   constructor(props){
     super(props);
-
-    this.onBackHandle = this.onBackHandle.bind(this);
-    this.onRightButtonPress = this.onRightButtonPress.bind(this);
-    this.onLogin = this.onLogin.bind(this);
-    this.onReset = this.onReset.bind(this);
   }
 
-  onBackHandle(){
+  onBackHandle= ()=>{
     const {navigator} = this.props;
     return naviGoBack(navigator);
   };
 
   // register
-  onRightButtonPress(){
+  onPressRegister= ()=>{
     const {navigator} = this.props;
     InteractionManager.runAfterInteractions(() => {
       navigator.push({
@@ -55,7 +50,7 @@ export default class Login extends React.Component {
     });
   };
 
-  onLogin(){
+  onPressLogin= ()=>{
     if(account == undefined || account.length < 1) {
       Alert.alert('提示', '亲, 请输入账号');
       return;
@@ -79,7 +74,7 @@ export default class Login extends React.Component {
     });
   }
 
-  onReset(){
+  onPressReset(){
     const {navigator} = this.props;
     InteractionManager.runAfterInteractions(() => {
       navigator.push({
@@ -97,7 +92,7 @@ export default class Login extends React.Component {
             onLeftButtonPress={this.onBackHandle}
             rightButtonTitle={"注册"}
             rightButtonTitleColor={'white'}
-            onRightButtonPress={this.onRightButtonPress}
+            onRightButtonPress={this.onPressRegister}
         />
 
         <View style={gstyles.content}>
@@ -105,13 +100,22 @@ export default class Login extends React.Component {
 
           <TextInput onChangeText={(text)=> pwd=text} secureTextEntry={true} style={gstyles.input} placeholder={"密码"}/>
 
-          <TouchableOpacity onPress={this.onReset}>
-            <Text style={{color:'blue', alignSelf:'flex-end', marginRight:15}}>
-              忘记密码?
-            </Text>
-          </TouchableOpacity>
+          <View style={{flexDirection:'row', justifyContent:'space-between',marginTop:15, }}>
+            <TouchableOpacity onPress={this.onPressRegister}>
+              <Text style={{color:'blue', alignSelf:'flex-start', marginLeft:15}}>
+                注册
+              </Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity onPress={this.onLogin} style={[gstyles.button, {marginTop:30}]}>
+            <TouchableOpacity onPress={this.onPressReset}>
+              <Text style={{color:'blue', alignSelf:'flex-end', marginRight:15}}>
+                忘记密码?
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+
+          <TouchableOpacity onPress={this.onPressLogin} style={[gstyles.button, {marginTop:30}]}>
             <Text style={{color:'white'}} >登陆</Text>
           </TouchableOpacity>
 

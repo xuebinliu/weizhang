@@ -1,6 +1,6 @@
-import React from 'react-native';
 
-const { AsyncStorage } = React;
+
+import {AsyncStorage} from 'react-native';
 
 export default class DeviceStorage {
   static get(key) {

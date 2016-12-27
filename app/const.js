@@ -25,7 +25,7 @@ export const BD_MAP_IP_URL = 'http://api.map.baidu.com/location/ip?ak=ES9weBsE8p
 
 
 
-
+export const SK_HALL_FILTER = 'SK_HALL_FILTER';
 
 
 

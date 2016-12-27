@@ -46,7 +46,9 @@ export default class HallFilter extends React.Component {
   };
 
   onPressComplete= ()=>{
-
+    const {route} = this.props;
+    route.cbFilterChange(this.state.sexIndex);
+    this.onBackHandle();
   };
 
   render() {

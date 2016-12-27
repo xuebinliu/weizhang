@@ -13,6 +13,7 @@ import {
   BackAndroid,
   ListView,
   Image,
+  AsyncStorage,
 } from 'react-native';
 
 import {
@@ -22,44 +23,67 @@ import {
   Location,
   LoadingView,
   UserInfo,
+  DeviceStorage,
 } from '../../header';
 
 import HallDataMgr from './HallDataMgr.js';
 import HallFilter from './HallFilter.js';
+import * as Const from '../../const.js';
 
 const dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
-let userCache;
+// 当前用户列表缓存
+let userCache = [];
+// 过滤条件对象
+var filterObj = {
+  city:'',
+  sex:2,
+};
 
 export default class Hall extends React.Component {
   constructor(props) {
     super(props);
+    console.log('Hall constructor');
 
-    userCache = [];
     this.state = {
-      city:'',
       isLoading:true,
       peopleItems:dataSource.cloneWithRows(userCache),
     };
+
+    this.initFilterData();
   }
 
-  componentDidMount(){
-    // 获取当前城市
-    this.cbRefreshCity();
-
-    // 获取当前城市的人
-    this.getPeopleList(userCache.length);
-
-    BackAndroid.addEventListener('hardwareBackPress', this.onBackHandler);
-  }
-
-  componentWillMount() {
-    BackAndroid.removeEventListener('hardwareBackPress', this.onBackHandler);
-  }
-
-  getPeopleList= (index)=>{
+  initFilterData= ()=>{
     const that = this;
-    HallDataMgr.getDefaultPeopleList(index, this.state.city).then(function (data) {
+    DeviceStorage.get(Const.SK_HALL_FILTER).then(function (obj) {
+      if(obj) {
+        filterObj = obj;
+      }
+
+      if(filterObj.city.length == 0) {
+        // 获取当前城市
+        that.cbRefreshCity();
+      } else {
+        // 刷新当前城市
+        that.forceUpdate();
+        // 首次拉取当前用户
+        userCache = [];
+        that.getPeopleList(0, filterObj);
+      }
+      console.log('initFilterData filterObj', filterObj);
+    }).catch(function (err) {
+      console.log('initFilterData filterObj catch err', err);
+    });
+  };
+
+  saveFilterData= (newFilter)=>{
+    filterObj = newFilter;
+    DeviceStorage.save(Const.SK_HALL_FILTER, filterObj);
+  };
+
+  getPeopleList= (index, filterObj)=>{
+    const that = this;
+    HallDataMgr.getDefaultPeopleList(index, filterObj).then(function (data) {
       console.log('getPeopleList ok', data);
 
       userCache = [].concat(userCache, data);
@@ -89,43 +113,41 @@ export default class Hall extends React.Component {
     const {navigator} = this.props;
     navigator.push({
       component: HallFilter,
-      cbReloadHall:this.cbReloadHall,
+      cbFilterChange:this.cbFilterChange,
     });
   };
 
   /**
-   * 回调函数，重新加载大厅数据
+   * 回调函数，过滤条件发生了变化
    */
-  cbReloadHall= (sex)=>{
-    this.getPeopleList(0, );
+  cbFilterChange= (sex)=>{
+    console.log('cbFilterChange sex', sex);
+    filterObj.sex = sex;
+    DeviceStorage.save(Const.SK_HALL_FILTER, filterObj);
+
+    // 重新加载用户列表
+    this.reloadPeopleList();
   };
 
   /**
    * 刷新当前城市
    */
   cbRefreshCity= ()=> {
-    console.log('cbRefreshCity current', this.state.city);
     const that = this;
     getCurrentCity().then((city)=>{
-      that.setState({
-        city:city
-      });
+      filterObj.city = city;
+      that.saveFilterData(filterObj);
+      // 显示当前城市
+      that.forceUpdate();
+      // 重新加载用户列表
+      that.reloadPeopleList();
     });
   };
 
-  /**
-   * android处理返回按键
-   * @returns {boolean}
-   */
-  onBackHandler= ()=>{
-    if(this.state.showFilterDialog) {
-      // 如果显示了过滤对话框，则隐藏框
-      this.setState({
-        showFilterDialog:false,
-      });
-      // 消化掉back按键
-      return true;
-    }
+  reloadPeopleList= ()=>{
+    // 获取用户列表
+    userCache = [];
+    this.getPeopleList(0, filterObj);
   };
 
   onPressRow= (rowData)=>{
@@ -146,7 +168,7 @@ export default class Hall extends React.Component {
 
   renderRow = (rowData, secId, rowId)=>{
     let user = rowData._serverData;
-    console.log('renderRow', user, secId, rowId);
+    // console.log('renderRow', user, secId, rowId);
     return (
       <TouchableOpacity style={styles.itemContainer} onPress={()=>{this.onPressRow(rowData)}}>
         {this.renderItemImage(user)}
@@ -174,7 +196,7 @@ export default class Hall extends React.Component {
         <View style={gstyles.container}>
           <NavigationBar
               title={'同城'}
-              leftButtonTitle={this.state.city}
+              leftButtonTitle={filterObj.city}
               leftButtonTitleColor={'#fff'}
               onLeftButtonPress={this.onClickCity}
               onRightButtonPress={this.onPressFilter}

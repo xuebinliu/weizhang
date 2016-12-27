@@ -19,54 +19,25 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AV from 'leancloud-storage';
 
+/**
+ * sex: 0男 1女 2保密
+ */
 export default class ModifySex extends React.Component {
   constructor(props){
     super(props);
 
-    let type = AV.User.current().get('sex');
-    this.init(type);
-  }
-
-  init= (type)=>{
-    switch (type){
-      case 0:
-        this.state = {
-          isCheckMan:true,
-          isCheckWoman:false,
-          isCheckSecret:false,
-        };
-        break;
-      case 1:
-        this.state = {
-          isCheckMan:false,
-          isCheckWoman:true,
-          isCheckSecret:false,
-        };
-        break;
-      case 2:
-        this.state = {
-          isCheckMan:false,
-          isCheckWoman:false,
-          isCheckSecret:true,
-        };
-        break;
-      default:
-        this.state = {
-          isCheckMan:false,
-          isCheckWoman:false,
-          isCheckSecret:false,
-        };
-        break;
+    this.state = {
+      sex:AV.User.current().get('sex'),
     }
-  };
+  }
 
   onBackHandle= ()=>{
     const {navigator} = this.props;
     return naviGoBack(navigator);
   };
 
-  save= (type)=>{
-    AV.User.current().set('sex', type);
+  onPressSexRadio= (sex)=>{
+    AV.User.current().set('sex', sex);
     AV.User.current().save();
 
     const {route} = this.props;
@@ -74,18 +45,6 @@ export default class ModifySex extends React.Component {
 
     this.onBackHandle();
     toastShort('修改成功');
-  };
-
-  onPressMan= ()=>{
-    this.save(0);
-  };
-
-  onPressWoman= ()=>{
-    this.save(1);
-  };
-
-  onPressSecret= ()=>{
-    this.save(2);
   };
 
   render() {
@@ -98,29 +57,29 @@ export default class ModifySex extends React.Component {
           />
 
           <View style={gstyles.content}>
-            <TouchableOpacity onPress={this.onPressMan}>
+            <TouchableOpacity onPress={()=>this.onPressSexRadio(0)}>
               <View style={[gstyles.listItem, {height:50, flexDirection:'row', alignItems:'center', paddingHorizontal:15}]}>
                 <Text>男</Text>
                 <View style={{flex:1,flexDirection:'row-reverse'}}>
-                  <Ionicons name={this.state.isCheckMan ? "ios-radio-button-on" : "ios-radio-button-off"} size={24} color="dimgray"/>
+                  <Ionicons name={this.state.sex==0 ? "ios-radio-button-on" : "ios-radio-button-off"} size={24} color="dimgray"/>
                 </View>
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={this.onPressWoman}>
+            <TouchableOpacity onPress={()=>this.onPressSexRadio(1)}>
               <View style={[gstyles.listItem, {height:50, flexDirection:'row', alignItems:'center', paddingHorizontal:15}]}>
                 <Text>女</Text>
                 <View style={{flex:1,flexDirection:'row-reverse'}}>
-                  <Ionicons name={this.state.isCheckWoman ? "ios-radio-button-on" : "ios-radio-button-off"} size={24} color="dimgray"/>
+                  <Ionicons name={this.state.sex==1 ? "ios-radio-button-on" : "ios-radio-button-off"} size={24} color="dimgray"/>
                 </View>
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={this.onPressSecret}>
+            <TouchableOpacity onPress={()=>this.onPressSexRadio(2)}>
               <View style={[gstyles.listItem, {height:50, flexDirection:'row', alignItems:'center', paddingHorizontal:15}]}>
                 <Text>保密</Text>
                 <View style={{flex:1,flexDirection:'row-reverse'}}>
-                  <Ionicons name={this.state.isCheckSecret ? "ios-radio-button-on" : "ios-radio-button-off"} size={24} color="dimgray"/>
+                  <Ionicons name={this.state.sex==2 ? "ios-radio-button-on" : "ios-radio-button-off"} size={24} color="dimgray"/>
                 </View>
               </View>
             </TouchableOpacity>

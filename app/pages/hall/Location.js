@@ -65,7 +65,7 @@ export default class Location extends React.Component {
 
     // refresh ui
     const {route} = this.props;
-    route.refreshCity();
+    route.cbRefreshCity();
 
     toastShort('已切换到 '+rowData);
 

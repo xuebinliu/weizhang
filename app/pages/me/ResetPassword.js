@@ -71,7 +71,7 @@ export default class ResetPassword extends React.Component{
           <TextInput onChangeText={(text) => email=text} style={[gstyles.input, {marginTop: 20}]} placeholder={"请输入绑定的邮箱"}/>
 
           <TouchableOpacity onPress={this.onRest} style={[gstyles.button, {marginTop:30}]}>
-            <Text style={{color:'white'}} >重置</Text>
+            <Text style={{color:'white'}}>重置</Text>
           </TouchableOpacity>
 
         </View>

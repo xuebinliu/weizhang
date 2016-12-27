@@ -71,8 +71,8 @@ export default class Profile extends React.Component {
 
     // 获取头像
     ImagePicker.openPicker({
-      width: parseInt(60 * PixelRatio.get()),
-      height: parseInt(60 * PixelRatio.get()),
+      width: parseInt(300 * PixelRatio.get()),
+      height: parseInt(300 * PixelRatio.get()),
       cropping: true,
     }).then((image)=>{
       // 上传前，显示加载框

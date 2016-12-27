@@ -6,7 +6,6 @@
 import React from 'react';
 import {
   View,
-  InteractionManager,
   Text,
   StyleSheet,
   Dimensions,
@@ -22,6 +21,7 @@ import {
   getCurrentCity,
   Location,
   LoadingView,
+  UserInfo,
 } from '../../header';
 
 import HallDataMgr from './HallDataMgr.js';
@@ -90,7 +90,6 @@ export default class Hall extends React.Component {
     this.setState({
       showFilterDialog:true,
     });
-    this.forceUpdate();
   };
 
   /**
@@ -147,7 +146,11 @@ export default class Hall extends React.Component {
   };
 
   onPressRow= (rowData)=>{
-
+    const {navigator} = this.props;
+    navigator.push({
+      component: UserInfo,
+      userData:rowData,
+    });
   };
 
   renderItemImage= (rowData)=>{
@@ -192,7 +195,7 @@ export default class Hall extends React.Component {
               leftButtonTitleColor={'#fff'}
               onLeftButtonPress={this.onClickCity}
               onRightButtonPress={this.onPressFilter}
-              rightButtonIcon={'md-add'}
+              rightButtonIcon={'ios-funnel-outline'}
           />
 
           <View style={[gstyles.content,]}>
@@ -246,13 +249,13 @@ const styles = StyleSheet.create({
     height:IMAGE_SIZE,
     marginTop:5,
     marginHorizontal:5,
-    borderRadius:2,
+    borderRadius:3,
   },
 
   itemImage:{
     width:IMAGE_SIZE,
     height:IMAGE_SIZE,
-    borderRadius:2,
+    borderRadius:3,
   },
 
   dialogContainer:{

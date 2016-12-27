@@ -7,6 +7,7 @@
 import Register from './pages/me/Register';
 import Login from './pages/me/Login';
 import Feedback from './pages/me/Feedback';
+import UserInfo from './pages/me/UserInfo';
 import Location from './pages/hall/Location';
 import Publish from './pages/Publish';
 import Profile from './pages/me/Profile';
@@ -32,6 +33,7 @@ export {
     Publish,
     Profile,
     AlbumContainer,
+    UserInfo,
 
     gstyles,
     DeviceStorage,

@@ -147,6 +147,26 @@ export default class Profile extends React.Component {
     });
   };
 
+  onModifyHeight= ()=>{
+    const {navigator} = this.props;
+    navigator.push({
+      component: ModifyText,
+      value:this.state.userinfo.get('height'),
+      modifyKey:'height',
+      callback:this.updateUserProfile
+    });
+  };
+
+  onModifyWeight= ()=>{
+    const {navigator} = this.props;
+    navigator.push({
+      component: ModifyText,
+      value:this.state.userinfo.get('weight'),
+      modifyKey:'weight',
+      callback:this.updateUserProfile
+    });
+  };
+
   onModifyMind= ()=>{
     const {navigator} = this.props;
     navigator.push({
@@ -252,6 +272,28 @@ export default class Profile extends React.Component {
               <Text>年龄</Text>
               <View style={{flex:1, flexDirection:'row', marginRight:10, justifyContent:'flex-end'}}>
                 <Text>{this.state.userinfo.get('age') ? this.state.userinfo.get('age') : '未设置'}</Text>
+              </View>
+              <Ionicons name="ios-arrow-forward" size={20} color="gray"/>
+            </View>
+          </TouchableOpacity>
+          <View style={gstyles.line}/>
+
+          <TouchableOpacity onPress={this.onModifyHeight}>
+            <View style={[gstyles.listItem, styles.item]}>
+              <Text>身高</Text>
+              <View style={{flex:1, flexDirection:'row', marginRight:10, justifyContent:'flex-end'}}>
+                <Text>{this.state.userinfo.get('height') ? this.state.userinfo.get('height') : '未设置'}</Text>
+              </View>
+              <Ionicons name="ios-arrow-forward" size={20} color="gray"/>
+            </View>
+          </TouchableOpacity>
+          <View style={gstyles.line}/>
+
+          <TouchableOpacity onPress={this.onModifyWeight}>
+            <View style={[gstyles.listItem, styles.item]}>
+              <Text>体重</Text>
+              <View style={{flex:1, flexDirection:'row', marginRight:10, justifyContent:'flex-end'}}>
+                <Text>{this.state.userinfo.get('weight') ? this.state.userinfo.get('weight') : '未设置'}</Text>
               </View>
               <Ionicons name="ios-arrow-forward" size={20} color="gray"/>
             </View>

@@ -56,32 +56,31 @@ export default class UserInfo extends React.Component {
             <Image style={styles.userAvatar} source={{uri:this.state.userData.attributes.avatar_url}}/>
 
             <View style={styles.userTimeLine}>
-              <Ionicons name={"md-person"} size={24} color="#777" style={{marginLeft:10,}}/>
-              <Text style={{marginLeft:15, fontSize:16}}>{this.state.userData.attributes.username}</Text>
+              <Ionicons name={"md-person"} size={24} color="darkgray" style={{marginLeft:10,}}/>
+              <Text style={{marginLeft:15, fontSize:20, fontFamily:'bold', color:'black'}}>{this.state.userData.attributes.username}</Text>
             </View>
 
             <View style={styles.userTimeLine}>
-              <Ionicons name={"md-heart"} size={24} color="#777" style={{marginLeft:10,}}/>
+              <Ionicons name={"md-heart"} size={24} color="darkgray" style={{marginLeft:10,}}/>
               <Text style={{marginLeft:15, fontSize:16}}>{this.state.userData.attributes.mind}</Text>
             </View>
 
             <View style={styles.userTimeLine}>
-              <Ionicons name={"md-albums"} size={24} color="#777" style={{marginLeft:10,}}/>
+              <Ionicons name={"md-albums"} size={24} color="darkgray" style={{marginLeft:10,}}/>
               <Text style={{marginLeft:15, fontSize:16}}>TA的相册</Text>
             </View>
 
-
             <View style={styles.userTimeLine}>
-              <Ionicons name={"md-menu"} size={24} color="#777" style={{marginLeft:10,}}/>
-              <Text style={{marginLeft:15, fontSize:16}}>TA的资料</Text>
+              <Ionicons name={"md-menu"} size={24} color="darkgray" style={{marginLeft:10,}}/>
+              <Text style={{marginLeft:15, fontSize:16}}>详细资料</Text>
             </View>
-            <Text style={styles.materialText}>年龄:{this.state.userData.attributes.age}</Text>
-            <Text style={styles.materialText}>身高:{this.state.userData.attributes.age}</Text>
-            <Text style={styles.materialText}>体重:{this.state.userData.attributes.age}</Text>
-            <Text style={styles.materialText}>地址:{this.state.userData.attributes.address}</Text>
+            <Text style={styles.materialText}>年龄: {this.state.userData.attributes.age}</Text>
+            <Text style={styles.materialText}>身高: {this.state.userData.attributes.height}</Text>
+            <Text style={styles.materialText}>体重: {this.state.userData.attributes.weight}</Text>
+            <Text style={styles.materialText}>地址: {this.state.userData.attributes.address}</Text>
 
-            <TouchableOpacity onPress={this.onPressLook} style={[gstyles.button, {marginTop:20}]}>
-              <Text style={{color:'white'}}>查看联系方式</Text>
+            <TouchableOpacity onPress={this.onPressLook} style={[gstyles.button, {marginVertical:20}]}>
+              <Text style={{color:'white'}}>VIP查看联系方式</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>

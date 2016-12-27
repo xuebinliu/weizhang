@@ -55,6 +55,12 @@ export default class ModifyText extends React.Component {
         case 'address':
           holder = '亲, 请输入联系地址';
           break;
+        case 'height':
+          holder = '亲, 请输入身高';
+          break;
+        case 'weight':
+          holder = '亲, 请输入体重';
+          break;
         default:
           holder = '亲, 请输入';
           break;

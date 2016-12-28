@@ -17,7 +17,7 @@ export default class HallDataMgr {
    *
    */
   static getDefaultPeopleList(index, filterObj) {
-    console.log('getDefaultPeopleList index=', index, filterObj);
+    console.log('getDefaultPeopleList index', index, 'filterObj', filterObj);
 
     return new Promise(function (resolve, reject) {
       var query = new AV.Query('_User');
@@ -27,25 +27,32 @@ export default class HallDataMgr {
         query.contains('city', filterObj.city);
       }
 
-      if(filterObj.sex && filterObj.sex != 2) {
-        // 指定性别 0男 1女
+      // 指定性别 0男 1女
+      if(filterObj.hot != -1) {
         query.equalTo('sex', filterObj.sex);
       }
 
+      // 热度排序 0降序 1升序
+      if(filterObj.hot == 0) {
+        query.descending('hot');
+      } else if(filterObj.hot == 1) {
+        query.ascending('hot');
+      } else {
+      }
+
+      // 时间排序 0降序 1升序
+      if(filterObj.time == 0) {
+        query.descending('createdAt');
+      } else if(filterObj.time == 1) {
+        query.ascending('createdAt');
+      } else {
+      }
+
       // 最多返回 10 条结果
-      query.limit(30);
+      query.limit(20);
 
       // 选定返回字段
       // query.select(['nickname:', 'mind', 'avatar_url']);
-
-      // 跳过 20 条结果
-      // query.skip(20);
-
-      // 按时间，升序排列
-      // query.ascending('createdAt');
-
-      // 按时间，降序排列
-      // query.descending('createdAt');
 
       query.find().then(function (data) {
         return resolve(data);

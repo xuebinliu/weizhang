@@ -39,7 +39,6 @@ export default class UserInfo extends React.Component {
   };
 
   onPressLook= ()=>{
-
   };
 
   render() {

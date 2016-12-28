@@ -10,10 +10,8 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  BackAndroid,
   ListView,
   Image,
-  AsyncStorage,
 } from 'react-native';
 
 import {
@@ -26,6 +24,8 @@ import {
   DeviceStorage,
 } from '../../header';
 
+import AV from 'leancloud-storage';
+
 import HallDataMgr from './HallDataMgr.js';
 import HallFilter from './HallFilter.js';
 import * as Const from '../../const.js';
@@ -37,7 +37,9 @@ let userCache = [];
 // 过滤条件对象
 var filterObj = {
   city:'',
-  sex:2,
+  sex:-1,
+  hot:-1,
+  time:-1,
 };
 
 export default class Hall extends React.Component {
@@ -113,6 +115,7 @@ export default class Hall extends React.Component {
     const {navigator} = this.props;
     navigator.push({
       component: HallFilter,
+      filterObj:filterObj,
       cbFilterChange:this.cbFilterChange,
     });
   };
@@ -120,9 +123,11 @@ export default class Hall extends React.Component {
   /**
    * 回调函数，过滤条件发生了变化
    */
-  cbFilterChange= (sex)=>{
-    console.log('cbFilterChange sex', sex);
-    filterObj.sex = sex;
+  cbFilterChange= (filterObj)=>{
+    console.log('cbFilterChange sex', filterObj);
+    filterObj.sex = filterObj.sex;
+    filterObj.hot = filterObj.hot;
+    filterObj.time = filterObj.time;
     DeviceStorage.save(Const.SK_HALL_FILTER, filterObj);
 
     // 重新加载用户列表
@@ -135,12 +140,23 @@ export default class Hall extends React.Component {
   cbRefreshCity= ()=> {
     const that = this;
     getCurrentCity().then((city)=>{
+      // save to server
+      AV.User.currentAsync().then(function (user) {
+        if(user != null){
+          user.set('city', city);
+          user.save().then(function (data) {
+            console.log('cbRefreshCity save ok', data);
+          });
+        }
+
+        // 重新加载用户列表
+        that.reloadPeopleList();
+      });
+
       filterObj.city = city;
       that.saveFilterData(filterObj);
       // 显示当前城市
       that.forceUpdate();
-      // 重新加载用户列表
-      that.reloadPeopleList();
     });
   };
 
@@ -216,12 +232,12 @@ const styles = StyleSheet.create({
     height:IMAGE_SIZE,
     marginTop:5,
     marginHorizontal:5,
-    borderRadius:3,
+    borderRadius:4,
   },
 
   itemImage:{
     width:IMAGE_SIZE,
     height:IMAGE_SIZE,
-    borderRadius:3,
+    borderRadius:4,
   },
 });

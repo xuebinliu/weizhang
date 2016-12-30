@@ -241,6 +241,7 @@ export default class Album extends React.Component {
                 dataSource={this.state.items}
                 renderRow={this.renderRow}
                 enableEmptySections={true}
+                pageSize={3}
             />
           </View>
         </View>

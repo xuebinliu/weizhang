@@ -2,19 +2,21 @@
  * Created by free on 12/22/16.
  */
 
-
 import AV from 'leancloud-storage';
 
 export default class HallDataMgr {
 
   /**
    * 从服务器获取用户列表
-   * @param index 其实索引，用于分页
+   * @param index 开始索引，用于分页
    * @param filterObj {
    *                    city 城市过滤
    *                    sex  性别过滤
+   *                    hot  热度排序
+   *                    time 注册时间排序
    *                  }
    *
+   * return _User表中符合条件的记录，一次最多返回20条
    */
   static getDefaultPeopleList(index, filterObj) {
     console.log('getDefaultPeopleList index', index, 'filterObj', filterObj);
@@ -24,7 +26,7 @@ export default class HallDataMgr {
 
       if(filterObj.city && filterObj.city.length > 0) {
         // 当前城市
-        query.contains('city', filterObj.city);
+        query.startsWith('city', filterObj.city);
       }
 
       // 指定性别 0男 1女
@@ -48,8 +50,11 @@ export default class HallDataMgr {
       } else {
       }
 
-      // 最多返回 10 条结果
+      // 一次最多返回条条数
       query.limit(20);
+
+      // 跳过的条目数
+      query.skip(index);
 
       // 选定返回字段
       // query.select(['nickname:', 'mind', 'avatar_url']);
@@ -62,5 +67,11 @@ export default class HallDataMgr {
     });
   }
 
+  /**
+   * 为指定用户id的热度加1
+   * @param uid
+   */
+  static addHotCount(uid) {
 
+  }
 }

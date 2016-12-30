@@ -6,12 +6,12 @@
 import React from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
   ListView,
   Image,
+  RefreshControl,
 } from 'react-native';
 
 import {
@@ -19,9 +19,9 @@ import {
   NavigationBar,
   getCurrentCity,
   Location,
-  LoadingView,
   UserInfo,
   DeviceStorage,
+  toastShort,
 } from '../../header';
 
 import AV from 'leancloud-storage';
@@ -48,7 +48,7 @@ export default class Hall extends React.Component {
     console.log('Hall constructor');
 
     this.state = {
-      isLoading:true,
+      refreshing: false,
       peopleItems:dataSource.cloneWithRows(userCache),
     };
 
@@ -69,8 +69,7 @@ export default class Hall extends React.Component {
         // 刷新当前城市
         that.forceUpdate();
         // 首次拉取当前用户
-        userCache = [];
-        that.getPeopleList(0, filterObj);
+        that.reloadPeopleList();
       }
       console.log('initFilterData filterObj', filterObj);
     }).catch(function (err) {
@@ -85,19 +84,26 @@ export default class Hall extends React.Component {
 
   getPeopleList= (index, filterObj)=>{
     const that = this;
+    that.setState({
+      refreshing:true,
+    });
+
     HallDataMgr.getDefaultPeopleList(index, filterObj).then(function (data) {
       console.log('getPeopleList ok', data);
-
-      userCache = [].concat(userCache, data);
+      if(data && data.length > 0) {
+        userCache = [].concat(userCache, data);
+      } else {
+        toastShort('加载完了');
+      }
       that.setState({
-        isLoading:false,
+        refreshing:false,
         peopleItems:dataSource.cloneWithRows(userCache),
       });
     }).catch(function (error) {
       console.log('getPeopleList err', error);
-
+      toastShort('加载数据失败');
       that.setState({
-        isLoading:false,
+        refreshing:false,
         peopleItems:dataSource.cloneWithRows(userCache),
       });
     });
@@ -192,20 +198,17 @@ export default class Hall extends React.Component {
     );
   };
 
-  renderListView() {
-    if(this.state.isLoading) {
-      return (<LoadingView/>);
-    } else {
-      return (
-        <ListView
-          contentContainerStyle={{flexDirection:'row', flexWrap:'wrap'}}
-          dataSource={this.state.peopleItems}
-          renderRow={this.renderRow}
-          enableEmptySections={true}
-        />
-      );
-    }
-  }
+  onEndReached= ()=>{
+    console.log('onEndReached');
+    // 上拉加载更多，增量加载
+    this.getPeopleList(userCache.length, filterObj);
+  };
+
+  onRefresh= ()=>{
+    console.log('onRefresh');
+    // 下拉刷新，清空缓存
+    this.reloadPeopleList();
+  };
 
   render(){
     return (
@@ -218,7 +221,20 @@ export default class Hall extends React.Component {
               onRightButtonPress={this.onPressFilter}
               rightButtonIcon={'ios-funnel-outline'}/>
           <View style={gstyles.content}>
-            {this.renderListView()}
+            <ListView
+                contentContainerStyle={{flexDirection:'row', flexWrap:'wrap'}}
+                dataSource={this.state.peopleItems}
+                renderRow={this.renderRow}
+                enableEmptySections={true}
+                pageSize={2}
+                onEndReached={this.onEndReached}
+                refreshControl={
+                  <RefreshControl
+                      refreshing={this.state.refreshing}
+                      onRefresh={this.onRefresh}
+                  />
+                }
+            />
           </View>
         </View>
     );

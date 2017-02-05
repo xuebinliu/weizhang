@@ -26,7 +26,7 @@ export default class Main extends React.Component {
     return (
       <TabNavigator>
         <TabNavigator.Item
-            title="Test"
+            title="同城"
             selected={this.state.selectedTab === 'home'}
             titleStyle={{color:'gray'}}
             selectedTitleStyle={{color:'green'}}
@@ -37,7 +37,7 @@ export default class Main extends React.Component {
         </TabNavigator.Item>
 
         <TabNavigator.Item
-            title="Test"
+            title="私信"
             selected={this.state.selectedTab === 'news'}
             titleStyle={{color:'gray'}}
             selectedTitleStyle={{color:'green'}}
@@ -48,7 +48,7 @@ export default class Main extends React.Component {
         </TabNavigator.Item>
 
         <TabNavigator.Item
-            title="Test"
+            title="我的"
             selected={this.state.selectedTab === 'center'}
             titleStyle={{color:'gray'}}
             selectedTitleStyle={{color:'green'}}

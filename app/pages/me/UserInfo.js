@@ -30,7 +30,9 @@ export default class UserInfo extends React.Component {
     const {route} = this.props;
     this.state = {
       userData:route.userData,
-    }
+    };
+
+    console.log('UserInfo userData', route.userData);
   }
 
   onBackHandle= ()=> {
@@ -79,7 +81,7 @@ export default class UserInfo extends React.Component {
             <Text style={styles.materialText}>地址: {this.state.userData.attributes.address}</Text>
 
             <TouchableOpacity onPress={this.onPressLook} style={[gstyles.button, {marginVertical:20}]}>
-              <Text style={{color:'white'}}>VIP查看联系方式</Text>
+              <Text style={{color:'white'}}>VIP发送私信</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>

@@ -25,6 +25,8 @@ export async function getCurrentCity() {
       let json = await response.json();
       let city = json.content.address_detail.city;
 
+      city = city.replace('市','');
+
       // 存储
       DeviceStorage.save(SK_CURR_CITY, city);
       console.log('getCurrentCity from baidu', city);

@@ -39,6 +39,8 @@ const dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2
 
 /**
  * 可以查看自己的相册和他人的相册，只有查看自己的相册时，可以添加新相册
+ *
+ * 传入：route.currentUser
  */
 export default class AlbumContainer extends React.Component {
   constructor(props){
@@ -73,7 +75,7 @@ export default class AlbumContainer extends React.Component {
         if(content) {
           that.setState({
             content:that.getListItemData(content)
-          })
+          });
         }
       }, function (error) {
         console.log('loadAlbums: get album error', album_id, error);

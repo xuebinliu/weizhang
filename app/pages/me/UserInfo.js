@@ -19,6 +19,7 @@ import {
   gstyles,
   NavigationBar,
   naviGoBack,
+  AlbumContainer,
 } from '../../header';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -40,7 +41,15 @@ export default class UserInfo extends React.Component {
     return naviGoBack(navigator);
   };
 
-  onPressLook= ()=>{
+  onPressSendMessage= ()=>{
+  };
+
+  onPressAlbum= ()=>{
+    const {navigator} = this.props;
+    navigator.push({
+      component:AlbumContainer,
+      currentUser:this.state.userData,
+    });
   };
 
   render() {
@@ -66,10 +75,10 @@ export default class UserInfo extends React.Component {
               <Text style={{marginLeft:15, fontSize:16}}>{this.state.userData.attributes.mind}</Text>
             </View>
 
-            <View style={styles.userTimeLine}>
+            <TouchableOpacity style={styles.userTimeLine} onPress={this.onPressAlbum}>
               <Ionicons name={"md-albums"} size={24} color="darkgray" style={{marginLeft:10,}}/>
               <Text style={{marginLeft:15, fontSize:16}}>TA的相册</Text>
-            </View>
+            </TouchableOpacity>
 
             <View style={styles.userTimeLine}>
               <Ionicons name={"md-menu"} size={24} color="darkgray" style={{marginLeft:10,}}/>
@@ -80,8 +89,8 @@ export default class UserInfo extends React.Component {
             <Text style={styles.materialText}>体重: {this.state.userData.attributes.weight}</Text>
             <Text style={styles.materialText}>地址: {this.state.userData.attributes.address}</Text>
 
-            <TouchableOpacity onPress={this.onPressLook} style={[gstyles.button, {marginVertical:20}]}>
-              <Text style={{color:'white'}}>VIP发送私信</Text>
+            <TouchableOpacity onPress={this.onPressSendMessage} style={[gstyles.button, {marginVertical:20}]}>
+              <Text style={{color:'white'}}>发送私信</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>

@@ -8,7 +8,6 @@ import React from 'react';
 import {
     Text,
     View,
-    InteractionManager,
     TouchableOpacity,
     StyleSheet,
     Image,
@@ -21,6 +20,7 @@ import {
     toastShort,
     Login,
     Feedback,
+    About,
     Profile,
     AlbumContainer,
 } from '../header';
@@ -111,15 +111,9 @@ export default class Center extends React.Component {
   // 建议
   onFeedback= ()=>{
     const {navigator} = this.props;
-    InteractionManager.runAfterInteractions(() => {
-      navigator.push({
-        component: Feedback,
-      });
+    navigator.push({
+      component: Feedback,
     });
-  };
-
-  onPressVersion = ()=>{
-
   };
 
   // 相册
@@ -142,7 +136,10 @@ export default class Center extends React.Component {
   };
 
   onAbout = ()=>{
-
+    const {navigator} = this.props;
+    navigator.push({
+      component: About,
+    });
   };
 
   renderAvatar= ()=>{
@@ -190,12 +187,6 @@ export default class Center extends React.Component {
               </TouchableOpacity>
               <TouchableOpacity style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                 <View style={{flexDirection:'column'}}>
-                  <Text>动态</Text>
-                  <Text>100</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-                <View style={{flexDirection:'column'}}>
                   <Text>粉丝</Text>
                   <Text>100</Text>
                 </View>
@@ -226,18 +217,8 @@ export default class Center extends React.Component {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => {this.onPressVersion()}}>
-              <View style={[gstyles.listItem, styles.item, {marginTop:15, position:'relative'}]}>
-                  <Text>版本</Text>
-                <View style={{flexDirection:'row', flex:1, justifyContent:'flex-end'}}>
-                  <Ionicons name="ios-arrow-forward" size={20} color="gray" style={{alignSelf:'center', marginRight:15}}/>
-                </View>
-              </View>
-            </TouchableOpacity>
-            <View style={gstyles.noMarginline}/>
-
             <TouchableOpacity onPress={() => {this.onFeedback()}}>
-              <View style={[gstyles.listItem, styles.item]}>
+              <View style={[gstyles.listItem, styles.item, {marginTop:15, position:'relative'}]}>
                 <Text>建议</Text>
                 <View style={{flexDirection:'row', flex:1, justifyContent:'flex-end'}}>
                 <Ionicons name="ios-arrow-forward" size={20} color="gray" style={{alignSelf:'center', marginRight:15}}/>

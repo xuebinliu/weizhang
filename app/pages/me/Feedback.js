@@ -21,23 +21,17 @@ import AV from 'leancloud-storage';
 let feedbackContent;
 
 export default class Feedback extends React.Component {
-  constructor(props){
-    super(props);
-
-    this.onBackHandle = this.onBackHandle.bind(this);
-    this.onFeedback = this.onFeedback.bind(this);
-  }
 
   componentDidMount() {
     feedbackContent = '';
   }
 
-  onBackHandle() {
+  onBackHandle= ()=> {
     const {navigator} = this.props;
     return naviGoBack(navigator);
   };
 
-  onFeedback() {
+  onFeedback= ()=> {
     const feedback = AV.Object.new('Feedback');
 
     // feedback.set('account', DeviceStorage.get(SK_ACCOUNT_INFO));
@@ -55,7 +49,7 @@ export default class Feedback extends React.Component {
     }, function (error) {
       toastShort('提交失败');
     });
-  }
+  };
 
   render() {
     return (

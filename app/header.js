@@ -7,6 +7,7 @@
 import Register from './pages/me/Register';
 import Login from './pages/me/Login';
 import Feedback from './pages/me/Feedback';
+import About from './pages/me/About';
 import UserInfo from './pages/me/UserInfo';
 import Location from './pages/hall/Location';
 import Publish from './pages/Publish';
@@ -28,6 +29,7 @@ import loaderHandler from './widget/LoaderHandler';
 export {
     Register,
     Login,
+    About,
     Feedback,
     Location,
     Publish,

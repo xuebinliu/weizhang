@@ -23,6 +23,7 @@ import {
     About,
     Profile,
     AlbumContainer,
+    Follows,
 } from '../header';
 
 import AV from 'leancloud-storage';
@@ -90,6 +91,7 @@ export default class Center extends React.Component {
     this.setUser();
   }
 
+  // 点击登录
   onLogin= ()=>{
     const {navigator} = this.props;
     AV.User.currentAsync().then((currentUser)=>{
@@ -97,6 +99,44 @@ export default class Center extends React.Component {
         navigator.push({
           component: Profile,
           callback: this.updateUserState,
+        });
+      } else {
+        // go login
+        navigator.push({
+          component: Login,
+          callback: this.updateUserState,
+        });
+      }
+    });
+  };
+
+  // 点击关注
+  onPressFollows= ()=>{
+    const {navigator} = this.props;
+    AV.User.currentAsync().then((currentUser)=>{
+      if(currentUser) {
+        navigator.push({
+          component: Follows,
+          title: '关注列表',
+        });
+      } else {
+        // go login
+        navigator.push({
+          component: Login,
+          callback: this.updateUserState,
+        });
+      }
+    });
+  };
+
+  // 点击粉丝
+  onPressFollowees= ()=>{
+    const {navigator} = this.props;
+    AV.User.currentAsync().then((currentUser)=>{
+      if(currentUser) {
+        navigator.push({
+          component: Follows,
+          title: '粉丝列表',
         });
       } else {
         // go login
@@ -179,19 +219,19 @@ export default class Center extends React.Component {
             <View style={gstyles.line}/>
 
             <View style={[gstyles.listItem, {flexDirection:'row', paddingVertical:10}]}>
-              <TouchableOpacity style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+              <TouchableOpacity style={styles.op_action}>
                 <View style={{flexDirection:'column'}}>
                   <Text>红豆</Text>
                   <Text>100</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+              <TouchableOpacity onPress={this.onPressFollowees} style={styles.op_action}>
                 <View style={{flexDirection:'column'}}>
                   <Text>粉丝</Text>
                   <Text>100</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+              <TouchableOpacity onPress={this.onPressFollows} style={styles.op_action}>
                 <View style={{flexDirection:'column'}}>
                   <Text>关注</Text>
                   <Text>100</Text>
@@ -244,6 +284,12 @@ export default class Center extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  op_action:{
+    flex:1,
+    alignItems:'center',
+    justifyContent:'center',
+  },
+
   item:{
     alignItems:'center',
     flexDirection:'row',

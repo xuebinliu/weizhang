@@ -9,7 +9,7 @@ export const toastShort = (content) => {
   }
   toast = Toast.show(content.toString(), {
     duration: Toast.durations.SHORT,
-    position: Toast.positions.CENTER,
+    position: Toast.positions.BOTTOM,
     shadow: true,
     animation: true,
     hideOnPress: true,

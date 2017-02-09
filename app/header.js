@@ -12,6 +12,7 @@ import UserInfo from './pages/me/UserInfo';
 import Location from './pages/hall/Location';
 import Publish from './pages/Publish';
 import Profile from './pages/me/Profile';
+import Follows from './pages/me/Follows';
 import AlbumContainer from './pages/album/AlbumContainer';
 
 // utils
@@ -36,6 +37,7 @@ export {
     Profile,
     AlbumContainer,
     UserInfo,
+    Follows,
 
     gstyles,
     DeviceStorage,

@@ -60,11 +60,9 @@ export default class Album extends React.Component {
 
   getListItemData(content) {
     let tmpContent = content.slice(0);
-
-    if(AV.User.current().getUsername() == currentUser.getUsername()) {
+    if(AV.User.current() && AV.User.current().getUsername() == currentUser.getUsername()) {
       tmpContent.unshift({addBtn:true});
     }
-
     return dataSource.cloneWithRows(tmpContent);
   }
 
@@ -150,11 +148,15 @@ export default class Album extends React.Component {
   onOpenPicture= (rowData)=>{
     console.log('renderRow rowData', rowData);
 
+    let isOwn = false;
+    if(AV.User.current() && AV.User.current().getUsername() == currentUser.getUsername()) {
+      isOwn = true;
+    }
     const {navigator} = this.props;
     navigator.push({
       component:PreviewImage,
       url:rowData.url,
-      isOwnPicture:(AV.User.current().getUsername() == currentUser.getUsername()),
+      isOwnPicture:isOwn,
       deletePictureCallback:this.deletePictureCallback,
     });
   };
@@ -213,7 +215,7 @@ export default class Album extends React.Component {
    * @returns {XML}
    */
   renderNavigator= ()=>{
-    if(AV.User.current().getUsername() == currentUser.getUsername()) {
+    if(AV.User.current() && AV.User.current().getUsername() == currentUser.getUsername()) {
       return (<NavigationBar
           title={'相册'}
           leftButtonIcon="md-arrow-back"
@@ -268,5 +270,4 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
   },
-
 });

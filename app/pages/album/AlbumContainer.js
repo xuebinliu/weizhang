@@ -96,13 +96,20 @@ export default class AlbumContainer extends React.Component {
     }
   }
 
+  /**
+   * 生成listview数据源
+   * @param content
+   * @return {ListViewDataSource}
+   */
   getListItemData(content) {
     // 复制相册数据
     let tempContent = content.slice(0);
 
-    if(AV.User.current().getUsername() == currentUser.getUsername()) {
-      // 查看自己 增加添加相册按钮
-      tempContent.unshift({addBtn:true});
+    if(AV.User.current()) {
+      if(AV.User.current().getUsername() == currentUser.getUsername()) {
+        // 查看自己 增加添加相册按钮
+        tempContent.unshift({addBtn:true});
+      }
     }
 
     return dataSource.cloneWithRows(tempContent);

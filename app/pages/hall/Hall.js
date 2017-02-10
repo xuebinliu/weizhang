@@ -93,7 +93,7 @@ export default class Hall extends React.Component {
       if(data && data.length > 0) {
         userCache = [].concat(userCache, data);
       } else {
-        toastShort('加载完了');
+        // toastShort('加载完了');
       }
       that.setState({
         refreshing:false,

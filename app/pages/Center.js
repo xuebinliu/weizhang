@@ -39,6 +39,8 @@ export default class Center extends React.Component {
       nickName:'未登陆',
       mind:'',
       avatar_url:null,
+      followees:0,    // 关注数
+      followers:0,    // 粉丝数
     };
   }
 
@@ -50,6 +52,7 @@ export default class Center extends React.Component {
    * 更新头像、昵称状态
    */
   setUser = ()=>{
+    // 更新用户状态
     const that = this;
     AV.User.currentAsync().then((currentUser)=>{
       console.log('setUser currentUser', currentUser);
@@ -71,6 +74,10 @@ export default class Center extends React.Component {
         avatar_url:null,
       });
     });
+
+    // 更新关注数
+    this.getFollowees();
+    this.getFollowers();
   };
 
   /**
@@ -117,7 +124,8 @@ export default class Center extends React.Component {
       if(currentUser) {
         navigator.push({
           component: Follows,
-          title: '关注列表',
+          type:1,
+          user:currentUser,
         });
       } else {
         // go login
@@ -136,7 +144,8 @@ export default class Center extends React.Component {
       if(currentUser) {
         navigator.push({
           component: Follows,
-          title: '粉丝列表',
+          type:2,
+          user:currentUser,
         });
       } else {
         // go login
@@ -195,6 +204,36 @@ export default class Center extends React.Component {
     }
   };
 
+  // 获取关注数
+  getFollowees= ()=>{
+    const that = this;
+    AV.User.currentAsync().then((currentUser)=>{
+      if(currentUser){
+        let query = currentUser.followeeQuery();
+        query.count(function (count) {
+          that.setState({
+            followees:count
+          });
+        });
+      }
+    });
+  };
+
+  // 获取粉丝数
+  getFollowers= ()=>{
+    const that = this;
+    AV.User.currentAsync().then((currentUser)=>{
+      if(currentUser){
+        let query = currentUser.followerQuery();
+        query.count(function (count) {
+          that.setState({
+            followers:count
+          });
+        });
+      }
+    });
+  };
+
   render() {
     return (
         <View style={gstyles.container}>
@@ -220,21 +259,21 @@ export default class Center extends React.Component {
 
             <View style={[gstyles.listItem, {flexDirection:'row', paddingVertical:10}]}>
               <TouchableOpacity style={styles.op_action}>
-                <View style={{flexDirection:'column'}}>
+                <View style={{alignItems:'center'}}>
                   <Text>红豆</Text>
                   <Text>100</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={this.onPressFollowees} style={styles.op_action}>
-                <View style={{flexDirection:'column'}}>
+                <View style={{alignItems:'center'}}>
                   <Text>粉丝</Text>
-                  <Text>100</Text>
+                  <Text>{this.state.followers}</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={this.onPressFollows} style={styles.op_action}>
-                <View style={{flexDirection:'column'}}>
+                <View style={{alignItems:'center'}}>
                   <Text>关注</Text>
-                  <Text>100</Text>
+                  <Text>{this.state.followees}</Text>
                 </View>
               </TouchableOpacity>
             </View>

@@ -57,14 +57,18 @@ export default class Center extends React.Component {
     AV.User.currentAsync().then((currentUser)=>{
       console.log('setUser currentUser', currentUser);
       let nickName='未登录';
+      let mind = '';
+      let avatar_url = '';
       if(currentUser) {
         nickName = this.getNickName(currentUser);
+        mind = currentUser.get('mind');
+        avatar_url = currentUser.get('avatar_url');
       }
 
       that.setState({
         nickName:nickName,
-        mind:currentUser.get('mind'),
-        avatar_url:currentUser.get('avatar_url'),
+        mind:mind,
+        avatar_url:avatar_url,
       });
     }).catch(function (error) {
       console.log('setUser no user info', error);
@@ -193,7 +197,7 @@ export default class Center extends React.Component {
 
   renderAvatar= ()=>{
     let url = this.state.avatar_url;
-    if(url) {
+    if(url && url.length > 0) {
       return (
           <Image style={{width:60, height:60, borderRadius:30, marginLeft:10, alignSelf:'center'}} source={{uri:url}}></Image>
       );
@@ -315,8 +319,6 @@ export default class Center extends React.Component {
               </View>
             </TouchableOpacity>
           </View>
-
-
         </View>
     );
   }

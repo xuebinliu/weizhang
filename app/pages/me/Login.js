@@ -36,6 +36,7 @@ export default class Login extends React.Component {
   }
 
   onBackHandle= ()=>{
+    console.log('onBackHandle');
     const {navigator} = this.props;
     return naviGoBack(navigator);
   };
@@ -51,6 +52,7 @@ export default class Login extends React.Component {
   };
 
   onPressLogin= ()=>{
+    console.log('onPressLogin', account, pwd);
     if(account == undefined || account.length < 1) {
       Alert.alert('提示', '亲, 请输入账号');
       return;
@@ -63,9 +65,13 @@ export default class Login extends React.Component {
 
     const that = this;
     AV.User.logIn(account, pwd).then(function (loginedUser) {
+      console.log('onPressLogin sucess');
+
       // refresh center ui
       const {route} = that.props;
-      route.callback();
+      if(route.callback){
+        route.callback();
+      }
 
       toastShort('登陆成功');
       that.onBackHandle();

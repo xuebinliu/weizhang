@@ -34,7 +34,7 @@ const dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2
 
 // 当前用户列表缓存
 let userCache = [];
-// 过滤条件对象
+// 过滤器对象
 var filterObj = {
   city:'',
   sex:-1,
@@ -48,13 +48,15 @@ export default class Hall extends React.Component {
     console.log('Hall constructor');
 
     this.state = {
-      refreshing: false,
-      peopleItems:dataSource.cloneWithRows(userCache),
+      isLoading: false,
+      peopleItems:dataSource.cloneWithRows([]),
     };
 
+    // 初始化过滤器数据
     this.initFilterData();
   }
 
+  // 初始化过滤器数据
   initFilterData= ()=>{
     const that = this;
     DeviceStorage.get(Const.SK_HALL_FILTER).then(function (obj) {
@@ -77,34 +79,39 @@ export default class Hall extends React.Component {
     });
   };
 
+  // 保存过滤器数据
   saveFilterData= (newFilter)=>{
     filterObj = newFilter;
     DeviceStorage.save(Const.SK_HALL_FILTER, filterObj);
   };
 
+  /**
+   * 获取用户列表
+   * @param index 起始索引，用于分页拉取
+   * @param filterObj 过滤条件
+   */
   getPeopleList= (index, filterObj)=>{
     const that = this;
     that.setState({
-      refreshing:true,
+      isLoading:true,
     });
 
-    HallDataMgr.getDefaultPeopleList(index, filterObj).then(function (data) {
-      console.log('getPeopleList ok', data);
-      if(data && data.length > 0) {
-        userCache = [].concat(userCache, data);
+    HallDataMgr.getDefaultPeopleList(index, filterObj).then(function (users) {
+      console.log('getPeopleList ok', users);
+      if(users && users.length > 0) {
+        userCache = [].concat(userCache, users);
       } else {
         // toastShort('加载完了');
       }
       that.setState({
-        refreshing:false,
+        isLoading:false,
         peopleItems:dataSource.cloneWithRows(userCache),
       });
     }).catch(function (error) {
       console.log('getPeopleList err', error);
       toastShort('加载数据失败');
       that.setState({
-        refreshing:false,
-        peopleItems:dataSource.cloneWithRows(userCache),
+        isLoading:false,
       });
     });
   };
@@ -190,7 +197,6 @@ export default class Hall extends React.Component {
 
   renderRow = (rowData, secId, rowId)=>{
     let user = rowData._serverData;
-    // console.log('renderRow', user, secId, rowId);
     return (
       <TouchableOpacity style={styles.itemContainer} onPress={()=>{this.onPressRow(rowData)}}>
         {this.renderItemImage(user)}
@@ -214,28 +220,29 @@ export default class Hall extends React.Component {
     return (
         <View style={gstyles.container}>
           <NavigationBar
-              title={'同城'}
-              leftButtonTitle={filterObj.city}
-              leftButtonTitleColor={'#fff'}
-              onLeftButtonPress={this.onClickCity}
-              onRightButtonPress={this.onPressFilter}
-              rightButtonIcon={'ios-funnel-outline'}/>
+            title={'同城'}
+            leftButtonTitle={filterObj.city}
+            leftButtonTitleColor={'#fff'}
+            onLeftButtonPress={this.onClickCity}
+            onRightButtonPress={this.onPressFilter}
+            rightButtonIcon={'ios-funnel-outline'}/>
+
           <View style={gstyles.content}>
             <ListView
-                contentContainerStyle={{flexDirection:'row', flexWrap:'wrap'}}
-                dataSource={this.state.peopleItems}
-                renderRow={this.renderRow}
-                enableEmptySections={true}
-                pageSize={2}
-                onEndReached={this.onEndReached}
-                refreshControl={
-                  <RefreshControl
-                      refreshing={this.state.refreshing}
-                      onRefresh={this.onRefresh}
-                  />
-                }
-            />
+              contentContainerStyle={{flexDirection:'row', flexWrap:'wrap'}}
+              dataSource={this.state.peopleItems}
+              renderRow={this.renderRow}
+              enableEmptySections={true}
+              pageSize={2}
+              onEndReached={this.onEndReached}
+              refreshControl={
+                <RefreshControl
+                    refreshing={this.state.isLoading}
+                    onRefresh={this.onRefresh}
+                />
+              }/>
           </View>
+
         </View>
     );
   }

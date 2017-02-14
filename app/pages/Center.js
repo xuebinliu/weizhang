@@ -80,8 +80,8 @@ export default class Center extends React.Component {
     });
 
     // 更新关注数
-    this.getFollowees();
-    this.getFollowers();
+    this.updateFolloweesCount();
+    this.updateFollowersCount();
   };
 
   /**
@@ -209,7 +209,7 @@ export default class Center extends React.Component {
   };
 
   // 获取关注数
-  getFollowees= ()=>{
+  updateFolloweesCount= ()=>{
     const that = this;
     AV.User.currentAsync().then((currentUser)=>{
       if(currentUser){
@@ -224,7 +224,7 @@ export default class Center extends React.Component {
   };
 
   // 获取粉丝数
-  getFollowers= ()=>{
+  updateFollowersCount= ()=>{
     const that = this;
     AV.User.currentAsync().then((currentUser)=>{
       if(currentUser){

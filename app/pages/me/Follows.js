@@ -30,7 +30,7 @@ const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 const PAGE_COUNT = 20;
 
 // 当前用户列表的缓存
-var userCache = [];
+let userCache = [];
 
 /**
  * props:
@@ -41,12 +41,17 @@ export default class Follows extends React.Component {
   constructor(props){
     super(props);
 
-    userCache = [];
-
     this.state = {
       dataSource: ds.cloneWithRows(userCache),
       isLoading:true,
     };
+  }
+
+  componentDidMount(){
+    const that = this;
+    setTimeout(function () {
+      that.loadData(userCache.length);
+    }, 300);
   }
 
   /**
@@ -55,8 +60,6 @@ export default class Follows extends React.Component {
    */
   loadData= (index)=>{
     console.log('loadData', index, this.props.route.type);
-
-    const that = this;
 
     let query;
     if(this.props.route.type == 1) {
@@ -70,42 +73,30 @@ export default class Follows extends React.Component {
       query.include('follower');
       query.limit(PAGE_COUNT);
     } else {
-
     }
 
     query.skip(index);
 
-    query.find().then(function(follows){
+    const that = this;
+    query.find().then(function(users){
+      console.log("loadData get users", users);
+
       //关注的用户列表 follows
-      console.log("my follows", follows);
-      if(follows && follows.length > 0) {
-        userCache = [].concat(userCache, follows);
+      if(users && users.length > 0) {
+        userCache = [].concat(userCache, users);
       } else {
         // toastShort('加载完了');
       }
 
-      console.log("my userCache", userCache);
-
       that.setState({
-        dataSource:ds.cloneWithRows(userCache),
         isLoading:false,
+        dataSource:ds.cloneWithRows(userCache),
       });
     }).catch(function (err) {
       console.log('loadData err', err);
       toastShort('加载出错了');
-      that.setState({
-        dataSource:ds.cloneWithRows(userCache),
-        isLoading:false,
-      });
     });
   };
-
-  componentDidMount(){
-    const that = this;
-    setTimeout(function () {
-      that.loadData(userCache.length);
-    }, 300);
-  }
 
   onEndReached= ()=>{
     this.loadData(userCache.length);
@@ -136,7 +127,7 @@ export default class Follows extends React.Component {
   };
 
   renderSeparator= (sectionID, rowID)=>{
-    return (<View key={`${sectionId}-${rowId}`} style={gstyles.noMarginline}></View>);
+    return (<View key={`${sectionID}-${rowID}`} style={gstyles.noMarginline}></View>);
   };
 
   renderFooter= ()=>{
@@ -145,7 +136,7 @@ export default class Follows extends React.Component {
           <Text style={{}}>没有更多了</Text>
         </View>
     );
-  }
+  };
 
   renderContent= ()=>{
     if(this.state.isLoading){
@@ -159,12 +150,12 @@ export default class Follows extends React.Component {
     } else {
       return (
         <ListView
-            dataSource={this.state.dataSource}
-            renderRow={this.renderRow}
-            renderSeparator={this.renderSeparator}
-            onEndReached={this.onEndReached}
-            renderFooter={this.renderFooter}
-            enableEmptySections={true}/>
+          dataSource={this.state.dataSource}
+          renderRow={this.renderRow}
+          renderSeparator={this.renderSeparator}
+          onEndReached={this.onEndReached}
+          renderFooter={this.renderFooter}
+          enableEmptySections={true}/>
       );
     }
   };

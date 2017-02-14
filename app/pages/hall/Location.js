@@ -3,7 +3,6 @@
  *
  * 位置信息, 选择用户当前的城市
  */
-
 import React from 'react';
 import {
   View,
@@ -44,7 +43,7 @@ export default class Location extends React.Component {
 
         // 数据加载完成
         that.setState({
-          isLoading:false,
+          isFirstLoading:false,
           dataSource : ds.cloneWithRowsAndSections(cities)
         });
       }, function (error) {
@@ -100,7 +99,7 @@ export default class Location extends React.Component {
   };
 
   renderListView() {
-    if(this.state.isLoading) {
+    if(this.state.isFirstLoading) {
       return (<LoadingView/>);
     } else {
       return (

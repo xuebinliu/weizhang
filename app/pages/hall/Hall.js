@@ -94,7 +94,7 @@ export default class Hall extends React.Component {
   getPeopleList= (index, filterObj)=>{
     const that = this;
     that.setState({
-      isLoading:true,
+      isFirstLoading:true,
     });
 
     HallDataMgr.getDefaultPeopleList(index, filterObj).then(function (users) {
@@ -105,14 +105,14 @@ export default class Hall extends React.Component {
         // toastShort('加载完了');
       }
       that.setState({
-        isLoading:false,
+        isFirstLoading:false,
         peopleItems:dataSource.cloneWithRows(userCache),
       });
     }).catch(function (error) {
       console.log('getPeopleList err', error);
       toastShort('加载数据失败');
       that.setState({
-        isLoading:false,
+        isFirstLoading:false,
       });
     });
   };
@@ -238,7 +238,7 @@ export default class Hall extends React.Component {
               onEndReached={this.onEndReached}
               refreshControl={
                 <RefreshControl
-                    refreshing={this.state.isLoading}
+                    refreshing={this.state.isFirstLoading}
                     onRefresh={this.onRefresh}
                 />
               }/>

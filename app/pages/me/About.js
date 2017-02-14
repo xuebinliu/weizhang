@@ -12,14 +12,14 @@ import{
 import {
   gstyles,
   NavigationBar,
-  naviGoBack,
+  CommonUtil,
 } from '../../header';
 
 export default class About extends React.Component {
 
   onBackHandle= ()=> {
     const {navigator} = this.props;
-    return naviGoBack(navigator);
+    return CommonUtil.naviGoBack(navigator);
   };
 
   render() {
@@ -28,8 +28,7 @@ export default class About extends React.Component {
           <NavigationBar
               title={'关于'}
               leftButtonIcon="md-arrow-back"
-              onLeftButtonPress={this.onBackHandle}
-          />
+              onLeftButtonPress={this.onBackHandle} />
 
           <View style={gstyles.content}>
 

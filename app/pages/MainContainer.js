@@ -10,7 +10,7 @@ import TabNavigator from 'react-native-tab-navigator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Hall from './hall/Hall';
-import News from './News';
+import Message from './msg/Message';
 import Center from './Center';
 
 export default class Main extends React.Component {
@@ -44,7 +44,7 @@ export default class Main extends React.Component {
             renderIcon={() => <Ionicons name="ios-aperture-outline" size={28} color="gray"/>}
             renderSelectedIcon={() => <Ionicons name="ios-aperture" size={28} color="green"/>}
             onPress={() => this.setState({ selectedTab: 'news' })}>
-          <News {...this.props}/>
+          <Message {...this.props}/>
         </TabNavigator.Item>
 
         <TabNavigator.Item

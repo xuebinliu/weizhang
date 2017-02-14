@@ -19,6 +19,7 @@ import {
   LoadingView,
   UserInfo,
   CommonUtil,
+  EmptyView,
 } from '../../header';
 
 import AV from 'leancloud-storage';
@@ -93,7 +94,7 @@ export default class Follows extends React.Component {
       }
 
       that.setState({
-        isLoading:false,
+        isFirstLoading:false,
         dataSource:ds.cloneWithRows(userCache),
       });
     }).catch(function (err) {
@@ -143,16 +144,10 @@ export default class Follows extends React.Component {
   };
 
   renderContent= ()=>{
-    if(this.state.isLoading){
+    if(this.state.isFirstLoading){
       return (<LoadingView/>);
     } else if(userCache.length == 0){
-      return (
-        <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-          <Text style={{fontSize:16}}>
-            {this.props.route.type == 1 ? '您还未关注其他人哦~' : '您还没有粉丝哦~'}
-          </Text>
-        </View>
-      );
+      return (<EmptyView message={this.props.route.type == 1 ? '您还未关注其他人哦~' : '您还没有粉丝哦~'} />);
     } else {
       return (
         <ListView

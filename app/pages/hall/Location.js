@@ -19,8 +19,7 @@ import {
     gstyles,
     DeviceStorage,
     LoadingView,
-    naviGoBack,
-    getCityList,
+    CommonUtil,
 } from '../../header';
 
 import * as Const from '../../const';
@@ -37,7 +36,7 @@ export default class Location extends React.Component {
     const that = this;
     // 延迟加载避免卡顿
     setTimeout(function () {
-      getCityList().then(function (cities) {
+      CommonUtil.getCityList().then(function (cities) {
         let ds = new ListView.DataSource({
           rowHasChanged:(r1, r2)=> r1 !== r2,
           sectionHeaderHasChanged:(s1, s2)=> s1!== s2,
@@ -56,7 +55,7 @@ export default class Location extends React.Component {
 
   onBackHandle= ()=> {
     const {navigator} = this.props;
-    return naviGoBack(navigator);
+    return CommonUtil.naviGoBack(navigator);
   };
 
   onPressRow= (rowData)=> {

@@ -11,10 +11,8 @@ import{
 
 import {
   gstyles,
-  DeviceStorage,
   NavigationBar,
   naviGoBack,
-  toastShort,
 } from '../../header';
 
 export default class About extends React.Component {

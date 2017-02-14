@@ -48,3 +48,16 @@ export function getCityList() {
     });
   });
 }
+
+/**
+ * 获取可读的用户名，查不到昵称就用账号
+ * @param user
+ */
+export function getReadableUserName(user) {
+  let nickname = user.get('nickname');
+  if(nickname) {
+    return nickname;
+  } else {
+    return user.getUsername();
+  }
+}

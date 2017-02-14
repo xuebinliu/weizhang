@@ -15,10 +15,10 @@ import{
 import {
   gstyles,
   NavigationBar,
-  naviGoBack,
   toastShort,
   LoadingView,
   UserInfo,
+  CommonUtil,
 } from '../../header';
 
 import AV from 'leancloud-storage';
@@ -52,6 +52,10 @@ export default class Follows extends React.Component {
     setTimeout(function () {
       that.loadData(userCache.length);
     }, 300);
+  }
+
+  componentWillUnmount(){
+    userCache = [];
   }
 
   /**
@@ -117,7 +121,7 @@ export default class Follows extends React.Component {
                  resizeMode="stretch"
                  source={{uri:rowData.attributes.avatar_url}}/>
           <View style={{flex:1}}>
-            <Text>{rowData.attributes.username}</Text>
+            <Text>{CommonUtil.getReadableUserName(rowData)}</Text>
             <Text>{rowData.attributes.mind}</Text>
           </View>
           <Ionicons name="ios-arrow-forward" size={20} color="gray" style={{marginHorizontal:10}}/>
@@ -144,7 +148,9 @@ export default class Follows extends React.Component {
     } else if(userCache.length == 0){
       return (
         <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-          <Text style={{fontSize:16}}>空空如也~</Text>
+          <Text style={{fontSize:16}}>
+            {this.props.route.type == 1 ? '您还未关注其他人哦~' : '您还没有粉丝哦~'}
+          </Text>
         </View>
       );
     } else {
@@ -166,7 +172,7 @@ export default class Follows extends React.Component {
           <NavigationBar
               title={this.props.route.type == 1 ? '我的关注' : '我的粉丝'}
               leftButtonIcon="md-arrow-back"
-              onLeftButtonPress={()=>{naviGoBack(this.props.navigator)}}
+              onLeftButtonPress={()=>{CommonUtil.naviGoBack(this.props.navigator)}}
           />
 
           <View style={gstyles.content}>

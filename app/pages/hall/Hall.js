@@ -17,7 +17,7 @@ import {
 import {
   gstyles,
   NavigationBar,
-  getCurrentCity,
+  CommonUtil,
   Location,
   UserInfo,
   DeviceStorage,
@@ -47,6 +47,7 @@ export default class Hall extends React.Component {
     super(props);
     console.log('Hall constructor');
 
+    userCache = [];
     this.state = {
       isLoading: false,
       peopleItems:dataSource.cloneWithRows([]),
@@ -152,7 +153,7 @@ export default class Hall extends React.Component {
    */
   cbRefreshCity= ()=> {
     const that = this;
-    getCurrentCity().then((city)=>{
+    CommonUtil.getCurrentCity().then((city)=>{
       // save to server
       AV.User.currentAsync().then(function (user) {
         if(user != null){

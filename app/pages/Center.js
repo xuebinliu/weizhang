@@ -24,6 +24,7 @@ import {
     Profile,
     AlbumContainer,
     Follows,
+    CommonUtil,
 } from '../header';
 
 import AV from 'leancloud-storage';
@@ -60,7 +61,7 @@ export default class Center extends React.Component {
       let mind = '';
       let avatar_url = '';
       if(currentUser) {
-        nickName = this.getNickName(currentUser);
+        nickName = CommonUtil.getReadableUserName(currentUser);
         mind = currentUser.get('mind');
         avatar_url = currentUser.get('avatar_url');
       }

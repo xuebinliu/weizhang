@@ -19,7 +19,9 @@ import AlbumContainer from './pages/album/AlbumContainer';
 import gstyles from './gstyles';
 import DeviceStorage from './utils/Storage';
 import {toastShort, toastLong} from './utils/ToastUtil';
-import {naviGoBack, getCityList, getCurrentCity} from './utils/common';
+import {naviGoBack} from './utils/common';
+
+import * as CommonUtil from './utils/common';
 
 // widget
 import LoadingView from './widget/LoadingView';
@@ -50,6 +52,5 @@ export {
     loaderHandler,
 
     naviGoBack,
-    getCityList,
-    getCurrentCity,
+    CommonUtil,
 }

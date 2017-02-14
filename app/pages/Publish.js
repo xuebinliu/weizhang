@@ -11,13 +11,9 @@ import {
 } from 'react-native';
 
 import {
-    toastShort,
     NavigationBar,
     gstyles,
-    DeviceStorage,
-    LoadingView,
     naviGoBack,
-    getCityList,
 } from '../header';
 
 import * as Const from '../const';

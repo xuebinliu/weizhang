@@ -19,7 +19,7 @@ import {
   NavigationBar,
   naviGoBack,
   toastShort,
-  getCurrentCity,
+  CommonUtil,
   Location,
 } from '../../header';
 
@@ -46,7 +46,7 @@ export default class Register extends React.Component {
   refreshCity= ()=>{
     // 获取当前城市
     const that = this;
-    getCurrentCity().then(function (city) {
+    CommonUtil.getCurrentCity().then(function (city) {
       that.setState({
         city:city,
       });

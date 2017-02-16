@@ -9,6 +9,7 @@ import {
   Text,
   View,
   Image,
+  TouchableOpacity,
 } from 'react-native';
 
 import {
@@ -26,6 +27,8 @@ export default class Message extends BaseListViewComponent {
   }
 
   componentDidMount(){
+    talkCache = [];
+    this.loadData(talkCache.length);
   }
 
   /**
@@ -53,9 +56,6 @@ export default class Message extends BaseListViewComponent {
     return (
         <TouchableOpacity onPress={()=>this.onPressRow(rowData)}>
           <View style={{flex:1, flexDirection:'row', height:80, alignItems:'center'}}>
-            {/*<Image style={{width:60, height:60, margin:10, borderRadius:30, alignSelf:'center'}}*/}
-                   {/*resizeMode="stretch"*/}
-                   {/*source={{uri:rowData.attributes.avatar_url}}/>*/}
             <View style={{flex:1}}>
               <Text>'ss'</Text>
               <Text>'sss'</Text>

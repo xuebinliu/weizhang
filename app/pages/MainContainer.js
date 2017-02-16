@@ -12,6 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Hall from './hall/Hall';
 import Message from './msg/Message';
 import Center from './Center';
+import BaseTest from '../base/BaseTest';
 
 export default class Main extends React.Component {
   constructor(props) {

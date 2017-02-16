@@ -151,6 +151,8 @@ dependencies {
 
     // LeanCloud 统计包
     compile ('cn.leancloud.android:avoscloud-statistics:v3.+')
+
+    compile ('cn.leancloud.android:chatkit:1.0.6')
 }
 
 // Run this once to be able to run the application with BUCK

@@ -32,6 +32,7 @@ public class RNPackages implements ReactPackage {
         List<NativeModule> modules = new ArrayList<>();
 
         modules.add(new FileUpload(reactContext));
+        modules.add(new ReactProxy(reactContext));
 
         return modules;
     }

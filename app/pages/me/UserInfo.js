@@ -13,6 +13,7 @@ import{
   ScrollView,
   StyleSheet,
   Dimensions,
+  NativeModules,
 } from 'react-native';
 
 import {
@@ -22,13 +23,11 @@ import {
   AlbumContainer,
   Login,
   toastShort,
+  CommonUtil,
 } from '../../header';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AV from 'leancloud-storage';
-
-// 已关注的id
-var followIds = [];
 
 export default class UserInfo extends React.Component {
   constructor(props){
@@ -74,9 +73,18 @@ export default class UserInfo extends React.Component {
 
   // 发送私信
   onPressSendMessage= ()=>{
+    const that = this;
     AV.User.currentAsync().then((currentUser)=>{
       if(currentUser) {
-
+          NativeModules.ReactProxy.openChat({
+            userId:currentUser.id,
+            avatar_url:currentUser.get('avatar_url'),
+            name:CommonUtil.getReadableUserName(currentUser)
+          },{
+            userId:that.state.userData.id,
+            avatar_url:that.state.userData.get('avatar_url'),
+            name:CommonUtil.getReadableUserName(that.state.userData)
+          });
       } else {
         const {navigator} = this.props;
         navigator.push({
@@ -84,6 +92,7 @@ export default class UserInfo extends React.Component {
         });
       }
     }).catch(function (error) {
+      console.log(error);
     });
   };
 

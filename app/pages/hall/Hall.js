@@ -49,7 +49,7 @@ export default class Hall extends React.Component {
 
     userCache = [];
     this.state = {
-      isLoading: false,
+      isFirstLoading: false,
       peopleItems:dataSource.cloneWithRows([]),
     };
 

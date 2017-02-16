@@ -10,6 +10,7 @@ import {
   View,
   Image,
   TouchableOpacity,
+  NativeModules,
 } from 'react-native';
 
 import {
@@ -24,6 +25,8 @@ let talkCache = [];
 export default class Message extends BaseListViewComponent {
   constructor(props){
     super(props);
+
+    console.log('Message constructor');
   }
 
   componentDidMount(){
@@ -36,12 +39,13 @@ export default class Message extends BaseListViewComponent {
    * @param index 其实位置
    */
   loadData= (index)=>{
-    var query = AV.Status.inboxQuery(AV.User.current());
-    query.find().then(function(statuses){
-      //查询成功，返回状态列表，每个对象都是 AV.Status
-    }, function(err){
-      //查询失败
-      console.dir(err);
+    console.log('Message loadData');
+
+    AV.User.currentAsync().then(function (currentUser) {
+      console.log('Message get currentUser id', currentUser.id);
+      NativeModules.ReactProxy.getChatLocalList(currentUser.id, function (chatList) {
+        console.log('loadData', chatList);
+      });
     });
   };
 

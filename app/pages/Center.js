@@ -15,9 +15,7 @@ import {
 
 import {
     gstyles,
-    DeviceStorage,
     NavigationBar,
-    toastShort,
     Login,
     Feedback,
     About,
@@ -83,19 +81,6 @@ export default class Center extends React.Component {
     // 更新关注数
     this.updateFolloweesCount();
     this.updateFollowersCount();
-  };
-
-  /**
-   * 获取昵称，如果没设置则返回用户名
-   * @returns {*}
-   */
-  getNickName= (currentUser)=>{
-    let nickname = currentUser.get('nickname');
-    if(nickname) {
-      return nickname;
-    } else {
-      return currentUser.getUsername();
-    }
   };
 
   // login success callback

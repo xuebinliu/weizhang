@@ -5,6 +5,7 @@ import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
+import com.weizhang.component.ChatListViewModule;
 import com.weizhang.rnmodule.FileUpload;
 
 import java.util.ArrayList;
@@ -23,12 +24,14 @@ public class RNPackages implements ReactPackage {
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        return Collections.emptyList();
+        List<ViewManager> modules = new ArrayList<>();
+        modules.add(new ChatListViewModule(reactContext));
+
+        return modules;
     }
 
     @Override
-    public List<NativeModule> createNativeModules(
-            ReactApplicationContext reactContext) {
+    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
 
         modules.add(new FileUpload(reactContext));

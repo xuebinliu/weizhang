@@ -8,17 +8,21 @@ import android.widget.Toast;
 import cn.leancloud.chatkit.LCChatKit;
 import cn.leancloud.chatkit.LCChatKitUser;
 import cn.leancloud.chatkit.activity.LCIMConversationActivity;
+import cn.leancloud.chatkit.cache.LCIMConversationItemCache;
 import cn.leancloud.chatkit.utils.LCIMConstants;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
-import com.avos.avoscloud.ProgressCallback;
-import com.avos.avoscloud.SaveCallback;
+import com.avos.avoscloud.*;
 import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.facebook.react.bridge.*;
 import com.weizhang.util.ChatKitUserProvider;
 import com.weizhang.util.Common;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by free on 16/02/2017.
@@ -28,13 +32,54 @@ import com.weizhang.util.Common;
 public class ReactProxy  extends ReactContextBaseJavaModule {
     private static final String TAG = "ReactProxy";
 
+    private ReactApplicationContext context;
+
+
     public ReactProxy(ReactApplicationContext reactContext){
         super(reactContext);
+
+        context = reactContext;
     }
 
     @Override
     public String getName() {
         return "ReactProxy";
+    }
+
+    @ReactMethod
+    public void getChatLocalList(final String userId, final Callback callback) {
+
+        Log.d(TAG, "getChatLocalList");
+
+        LCChatKit.getInstance().open(userId, new AVIMClientCallback() {
+            @Override
+            public void done(AVIMClient avimClient, AVIMException e) {
+                if (e != null) {
+                    Log.e(TAG, "getChatLocalList exp=" + e.getMessage());
+                    if (callback != null) {
+                        callback.invoke();
+                    }
+                } else {
+                    WritableNativeArray jsArray = new WritableNativeArray();
+
+                    List<String> convIdList = LCIMConversationItemCache.getInstance().getSortedConversationList();
+                    for (String convId : convIdList) {
+                        AVIMConversation conversation = LCChatKit.getInstance().getClient().getConversation(convId);
+
+                        WritableNativeMap jsMap = new WritableNativeMap();
+                        jsMap.putString("userId", conversation.getConversationId());
+                        jsMap.putString("lastMessage", conversation.getLastMessage().getContent());
+                        jsMap.putInt("lastMessageAt", (int)conversation.getLastMessageAt().getTime());
+
+                        jsArray.pushMap(jsMap);
+                    }
+
+                    if (callback != null) {
+                        callback.invoke(jsArray);
+                    }
+                }
+            }
+        });
     }
 
     /**

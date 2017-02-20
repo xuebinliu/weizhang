@@ -6,6 +6,7 @@ import {
   Text,
   View,
   ListView,
+  RefreshControl,
 } from 'react-native';
 
 import {
@@ -20,7 +21,7 @@ const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 let dataCache = [];
 
 /**
- * 子类必须实现loadData方法、renderRow方法
+ * 子类必须实现loadData方法、renderRow方法, onPullRefresh
  *
  */
 export default class BaseListViewComponent extends React.Component {
@@ -97,7 +98,14 @@ export default class BaseListViewComponent extends React.Component {
           renderSeparator={this.renderSeparator}
           onEndReached={this.onEndReached}
           renderFooter={this.renderFooter}
-          enableEmptySections={true}/>
+          enableEmptySections={true}
+          refreshControl={
+            <RefreshControl
+                refreshing={this.state.isFirstLoading}
+                onRefresh={this.onPullRefresh}
+            />
+          }
+        />
       );
     }
   };

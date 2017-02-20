@@ -28,6 +28,10 @@ export default class Message extends BaseListViewComponent {
     this.loadData();
   }
 
+  onPullRefresh= ()=>{
+    this.loadData();
+  };
+
   /**
    * 从服务器获取列表数据
    * @param index 其实位置
@@ -45,6 +49,11 @@ export default class Message extends BaseListViewComponent {
             console.log('Message getChatLocalList conversationId=', conversation.conversationId);
             if(!talkCacheMap.has(conversation.conversationId)) {
               talkCacheMap.set(conversation.conversationId, conversation);
+            } else {
+              let tmp = talkCacheMap.get(conversation.conversationId);
+              tmp.lastMessage = conversation.lastMessage;
+              tmp.lastMessageTime = conversation.lastMessageTime;
+              tmp.unreadCount = conversation.unreadCount;
             }
           }
         }
@@ -58,6 +67,7 @@ export default class Message extends BaseListViewComponent {
           that.getChatName(v.conversationId);
           that.getChatAvatar(v.conversationId);
         }
+
         that.updateData(listData);
       });
     });
@@ -69,15 +79,17 @@ export default class Message extends BaseListViewComponent {
       console.log('Message getChatName', name);
       if(talkCacheMap.has(conversationId)) {
         let conversation = talkCacheMap.get(conversationId);
-        conversation.name = name;
-        talkCacheMap.set(conversationId, conversation);
+        if(conversation.name != name) {
+          conversation.name = name;
+          talkCacheMap.set(conversationId, conversation);
 
-        // update list
-        let listData = [];
-        for(let v of talkCacheMap.values()) {
-          listData.push(v);
+          // update list
+          let listData = [];
+          for(let v of talkCacheMap.values()) {
+            listData.push(v);
+          }
+          that.updateData(listData);
         }
-        that.updateData(listData);
       }
     });
   };
@@ -88,15 +100,17 @@ export default class Message extends BaseListViewComponent {
       console.log('Message getChatAvatar', avatar_url);
       if(talkCacheMap.has(conversationId)) {
         let conversation = talkCacheMap.get(conversationId);
-        conversation.avatar_url = avatar_url;
-        talkCacheMap.set(conversationId, conversation);
+        if(conversation.avatar_url != avatar_url) {
+          conversation.avatar_url = avatar_url;
+          talkCacheMap.set(conversationId, conversation);
 
-        // update list
-        let listData = [];
-        for(let v of talkCacheMap.values()) {
-          listData.push(v);
+          // update list
+          let listData = [];
+          for(let v of talkCacheMap.values()) {
+            listData.push(v);
+          }
+          that.updateData(listData);
         }
-        that.updateData(listData);
       }
     });
   };

@@ -1,5 +1,6 @@
 package com.weizhang;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -10,19 +11,18 @@ import cn.leancloud.chatkit.LCChatKitUser;
 import cn.leancloud.chatkit.activity.LCIMConversationActivity;
 import cn.leancloud.chatkit.cache.LCIMConversationItemCache;
 import cn.leancloud.chatkit.utils.LCIMConstants;
+import cn.leancloud.chatkit.utils.LCIMConversationUtils;
 import com.avos.avoscloud.*;
-import com.avos.avoscloud.im.v2.AVIMClient;
-import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.*;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
+import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.facebook.react.bridge.*;
 import com.weizhang.util.ChatKitUserProvider;
 import com.weizhang.util.Common;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by free on 16/02/2017.
@@ -32,13 +32,8 @@ import java.util.List;
 public class ReactProxy  extends ReactContextBaseJavaModule {
     private static final String TAG = "ReactProxy";
 
-    private ReactApplicationContext context;
-
-
     public ReactProxy(ReactApplicationContext reactContext){
         super(reactContext);
-
-        context = reactContext;
     }
 
     @Override
@@ -46,11 +41,77 @@ public class ReactProxy  extends ReactContextBaseJavaModule {
         return "ReactProxy";
     }
 
+
+    /**
+     * 获取对话对方的名称
+     * @param conversationId
+     * @param callback (conversationId, name)
+     */
+    @ReactMethod
+    public void getConversationName(final String conversationId, final Callback callback) {
+        final AVIMConversation conversation = LCChatKit.getInstance().getClient().getConversation(conversationId);
+        if (null == conversation.getCreatedAt()) {
+            Log.d(TAG, "fetchInfoInBackground " + conversation.getConversationId());
+            conversation.fetchInfoInBackground(new AVIMConversationCallback() {
+                @Override
+                public void done(AVIMException e) {
+                    if (e == null) {
+                        getName(conversation, callback);
+                    } else {
+                        Log.e(TAG, "fetchInfoInBackground err" + e.getMessage());
+                    }
+                }
+            });
+        } else {
+            getName(conversation, callback);
+        }
+    }
+
+    /**
+     * 获取对话对方的头像url
+     * @param conversationId
+     * @param callback (conversationId, url)
+     */
+    @ReactMethod
+    public void getConversationAvatarUrl(final String conversationId, final Callback callback) {
+        final AVIMConversation conversation = LCChatKit.getInstance().getClient().getConversation(conversationId);
+        if (null == conversation.getCreatedAt()) {
+            Log.d(TAG, "getConversationAvatarUrl " + conversation.getConversationId());
+            conversation.fetchInfoInBackground(new AVIMConversationCallback() {
+                @Override
+                public void done(AVIMException e) {
+                    if (e == null) {
+                        getAvatarUrl(conversation, callback);
+                    } else {
+                        Log.e(TAG, "fetchInfoInBackground err" + e.getMessage());
+                    }
+                }
+            });
+        } else {
+            getAvatarUrl(conversation, callback);
+        }
+    }
+
+    /**
+     * 获取历史聊天列表
+     * @param userId 当前用户id
+     * @param callback
+     * {
+     *     conversationId:
+     *     lastMessage:
+     *     lastMessageTime:
+     *     unreadCount:
+     * }
+     */
     @ReactMethod
     public void getChatLocalList(final String userId, final Callback callback) {
+        if (TextUtils.isEmpty(userId) || callback == null) {
+            return;
+        }
 
-        Log.d(TAG, "getChatLocalList");
+        Log.d(TAG, "getChatLocalList userId=" + userId);
 
+        // 初始化历史聊天数据
         LCChatKit.getInstance().open(userId, new AVIMClientCallback() {
             @Override
             public void done(AVIMClient avimClient, AVIMException e) {
@@ -60,16 +121,28 @@ public class ReactProxy  extends ReactContextBaseJavaModule {
                         callback.invoke();
                     }
                 } else {
+                    // 以数组形式返回对话列表
                     WritableNativeArray jsArray = new WritableNativeArray();
 
                     List<String> convIdList = LCIMConversationItemCache.getInstance().getSortedConversationList();
                     for (String convId : convIdList) {
-                        AVIMConversation conversation = LCChatKit.getInstance().getClient().getConversation(convId);
+                        final AVIMConversation conversation = LCChatKit.getInstance().getClient().getConversation(convId);
 
+                        // 每个对话的详细信息
                         WritableNativeMap jsMap = new WritableNativeMap();
-                        jsMap.putString("userId", conversation.getConversationId());
-                        jsMap.putString("lastMessage", conversation.getLastMessage().getContent());
-                        jsMap.putInt("lastMessageAt", (int)conversation.getLastMessageAt().getTime());
+                        jsMap.putString("conversationId", conversation.getConversationId());
+
+                        // lastMessage
+                        jsMap.putString("lastMessage", getMessageeContent(getReactApplicationContext(), conversation.getLastMessage()));
+
+                        // lastMessageTime
+                        Date date = new Date(conversation.getLastMessage().getTimestamp());
+                        String lastMessageTime = new SimpleDateFormat("MM-dd HH:mm").format(date);
+                        jsMap.putString("lastMessageTime", lastMessageTime);
+
+                        // unreadCount
+                        int unreadCount = LCIMConversationItemCache.getInstance().getUnreadCount(conversation.getConversationId());
+                        jsMap.putInt("unreadCount", unreadCount);
 
                         jsArray.pushMap(jsMap);
                     }
@@ -80,6 +153,55 @@ public class ReactProxy  extends ReactContextBaseJavaModule {
                 }
             }
         });
+    }
+
+    private void getName(final AVIMConversation conversation, final Callback callback) {
+        LCIMConversationUtils.getConversationName(conversation, new AVCallback<String>() {
+            @Override
+            protected void internalDone0(String name, AVException e) {
+                if (null == e) {
+                    Log.d(TAG, "get name=" + name);
+                    callback.invoke(conversation.getConversationId(), name);
+                } else {
+                    Log.e(TAG, "getName err" + e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void getAvatarUrl(final AVIMConversation conversation, final Callback callback) {
+        LCIMConversationUtils.getConversationPeerIcon(conversation, new AVCallback<String>() {
+            @Override
+            protected void internalDone0(String url, AVException e) {
+                if (null == e) {
+                    Log.d(TAG, "get avatar url=" + url);
+                    callback.invoke(conversation.getConversationId(), url);
+                } else {
+                    Log.e(TAG, "getAvatarUrl err" + e.getMessage());
+                }
+            }
+        });
+    }
+
+    private String getMessageeContent(Context context, AVIMMessage message) {
+        if (message instanceof AVIMTypedMessage) {
+            AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(
+                    ((AVIMTypedMessage) message).getMessageType());
+            switch (type) {
+                case TextMessageType:
+                    return ((AVIMTextMessage) message).getText();
+                case ImageMessageType:
+                    return context.getString(R.string.lcim_message_shorthand_image);
+                case LocationMessageType:
+                    return context.getString(R.string.lcim_message_shorthand_location);
+                case AudioMessageType:
+                    return context.getString(R.string.lcim_message_shorthand_audio);
+                default:
+                    return "未知";
+            }
+        } else {
+            return message.getContent();
+        }
     }
 
     /**
@@ -115,6 +237,22 @@ public class ReactProxy  extends ReactContextBaseJavaModule {
                 }
             }
         });
+    }
+
+    /**
+     * 打开历史聊天界面
+     * @param conversationId 聊天id
+     */
+    @ReactMethod
+    public void openHistoryChat(final String conversationId) {
+        if (conversationId == null) {
+            Log.w(TAG, "openChat conversationId is null");
+            return;
+        }
+
+        Intent intent = new Intent(getCurrentActivity(), LCIMConversationActivity.class);
+        intent.putExtra(LCIMConstants.CONVERSATION_ID, conversationId);
+        getCurrentActivity().startActivity(intent);
     }
 
     /**
